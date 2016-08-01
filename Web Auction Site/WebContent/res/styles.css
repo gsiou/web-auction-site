@@ -1,0 +1,100 @@
+body{
+    height:100;
+    margin: 0;
+    font-family: Helvetica;
+}
+
+footer{
+    padding-right: 1%;
+    text-align:right;
+}
+
+.menubar{
+    //background-color: #f5f5f5;
+    background-color: white;
+    color: white;
+    text-align: right;
+    width: 100%;
+    padding-top: 0.3%;
+    padding-bottom: 0.5%;
+    font-size: 15px;
+    border-bottom: 1px solid black;
+}
+
+.menubar a{
+    color: orange;
+    font-family: serif;
+    padding-right: 1.0%;
+    padding-left: 1.0%;
+    padding-top: 0.5%;
+    padding-bottom: 0.4%;
+    text-decoration: none;
+}
+
+.menubar a:hover{
+    border-bottom: 3px solid orange;
+}
+
+.menubar a:visited{
+    text-decoration: none;
+}
+
+#search{
+    text-align: center;
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    padding-left: 3%;
+    padding-right: 3%;
+    color: white;
+    background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
+}
+.txtbtncontainer{
+    display: inline-block;
+    border: 1px solid orange;
+    height: 50%;
+    width: 40%;
+}
+
+.textbox-search:hover{
+    box-shadow: 0px 0px 10px orange;
+}
+
+.textbox-search{
+    height:100%;
+    border: 0;
+    background-color: white;
+    font-size: 19px;
+    outline: none;
+    width: 65%;
+    padding-left:1%;
+    color: black;
+}
+
+.select-search{
+    background-color: white;
+    border: 0;
+    height: 100%;
+    width: 20%;
+    float: right;
+    outline: none;
+    color: orange;
+    border-left: 0.1px solid grey;
+    font-weight: bold;
+}
+
+.select-search:hover{
+    box-shadow: 0px 0px 10px orange;
+}
+
+.button-search{
+    color: white;
+    background-color: orange;
+    border: 0;
+    height: 100%;
+    width: 15%;
+    float: right;
+}
+
+.button-search:hover{
+    background-color: #ee7300
+}
