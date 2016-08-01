@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="res/styles.css">
+    <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
     <title>Web Auction Site by RobCo Industries</title>
   </head>
   <body>
