@@ -44,13 +44,13 @@ public class User implements Serializable {
 	private String password;
 
 	@Column(name="Phone")
-	private int phone;
+	private String phone;
 
 	@Column(name="Sell_rating")
 	private float sell_rating;
 
 	@Column(name="Trn")
-	private int trn;
+	private String trn;
 
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="user1")
@@ -152,11 +152,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public int getPhone() {
+	public String getPhone() {
 		return this.phone;
 	}
 
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 
@@ -168,11 +168,11 @@ public class User implements Serializable {
 		this.sell_rating = sell_rating;
 	}
 
-	public int getTrn() {
+	public String getTrn() {
 		return this.trn;
 	}
 
-	public void setTrn(int trn) {
+	public void setTrn(String trn) {
 		this.trn = trn;
 	}
 

@@ -101,9 +101,9 @@ public class UserRegistrationServlet extends HttpServlet {
 				user.setLongitude(0); // TODO: add support for this
 				user.setCountry(country);
 				user.setAddress(address);
-				user.setPhone(Integer.parseInt(phone.trim()));
+				user.setPhone(phone);
 				user.setEmail(email);
-				user.setTrn(Integer.parseInt(trn.trim()));
+				user.setTrn(trn);
 				
 				// Create dao object to insert user to db.
 				UserDAOI dao = new UserDAO();
