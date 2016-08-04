@@ -9,7 +9,7 @@
 	<div class="reg-table">
 		<input type="text" name="Username" class="textbox-register" placeholder="Username"><br>
 		<input type="password" name="Password" class="textbox-register" placeholder="Password"><br>
-		
+	
 		<input type="submit" class="button-register" value="Login">
 	</div>
 </body>
