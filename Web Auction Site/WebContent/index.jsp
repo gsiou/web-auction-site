@@ -6,8 +6,8 @@
   </head>
   <body>
     <header class="menubar">
-      <a href="">Login</a> |
-      <a href="">Register</a>
+      <a onClick=location.assign("login.jsp");>Login</a> |
+      <a onClick=location.assign("register.jsp");>Register</a>
     </header>
     <div id="search">
       <h1>Web Auction Site</h1>
