@@ -8,6 +8,6 @@
 </head>
 <body>
 	<h3>You have successfully registered to our service. Please wait for an admin to verify your account. Thank you.</h3>
-	<a href="/">Go to homepage.</a>
+	<a href="/Web_Auction_Site">Go to homepage.</a>
 </body>
 </html>
