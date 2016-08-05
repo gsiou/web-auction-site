@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import dao.UserDAO;
 import dao.UserDAOI;
@@ -53,6 +56,7 @@ public class UserRegistrationServlet extends HttpServlet {
 		String country = request.getParameter("Country");
 		String phone = request.getParameter("Phone");
 		String trn = request.getParameter("Trn");
+		String hashed_password = "";
 		// Validate form input.
 		if(userid == null){
 			msg = "Username cannot be empty.";
@@ -90,11 +94,21 @@ public class UserRegistrationServlet extends HttpServlet {
 				msg = "Passwords do not match";
 			}
 			else{
+				// Hash password.
+				try {
+					MessageDigest md = MessageDigest.getInstance("SHA-256");
+					md.update(password1.getBytes());
+					hashed_password = (new HexBinaryAdapter()).marshal(md.digest()); // Convert to hex.
+					
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+				
 				// Create user object.
 				User user = new User();
 				user.setUserId(userid);
 				user.setAccess_lvl(0); // Default access level.
-				user.setPassword(password1); // TODO: hash this
+				user.setPassword(hashed_password);
 				user.setBid_rating(0);
 				user.setSell_rating(0);
 				user.setLatitude(0); // TODO: add support for this

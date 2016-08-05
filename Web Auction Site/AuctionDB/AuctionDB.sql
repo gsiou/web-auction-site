@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`User` (
   `Longitude` FLOAT NULL,
   `Sell_rating` FLOAT NULL,
   `Bid_rating` FLOAT NULL,
-  `Password` VARCHAR(45) NULL,
+  `Password` VARCHAR(80) NULL,
   `Access_lvl` INT NULL,
   PRIMARY KEY (`UserId`))
 ENGINE = InnoDB;
