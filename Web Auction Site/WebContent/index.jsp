@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="res/styles.css">
@@ -6,8 +8,17 @@
   </head>
   <body>
     <header class="menubar">
-      <a onClick=location.assign("login.jsp");>Login</a> |
-      <a onClick=location.assign("register.jsp");>Register</a>
+    	<c:choose>
+    		<c:when test="${sessionScope.userID == null}">
+      			<a href="Login">Login</a> |
+      			<a href="Registration">Register</a>
+      		</c:when>
+      		<c:otherwise>
+      			Logged in as <strong>${sessionScope.userID}</strong> |
+      			<a href="/Messages">Messages()</a> |
+      			<a href="/Logout">Log Out</a>
+      		</c:otherwise>
+      	</c:choose>
     </header>
     <div id="search">
       <h1>Web Auction Site</h1>
