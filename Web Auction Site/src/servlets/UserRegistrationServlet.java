@@ -57,6 +57,9 @@ public class UserRegistrationServlet extends HttpServlet {
 		String country = request.getParameter("Country");
 		String phone = request.getParameter("Phone");
 		String trn = request.getParameter("Trn");
+		String longitude = request.getParameter("Longitude");
+		String latitude = request.getParameter("Latitude");
+		
 		String hashed_password = "";
 		// Validate form input.
 		if(userid == null){
@@ -105,14 +108,15 @@ public class UserRegistrationServlet extends HttpServlet {
 				user.setPassword(hashed_password);
 				user.setBid_rating(0);
 				user.setSell_rating(0);
-				user.setLatitude(0); // TODO: add support for this
-				user.setLongitude(0); // TODO: add support for this
 				user.setCountry(country);
 				user.setAddress(address);
 				user.setPhone(phone);
 				user.setEmail(email);
 				user.setTrn(trn);
-				
+				if(latitude != "" && longitude != ""){
+					user.setLatitude(Float.parseFloat(latitude));
+					user.setLongitude(Float.parseFloat(longitude));
+				}
 				// Create dao object to insert user to db.
 				UserDAOI dao = new UserDAO();
 				if(dao.create(user)){
