@@ -71,6 +71,7 @@ public class UserLoginServlet extends HttpServlet {
 		
 		if(login_success){
 			request.getSession().setAttribute("userID", username);
+			request.getSession().setAttribute("access", myuser.getAccess_lvl());
 			disp = getServletContext().getRequestDispatcher("/"); // Return to home page;
 		}
 		else{

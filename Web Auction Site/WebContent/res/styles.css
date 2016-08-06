@@ -146,3 +146,24 @@ footer{
 .button-search:hover{
     background-color: #ee7300
 }
+
+.user-table{
+	width: 100%;
+	text-align: center;
+	border-collapse: collapse;
+}
+
+.user-table tr{
+	border: solid;
+	border-width: 1px 0;
+	height: 10px;
+}
+
+.user-table tr:hover{
+	background-color: orange;
+	color: white;
+}
+
+.user-table tr:first-child {
+  border-top: none;
+}

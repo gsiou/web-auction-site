@@ -1,6 +1,9 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import entities.User;
 import utils.EntityManagerHelper;
@@ -26,5 +29,21 @@ public class UserDAO implements UserDAOI {
 			return false;
 		}
 	}
+	
+	@Override
+	public List<User> list(){
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		Query query = em.createNamedQuery("User.findAll");
+		@SuppressWarnings("unchecked")
+		List<User> users = query.getResultList();  
+        return users;
+	}
 
+	@Override
+	public void changeAccess(User user, int access_level){
+		user.setAccess_lvl(access_level);
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		em.persist(user);
+		em.flush();
+	}
 }
