@@ -4,7 +4,9 @@
 	<head>
 	<link rel="stylesheet" type="text/css" href="res/styles.css">
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="res/maps.js"> </script> 
 	<title>Register|Auction Deals</title>
+		
 </head>
 <body>
 	<header class="logo" > Hammer Deals<br>Register </header>
@@ -23,6 +25,14 @@
 			<input type="text" name="Address" class="textbox-register"
 				placeholder="Address"><br> <input type="text"
 				name="Country" class="textbox-register" placeholder="Country"><br>
+				
+			    <p>Add your location(Optional)</p>
+    			<div id="map"></div>
+				<script async defer
+				    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeUHWIAbJ6ik1KM6PcqEHPM0uCWYF1cfM&callback=initMap">
+				</script>
+			<input type="text" name="Latitude" class="textbox-register" placeholder="Latitude" id="lat" />
+			<input type="text" name="Longitude" class="textbox-register" placeholder="Longitude" id="lng" />
 
 			<input type="submit" class="button-register" value="Register">
 		</form>

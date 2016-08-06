@@ -52,6 +52,14 @@ footer{
     text-decoration: none;
 }
 
+#map{
+	margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 400px;
+	background-color: grey;
+}
+
 #search{
     text-align: center;
     padding-top: 0.5%;
