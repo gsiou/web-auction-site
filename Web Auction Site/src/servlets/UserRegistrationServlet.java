@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import dao.UserDAO;
 import dao.UserDAOI;
 import entities.User;
+import utils.HelperFunctions;
 
 /**
  * Servlet implementation class UserRegistrationServlet
@@ -95,14 +96,7 @@ public class UserRegistrationServlet extends HttpServlet {
 			}
 			else{
 				// Hash password.
-				try {
-					MessageDigest md = MessageDigest.getInstance("SHA-256");
-					md.update(password1.getBytes());
-					hashed_password = (new HexBinaryAdapter()).marshal(md.digest()); // Convert to hex.
-					
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-				}
+				hashed_password = HelperFunctions.hash(password1);
 				
 				// Create user object.
 				User user = new User();
