@@ -5,12 +5,16 @@
 	<title>Login|Auction Deals</title>
 </head>
 <body>
-	<header class="logo" > Hammer Deals<br>Login </header>
-	<div class="reg-table">
-		<input type="text" name="Username" class="textbox-register" placeholder="Username"><br>
-		<input type="password" name="Password" class="textbox-register" placeholder="Password"><br>
 	
-		<input type="submit" class="button-register" value="Login">
+	<div class="reg-table">
+		<header class="logo" > Hammer Deals<br>Login </header>
+		<form action="Login" method="post">
+			<h3 style="color: red">${error}</h3>
+			<input type="text" name="Username" class="textbox-register" placeholder="Username"><br>
+			<input type="password" name="Password" class="textbox-register" placeholder="Password"><br>
+	
+			<input type="submit" class="button-register" value="Login">
+		</form>
 	</div>
 </body>
 </html>
