@@ -43,6 +43,7 @@ public class UserLoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean login_success = false;
 		String hashed_password = "";
+		String message = "Incorect username or password"; // Default error message.
 		// Gather Form data
 		
 		String username = "";
@@ -56,7 +57,13 @@ public class UserLoginServlet extends HttpServlet {
 			hashed_password = HelperFunctions.hash(password);
 			if(hashed_password.equals(myuser.getPassword())){
 				// Password match.
-				login_success = true;
+				if(myuser.getAccess_lvl() != 0){
+					login_success = true;
+				}
+				else{
+					// User not activated.
+					message = "You are not activated yet.";
+				}
 			}
 		}
 		
@@ -67,7 +74,7 @@ public class UserLoginServlet extends HttpServlet {
 			disp = getServletContext().getRequestDispatcher("/"); // Return to home page;
 		}
 		else{
-			request.setAttribute("error", "Incorect username or password");
+			request.setAttribute("error", message);
 			disp = getServletContext().getRequestDispatcher("/login.jsp");
 		}
 		disp.forward(request, response);
