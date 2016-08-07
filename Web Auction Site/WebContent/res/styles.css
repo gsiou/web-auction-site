@@ -45,6 +45,25 @@ footer{
     cursor: pointer;
 }
 
+.Gtext{
+	font-family: "Georgia";
+	font-weight: bold;
+	font-size: 200%;
+}
+
+.big-logo-center{
+	width:400px;
+	height:300px;
+	display: block;
+    margin: auto;
+    cursor: pointer;
+}
+
+.small-logo-left{
+	width:200px;
+	height:150px;
+}
+
 .menubar a:hover{
     border-bottom: 3px solid orange;
 }
