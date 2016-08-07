@@ -21,8 +21,8 @@
       	</c:choose>
     </header>
     <div id="search">
-      <h1>Web Auction Site</h1>
       <form>
+      	<a href="index.jsp" title="Hammer Deals"><img class="small-logo-left" src="logo.png" ></a>
         <div class="txtbtncontainer">
           <input type="text" placeholder="Search..." class="textbox-search" name="search_terms" />
           <input type="submit" class="button-search" value="Search"/>

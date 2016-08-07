@@ -10,7 +10,7 @@
 		
 </head>
 <body>
-	<a href="index.jsp" title="Mouseover Description">
+	<a href="index.jsp" title="Hammer Deals">
 	<img class="big-logo-center" src="logo.png" >
 	</a>
 	<div class="reg-table">

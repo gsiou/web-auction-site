@@ -2,12 +2,14 @@
 	<head>
 	<link rel="stylesheet" type="text/css" href="res/styles.css">
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
-	<title>Login|Auction Deals</title>
+	<title>Login|Hammer Deals</title>
 </head>
 <body>
-	
+	<a href="index.jsp" title="Hammer Deals">
+	<img class="big-logo-center" src="logo.png" >
+	</a>
 	<div class="reg-table">
-		<header class="logo" > Hammer Deals<br>Login </header>
+		<header class="Gtext" > Hammer Deals</header>
 		<form action="Login" method="post">
 			<h3 style="color: red">${error}</h3>
 			<input type="text" name="Username" class="textbox-register" placeholder="Username"><br>

@@ -5,15 +5,17 @@ function initMap() {
 		
 		var marker;
 		google.maps.event.addListener(map, 'click', function(event) {
-			if (marker){
-				marker.setPosition(event.latLng);
-			}
+			
+			if ( marker ) {
+			    marker.setPosition(event.latLng);
+			  } 
 			else {
 				marker = new google.maps.Marker({
-					position: location,map: map,
-					title: 'Your location'
-				});
+						position: event.latLng,
+						map: map,
+						title: 'Your location' });
 			}
+			
 			document.getElementById('lat').value = event.latLng.lat();
 			document.getElementById('lng').value = event.latLng.lng();
 		});
