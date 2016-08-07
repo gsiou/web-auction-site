@@ -113,7 +113,7 @@ public class UserRegistrationServlet extends HttpServlet {
 				user.setPhone(phone);
 				user.setEmail(email);
 				user.setTrn(trn);
-				if(latitude != "" && longitude != ""){
+				if(!latitude.equals("") && !longitude.equals("")){
 					user.setLatitude(Float.parseFloat(latitude));
 					user.setLongitude(Float.parseFloat(longitude));
 				}
