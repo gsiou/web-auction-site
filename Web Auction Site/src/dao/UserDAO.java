@@ -46,4 +46,9 @@ public class UserDAO implements UserDAOI {
 		em.persist(user);
 		em.flush();
 	}
+	
+	@Override public void update(User tempUser){
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		em.merge(tempUser);
+	}
 }

@@ -19,10 +19,11 @@
 	</div>
 	<div class="reg-table" id="useractivate">
 		<h2>Admin Panel</h2>
+		<button id="toggle-inactive">Toggle Not Activated</button>
 		<table class="user-table">
 			<tr><th>UserID</th><th>Access Level</th><th>Action</th></tr>
 			<c:forEach items="${userList}" var="user">
-				<tr>
+				<tr class="${(user.access_lvl == 0) ? 'activated':'deactivated'}">
 					<td>${user.userId}</td>
 					<td>${user.access_lvl}</td>
 					<c:choose>
@@ -68,13 +69,19 @@
 		
 		// Expand on clicd
 		$("#btn-activate").click(function() {
-			$("#datasetupload").hide(1000);
-			$("#useractivate").show(1000);
+			//$("#datasetupload").toggle(1000);
+			$("#useractivate").toggle(1000);
 		});
 		$("#btn-dataset").click(function() {
-			$("#datasetupload").show(1000);
-			$("#useractivate").hide(1000);
+			$("#datasetupload").toggle(1000);
+			//$("#useractivate").toggle(1000);
 		})
+		$("#toggle-active").click(function(){
+			$(".activated").toggle();
+		});
+		$("#toggle-inactive").click(function(){
+			$(".deactivated").toggle();
+		});
 	</script>
 </body>
 </html>

@@ -12,4 +12,6 @@ public interface UserDAOI {
 	public List<User> list();
 	
 	public void changeAccess(User user, int access_level);
+	
+	public void update(User user);
 }
