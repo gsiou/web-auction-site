@@ -6,6 +6,7 @@
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="res/maps.js"> </script> 
     <script src="jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="res/username_check.js"> </script> 
 	<title>Register|Hammer Deals</title>
 		
 </head>
@@ -14,12 +15,14 @@
 	<img class="big-logo-center" src="logo.png" >
 	</a>
 	<div class="reg-table">
-		<header class="Gtext" >Register </header>
+		<header class="Gtext" >Register</header>
 		<form action="Registration" method="post">
 			<h3 style="color: red">${message}</h3>
-			<input type="text" name="Username" class="textbox-register"
+			<input type="hidden" id="Action" name="Action" value="submit">
+			<input type="text" id="Username" name="Username" class="textbox-register"
 				placeholder="Username">
-				<c:out value="${param.Username}" />
+				<input type='button' id='username_check_button' value='Check Availability'>
+				<div id='username_check_result'></div>
 				<br> <input type="password"
 				name="Password" class="textbox-register" placeholder="Password"><br>
 			<input type="password" name="Password_conf" class="textbox-register"
@@ -39,7 +42,7 @@
 				</script>
 			<input type="text" name="Latitude" class="textbox-register" placeholder="Latitude" id="lat" />
 			<input type="text" name="Longitude" class="textbox-register" placeholder="Longitude" id="lng" />
-
+			
 			<input type="submit" class="button-register" value="Register">
 		</form>
 	</div>

@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import dao.UserDAO;
 import dao.UserDAOI;
 import entities.User;
@@ -45,102 +48,121 @@ public class UserRegistrationServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		boolean register_success = false;
-		String msg = "";
 		
-		// Gather form data.
-		String userid = request.getParameter("Username");
-		String password1 = request.getParameter("Password");
-		String password2 = request.getParameter("Password_conf");
-		String email = request.getParameter("Email");
-		String address = request.getParameter("Address");
-		String country = request.getParameter("Country");
-		String phone = request.getParameter("Phone");
-		String trn = request.getParameter("Trn");
-		String longitude = request.getParameter("Longitude");
-		String latitude = request.getParameter("Latitude");
-		
-		String hashed_password = "";
-		// Validate form input.
-		if(userid == null){
-			msg = "Username cannot be empty.";
-		}
-		else if(password1 == null){
-			msg = "Password cannot be empty.";
-		}
-		else if(password2 == null){
-			msg = "You have to verify your password.";
-		}
-		else if(email == null){
-			msg = "Email cannot be empty.";
-		}
-		else if(address == null){
-			msg = "Address cannot be empty.";
-		}
-		else if(country == null){
-			msg = "Country cannot be empty.";
-		}
-		else if(phone == null){
-			msg = "Phone cannot be empty.";
-		}
-		else if(trn == null){
-			msg = "Tax Registration Number cannot be empty.";
+		String action =(String)request.getParameter("Action");
+		if(action.equals("namecheck")){
+			JsonObject message= new JsonObject();
+			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
+			UserDAOI dao = new UserDAO();
+			String username = (String)data.get("username").getAsString();
+			User checkuser = dao.findByID(username);
+			if(checkuser != null)
+				message.addProperty("response",true);
+			else
+				message.addProperty("response",false);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(message.toString());
 		}
 		else{
-			// We have what we need.
+				
+			boolean register_success = false;
+			String msg = "";
 			
-			if(password1.length() == 0){
-				// We cannot accept empty passwords.
-				msg = "You cannot use an empty password.";
+			// Gather form data.
+			String userid = request.getParameter("Username");
+			String password1 = request.getParameter("Password");
+			String password2 = request.getParameter("Password_conf");
+			String email = request.getParameter("Email");
+			String address = request.getParameter("Address");
+			String country = request.getParameter("Country");
+			String phone = request.getParameter("Phone");
+			String trn = request.getParameter("Trn");
+			String longitude = request.getParameter("Longitude");
+			String latitude = request.getParameter("Latitude");
+			
+			String hashed_password = "";
+			// Validate form input.
+			if(userid == null){
+				msg = "Username cannot be empty.";
 			}
-			else if(!password1.equals(password2)){
-				// Passwords must match.
-				msg = "Passwords do not match";
+			else if(password1 == null){
+				msg = "Password cannot be empty.";
+			}
+			else if(password2 == null){
+				msg = "You have to verify your password.";
+			}
+			else if(email == null){
+				msg = "Email cannot be empty.";
+			}
+			else if(address == null){
+				msg = "Address cannot be empty.";
+			}
+			else if(country == null){
+				msg = "Country cannot be empty.";
+			}
+			else if(phone == null){
+				msg = "Phone cannot be empty.";
+			}
+			else if(trn == null){
+				msg = "Tax Registration Number cannot be empty.";
 			}
 			else{
-				// Hash password.
-				hashed_password = HelperFunctions.hash(password1);
+				// We have what we need.
 				
-				// Create user object.
-				User user = new User();
-				user.setUserId(userid);
-				user.setAccess_lvl(0); // Default access level.
-				user.setPassword(hashed_password);
-				user.setBid_rating(0);
-				user.setSell_rating(0);
-				user.setCountry(country);
-				user.setAddress(address);
-				user.setPhone(phone);
-				user.setEmail(email);
-				user.setTrn(trn);
-				if(!latitude.equals("") && !longitude.equals("")){
-					user.setLatitude(Float.parseFloat(latitude));
-					user.setLongitude(Float.parseFloat(longitude));
+				if(password1.length() == 0){
+					// We cannot accept empty passwords.
+					msg = "You cannot use an empty password.";
 				}
-				// Create dao object to insert user to db.
-				UserDAOI dao = new UserDAO();
-				if(dao.create(user)){
-					// Success.
-					msg = "User registration succeded.";
-					register_success = true;
+				else if(!password1.equals(password2)){
+					// Passwords must match.
+					msg = "Passwords do not match";
 				}
 				else{
-					// Duplicate username.
-					msg = "User with that username exists.";
+					// Hash password.
+					hashed_password = HelperFunctions.hash(password1);
+					
+					// Create user object.
+					User user = new User();
+					user.setUserId(userid);
+					user.setAccess_lvl(0); // Default access level.
+					user.setPassword(hashed_password);
+					user.setBid_rating(0);
+					user.setSell_rating(0);
+					user.setCountry(country);
+					user.setAddress(address);
+					user.setPhone(phone);
+					user.setEmail(email);
+					user.setTrn(trn);
+					if(!latitude.equals("") && !longitude.equals("")){
+						user.setLatitude(Float.parseFloat(latitude));
+						user.setLongitude(Float.parseFloat(longitude));
+					}
+					// Create dao object to insert user to db.
+					UserDAOI dao = new UserDAO();
+					if(dao.create(user)){
+						// Success.
+						msg = "User registration succeded.";
+						register_success = true;
+					}
+					else{
+						// Duplicate username.
+						msg = "User with that username exists.";
+					}
 				}
 			}
+			RequestDispatcher disp;
+			request.setAttribute("message", msg);
+			if(register_success){
+				// Redirect to success page
+				disp = getServletContext().getRequestDispatcher("/reg_success.jsp");
+			}
+			else{
+				// Redirect back to registration page with message.
+				disp = getServletContext().getRequestDispatcher("/register.jsp");
+			}
+			disp.forward(request, response);
 		}
-		RequestDispatcher disp;
-		request.setAttribute("message", msg);
-		if(register_success){
-			// Redirect to success page
-			disp = getServletContext().getRequestDispatcher("/reg_success.jsp");
-		}
-		else{
-			// Redirect back to registration page with message.
-			disp = getServletContext().getRequestDispatcher("/register.jsp");
-		}
-		disp.forward(request, response);
 	}
 
 }

@@ -9,7 +9,7 @@
 	<img class="big-logo-center" src="logo.png" >
 	</a>
 	<div class="reg-table">
-		<header class="Gtext" > Hammer Deals</header>
+		<header class="Gtext" >Login</header>
 		<form action="Login" method="post">
 			<h3 style="color: red">${error}</h3>
 			<input type="text" name="Username" class="textbox-register" placeholder="Username"><br>
