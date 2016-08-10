@@ -5,7 +5,7 @@
 	<title>Login|Hammer Deals</title>
 </head>
 <body>
-	<a href="index.jsp" title="Hammer Deals">
+	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
 	<img class="big-logo-center" src="logo.png" >
 	</a>
 	<div class="reg-table">
