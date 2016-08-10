@@ -11,7 +11,7 @@
 		
 </head>
 <body>
-	<a href="index.jsp" title="Hammer Deals">
+	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
 	<img class="big-logo-center" src="logo.png" >
 	</a>
 	<div class="reg-table">
@@ -19,7 +19,7 @@
 		<form action="Registration" method="post">
 			<h3 style="color: red">${message}</h3>
 			<input type="hidden" id="Action" name="Action" value="submit">
-			<input type="text" id="Username" name="Username" class="textbox-register"
+			<input type="text" id="Username" name="Username" class="textbox-register" style="width:39%"
 				placeholder="Username">
 				<input type='button' id='username_check_button' value='Check Availability'>
 				<div id='username_check_result'></div>
