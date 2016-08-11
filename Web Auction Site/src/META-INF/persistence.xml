@@ -3,6 +3,7 @@
 	<persistence-unit name="Web Auction Site" transaction-type="RESOURCE_LOCAL">
 		<class>entities.Auction</class>
 		<class>entities.Category</class>
+		<class>entities.Image</class>
 		<class>entities.Message</class>
 		<class>entities.MessagePK</class>
 		<class>entities.User</class>

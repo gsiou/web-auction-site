@@ -37,9 +37,6 @@ public class Auction implements Serializable {
 	@Column(name="Expiration_time")
 	private Date expiration_time;
 
-	@Column(name="Image")
-	private String image;
-
 	@Column(name="Latitude")
 	private float latitude;
 
@@ -65,6 +62,10 @@ public class Auction implements Serializable {
 	//bi-directional many-to-many association to Category
 	@ManyToMany(mappedBy="auctions")
 	private List<Category> categories;
+
+	//bi-directional many-to-many association to Image
+	@ManyToMany(mappedBy="auctions")
+	private List<Image> images;
 
 	//bi-directional many-to-many association to User
 	@ManyToMany(mappedBy="auctions")
@@ -123,14 +124,6 @@ public class Auction implements Serializable {
 
 	public void setExpiration_time(Date expiration_time) {
 		this.expiration_time = expiration_time;
-	}
-
-	public String getImage() {
-		return this.image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
 	}
 
 	public float getLatitude() {
@@ -195,6 +188,14 @@ public class Auction implements Serializable {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
+	}
+
+	public List<Image> getImages() {
+		return this.images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
 	}
 
 	public List<User> getUsers() {
