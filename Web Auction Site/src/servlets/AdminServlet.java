@@ -88,6 +88,7 @@ public class AdminServlet extends HttpServlet {
 			request.setAttribute("error", "You must login as admin to continue.");
 			disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
 			disp.forward(request, response);
+			return ;
 		}
 		
 		String action;
