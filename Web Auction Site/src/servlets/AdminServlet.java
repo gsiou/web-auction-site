@@ -226,7 +226,7 @@ public class AdminServlet extends HttpServlet {
 					Element e = (Element) current;
 					Boolean addCat = true;
 					Auction auc = new Auction();
-					auc.setAuctionId(Integer.parseInt(e.getAttribute("ItemID")));
+					//auc.setAuctionId(Integer.parseInt(e.getAttribute("ItemID")));
 					auc.setName(e.getElementsByTagName("Name").item(0).getTextContent());
 					
 					List<Category> categories = new ArrayList<>();

@@ -1,6 +1,9 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import entities.Auction;
 import entities.Category;
@@ -35,5 +38,20 @@ public class CategoryDAO implements CategoryDAOI{
 				return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public List<Category> listChildren(String parent){
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Category> getChildrenQ;
+		if(parent != null){
+			getChildrenQ = em.createNamedQuery("Category.findChildren", Category.class);
+			getChildrenQ.setParameter("parent", parent);
+		}
+		else{
+			getChildrenQ = em.createNamedQuery("Category.findRoot", Category.class);
+		}
+		List<Category> category_list = getChildrenQ.getResultList();
+		return category_list;
 	}
 }

@@ -16,7 +16,8 @@ import java.util.List;
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="AuctionId")
 	private int auctionId;
 

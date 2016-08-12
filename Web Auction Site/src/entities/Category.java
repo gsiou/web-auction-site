@@ -11,7 +11,11 @@ import java.util.List;
  */
 @Entity
 @Table(name="Category")
-@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
+@NamedQueries({
+	@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c"),
+	@NamedQuery(name="Category.findChildren", query="SELECT c FROM Category c WHERE c.parent = :parent"),
+	@NamedQuery(name="Category.findRoot", query="SELECT c FROM Category c WHERE c.parent IS NULL"),
+})
 public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +34,7 @@ public class Category implements Serializable {
 			@JoinColumn(name="Category_Name")
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="Auctions_ItemId")
+			@JoinColumn(name="Auction_AuctionId")
 			}
 		)
 	private List<Auction> auctions;
