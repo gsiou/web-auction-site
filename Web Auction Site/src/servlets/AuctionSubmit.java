@@ -1,11 +1,16 @@
 package servlets;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -24,10 +30,13 @@ import dao.AuctionDAO;
 import dao.AuctionDAOI;
 import dao.CategoryDAO;
 import dao.CategoryDAOI;
+import dao.ImageDAO;
+import dao.ImageDAOI;
 import dao.UserDAO;
 import dao.UserDAOI;
 import entities.Auction;
 import entities.Category;
+import entities.Image;
 import entities.User;
 
 /**
@@ -180,7 +189,6 @@ public class AuctionSubmit extends HttpServlet {
 				auc.setStarting_Bid(Float.parseFloat(starting));
 				auc.setNum_of_bids(0);
 				auc.setCurrent_Bid(auc.getStarting_Bid());
-				//auc.setImages...
 				if(!latitude.equals("") && !longitude.equals("")){
 					auc.setLatitude(Float.parseFloat(latitude));
 					auc.setLongitude(Float.parseFloat(longitude));
@@ -200,7 +208,6 @@ public class AuctionSubmit extends HttpServlet {
 					if(cat != null){
 						cat.getAuctions().add(auc);
 						catlist.add(cat);
-						//auc.getCategories().add(cat);
 					}
 				}
 				auc.setCategories(catlist);
@@ -211,9 +218,58 @@ public class AuctionSubmit extends HttpServlet {
 				ArrayList<User> users_list = new ArrayList<>();
 				users_list.add(user);
 				auc.setUsers(users_list);
-				//auc.getUsers().add(user);
 				
 				aucdao.create(auc);
+				
+				// Upload images.
+				// Get all image parts from imagefiles input element.
+				List<Part> file_parts = request.getParts().stream().filter(
+						part -> "imagefiles".equals(part.getName())).
+						collect(Collectors.toList()); //http://stackoverflow.com/a/2424824
+				
+				int counter = 0;
+				int auction_id = auc.getAuctionId();
+				String extension, file_name, save_file_name;
+				File image_file, savepath;
+				InputStream content;
+				long file_size;
+				long max_file_size = Long.parseLong(getServletContext().getInitParameter("images.maxsize")); // web.xml
+				savepath = new File(getServletContext().getInitParameter("images.location"));
+				
+				// Load image dao to create new images.
+				Image image;
+				ImageDAOI imgdao = new ImageDAO();
+				ArrayList<Image> auction_images = new ArrayList<>();
+				ArrayList<Auction> auctions; // To save image's auctions.
+				
+				for(Part file_part : file_parts){
+					file_name = Paths.get(file_part.getSubmittedFileName()).getFileName().toString();
+					extension = file_name.substring(file_name.lastIndexOf("."));
+					file_size = file_part.getSize();
+					if(extension.equalsIgnoreCase(".png") 
+							|| extension.equalsIgnoreCase(".jpg") 
+							|| extension.equals(".jpeg")){ // Only accept png, jpg and jpeg.
+						
+						if(file_size < max_file_size){ // Accept only small files.
+							content = file_part.getInputStream();
+							save_file_name = auction_id + "_" + counter + extension;// Name and extension.
+							image_file = new File(savepath, save_file_name); 
+							Files.copy(content, image_file.toPath()); // Write file.
+							
+							// Store image in db.
+							image = new Image();
+							image.setUrl(save_file_name);
+							auctions = new ArrayList<>();
+							auctions.add(auc);
+							image.setAuctions(auctions);
+							imgdao.create(image);
+							auction_images.add(image);
+							
+							counter ++; // Prevent duplicate names.
+						}
+					}
+				}
+				auc.setImages(auction_images);
 			}
 			System.out.println(message);
 		}

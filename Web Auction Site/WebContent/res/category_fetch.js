@@ -41,7 +41,8 @@ function fetch(parent){
 				});
 			}
 		});
-		$(document).scrollTop($("#category_list").offset().top ); // Scroll back to categories
+		//$(document).scrollTop($("#category_list").offset().top ); // Scroll back to categories
+		$(document).scrollTop();
 	}
 	else{
 		$("#category_list").html("");

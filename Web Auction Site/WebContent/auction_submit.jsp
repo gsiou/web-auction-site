@@ -33,7 +33,7 @@
 <body>
 	<div class="reg-table">
 		<h1>Submit an auction</h1>
-		<form action="AuctionSubmit" method="post" id="form" autocomplete="off">
+		<form action="AuctionSubmit" method="post" id="form" autocomplete="off" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="submit">
 			<h4>Product Category(Required)</h4>
 			<div id="category_list">
@@ -86,7 +86,7 @@
 			<hr>
 			<br>
 			<h4>Product Image(s) (Optional):</h4>
-			<input type="file" name="imagefile">
+			<input type="file" name="imagefiles" multiple="true">
 			<br>
 			<hr>
 			<h4>Auction Location (Required)</h4>
