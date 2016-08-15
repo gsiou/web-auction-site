@@ -11,7 +11,17 @@ import java.util.Date;
  */
 @Entity
 @Table(name="Message")
-@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m")
+@NamedQueries({
+	@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m"),
+	@NamedQuery(name="Message.getSentOf", 
+		query="SELECT m FROM Message m WHERE m.user_from = :user ORDER BY m.time DESC"),
+	@NamedQuery(name="Message.getReceivedOf",
+		query="SELECT m FROM Message m WHERE m.user_to = :user ORDER BY m.time DESC"),
+	@NamedQuery(name="Message.countSent",
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user"),
+	@NamedQuery(name="Message.countReceived",
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user"),
+})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -6,15 +6,41 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Messages|Hammer Deals</title>
 <link rel="stylesheet" type="text/css" href="res/styles.css">
+<link rel="icon" href="res/favicon.ico" type="image/x-icon">
 <style type="text/css">
 	#message-list{
 		background-color: white;
+		margin-left: auto;
+		margin-right: auto;
+		width: 100%;
+		text-align: center;
+	}
+	.subject{
+		width:75%;
+	}
+	.user{
+		width: 10%;
+	}
+	.date{
+		width: 15%;
+	}
+	#message-list a{
+		color: blue;
+		text-decoration: underline;
+	}
+	#message-list a:hover{
+		color: white;
+		text-decoration: none;
+		background-color: orange
 	}
 	#message-form{
 		display: none;
 		margin-left: auto;
 		margin-right: auto; 
 		
+	}
+	.message-body{
+		display: none;
 	}
 </style>
 <script src="jquery-3.1.0.min.js"></script>
@@ -38,9 +64,17 @@
 				<br>Body:
 				<br><textarea class="textbox-register" cols="86" rows="20" id="msg-body"></textarea>
 				<button class="button-register">Send</button>
+				<hr>
 			</form>
 		</div>
-		<div id="message-list">
+		<button id="btn-refresh">Refresh</button>
+		<table id="message-list">
+			<tr><th>Subject</th><th>User</th><th>Date</th></tr>
+			<tbody id="message-list-tbody">
+			</tbody>
+		</table>
+		Pages:
+		<div id="pages">
 		</div>
 	</div>
 </body>

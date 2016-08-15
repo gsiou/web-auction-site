@@ -1,7 +1,10 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import dao.MessageDAO;
@@ -27,6 +31,7 @@ import entities.User;
 public class MessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private static final int ENTRIES_PER_MESSAGE_PAGE = 10;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -132,6 +137,73 @@ public class MessageServlet extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(reply.toString());
+		}
+		else if(action.equals("fetch")){
+			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
+			String type = (String)data.get("type").getAsString();
+			String page = (String)data.get("page").getAsString();
+			
+			// Check if we have everything.
+			String message = "";
+			boolean success = false;
+			if(type == null || !(type.equals("sent") || type.equals("received"))){
+				message = "Invalid";
+			}
+			else if(page == null || page.equals("")){
+				message = "Page not specified";
+			}
+			else{
+				// Fetch user's messages according to type and page
+				int entries_per_page = ENTRIES_PER_MESSAGE_PAGE;
+				String userid = request.getSession().getAttribute("userID").toString();
+				UserDAOI udao = new UserDAO();
+				User myuser = udao.findByID(userid); // Get logged in user.
+				MessageDAOI msgdao = new MessageDAO();
+				
+				// Gather all messages.
+				List<Message> msg_list = null;
+				if(type.equals("sent")){
+					msg_list = msgdao.getSentOf(myuser, Integer.parseInt(page), entries_per_page);
+				}
+				else{
+					msg_list = msgdao.getReceivedOf(myuser, Integer.parseInt(page), entries_per_page);
+				}
+				
+				// Prepare Json Response.
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+				JsonArray msg_arr = new JsonArray();
+				JsonObject msg;
+				
+				for(Message m : msg_list){
+					msg = new JsonObject();
+					if(type.equals("sent")){
+						msg.addProperty("user", m.getUser_to().getUserId());
+					}
+					else{
+						msg.addProperty("user", m.getUser_from().getUserId());
+					}
+					msg.addProperty("subject", m.getSubject());
+					msg.addProperty("date", sdf.format(m.getTime()));
+					msg.addProperty("read", m.getIs_read());
+					msg.addProperty("body", m.getText());
+					msg_arr.add(msg);
+				}
+				
+				int pages_number; // Let the front end know how many pages exists. 
+				if(type.equals("sent")){
+					pages_number = (int) (Math.ceil(msgdao.getCountSent(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
+				}
+				else{
+					pages_number = (int) (Math.ceil(msgdao.getCountReceived(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
+				}
+				
+				JsonObject reply = new JsonObject();
+				reply.add("messages", msg_arr);
+				reply.addProperty("pages", pages_number);
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(reply.toString());
+			}
 		}
 	}
 }
