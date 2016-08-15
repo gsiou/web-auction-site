@@ -5,7 +5,6 @@
 		<class>entities.Category</class>
 		<class>entities.Image</class>
 		<class>entities.Message</class>
-		<class>entities.MessagePK</class>
 		<class>entities.User</class>
 		<class>entities.User_bid_Auction</class>
 		<class>entities.User_bid_AuctionPK</class>

@@ -10,15 +10,18 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="Message")
 @NamedQuery(name="Message.findAll", query="SELECT m FROM Message m")
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private MessagePK id;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="idMessages")
+	private int id;
 
 	@Column(name="Is_read")
-	private byte is_read;
+	private boolean is_read;
 
 	@Lob
 	@Column(name="Subject")
@@ -34,30 +37,30 @@ public class Message implements Serializable {
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
-	@JoinColumn(name="User_UserId")
-	private User user1;
+	@JoinColumn(name="User_from")
+	private User user_from;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
-	@JoinColumn(name="User_UserId1")
-	private User user2;
+	@JoinColumn(name="User_to")
+	private User user_to;
 
 	public Message() {
 	}
 
-	public MessagePK getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(MessagePK id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public byte getIs_read() {
+	public boolean getIs_read() {
 		return this.is_read;
 	}
 
-	public void setIs_read(byte is_read) {
+	public void setIs_read(boolean is_read) {
 		this.is_read = is_read;
 	}
 
@@ -85,20 +88,20 @@ public class Message implements Serializable {
 		this.time = time;
 	}
 
-	public User getUser1() {
-		return this.user1;
+	public User getUser_from() {
+		return this.user_from;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
+	public void setUser_from(User user_from) {
+		this.user_from = user_from;
 	}
 
-	public User getUser2() {
-		return this.user2;
+	public User getUser_to() {
+		return this.user_to;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setUser_to(User user_to) {
+		this.user_to = user_to;
 	}
 
 }
