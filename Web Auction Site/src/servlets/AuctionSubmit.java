@@ -226,7 +226,7 @@ public class AuctionSubmit extends HttpServlet {
 				List<Part> file_parts = request.getParts().stream().filter(
 						part -> "imagefiles".equals(part.getName())).
 						collect(Collectors.toList()); //http://stackoverflow.com/a/2424824
-				
+
 				int counter = 0;
 				int auction_id = auc.getAuctionId();
 				String extension, file_name, save_file_name;
@@ -244,34 +244,36 @@ public class AuctionSubmit extends HttpServlet {
 				
 				for(Part file_part : file_parts){
 					file_name = Paths.get(file_part.getSubmittedFileName()).getFileName().toString();
-					extension = file_name.substring(file_name.lastIndexOf("."));
-					file_size = file_part.getSize();
-					if(extension.equalsIgnoreCase(".png") 
-							|| extension.equalsIgnoreCase(".jpg") 
-							|| extension.equals(".jpeg")){ // Only accept png, jpg and jpeg.
-						
-						if(file_size < max_file_size){ // Accept only small files.
-							content = file_part.getInputStream();
-							save_file_name = auction_id + "_" + counter + extension;// Name and extension.
-							image_file = new File(savepath, save_file_name); 
-							Files.copy(content, image_file.toPath()); // Write file.
-							
-							// Store image in db.
-							image = new Image();
-							image.setUrl(save_file_name);
-							auctions = new ArrayList<>();
-							auctions.add(auc);
-							image.setAuctions(auctions);
-							imgdao.create(image);
-							auction_images.add(image);
-							
-							counter ++; // Prevent duplicate names.
+					if(file_name.lastIndexOf(".") != -1){ // No extension.
+						extension = file_name.substring(file_name.lastIndexOf("."));
+						file_size = file_part.getSize();
+						if(extension.equalsIgnoreCase(".png") 
+								|| extension.equalsIgnoreCase(".jpg") 
+								|| extension.equals(".jpeg")){ // Only accept png, jpg and jpeg.
+
+							if(file_size < max_file_size){ // Accept only small files.
+								content = file_part.getInputStream();
+								save_file_name = auction_id + "_" + counter + extension;// Name and extension.
+								image_file = new File(savepath, save_file_name); 
+								Files.copy(content, image_file.toPath()); // Write file.
+
+								// Store image in db.
+								image = new Image();
+								image.setUrl(save_file_name);
+								auctions = new ArrayList<>();
+								auctions.add(auc);
+								image.setAuctions(auctions);
+								imgdao.create(image);
+								auction_images.add(image);
+
+								counter ++; // Prevent duplicate names.
+							}
 						}
 					}
+					auc.setImages(auction_images);
 				}
-				auc.setImages(auction_images);
 			}
-			System.out.println(message);
+			//System.out.println(message);
 		}
 		else if(action.equals("fetch_categories")){
 			// Fetch categories for dynamic calls in category picking.
