@@ -14,13 +14,13 @@ import java.util.Date;
 @NamedQueries({
 	@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m"),
 	@NamedQuery(name="Message.getSentOf", 
-		query="SELECT m FROM Message m WHERE m.user_from = :user ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.user_from = :user AND m.show_sent = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.getReceivedOf",
-		query="SELECT m FROM Message m WHERE m.user_to = :user ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.user_to = :user AND m.show_received = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.countSent",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user AND m.show_sent = TRUE"),
 	@NamedQuery(name="Message.countReceived",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user AND m.show_received = TRUE"),
 })
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,13 @@ public class Message implements Serializable {
 
 	@Column(name="Is_read")
 	private boolean is_read;
+	
+	@Column(name="show_sent")
+	private boolean show_sent;
 
+	@Column(name="show_received")
+	private boolean show_received;
+	
 	@Lob
 	@Column(name="Subject")
 	private String subject;
@@ -72,6 +78,22 @@ public class Message implements Serializable {
 
 	public void setIs_read(boolean is_read) {
 		this.is_read = is_read;
+	}
+	
+	public boolean getShow_sent() {
+		return this.show_sent;
+	}
+	
+	public void setShow_sent(boolean show_sent) {
+		this.show_sent = show_sent;
+	}
+	
+	public boolean getShow_received() {
+		return this.show_received;
+	}
+	
+	public void setShow_received(boolean show_received) {
+		this.show_received = show_received;
 	}
 
 	public String getSubject() {

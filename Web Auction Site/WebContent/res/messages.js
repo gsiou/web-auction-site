@@ -34,13 +34,13 @@ function load_messages(type, page){
 			$("#message-list-tbody").html("");
 			$.each(data.messages, function(i, item){
 				$("<tr/>",{
-					html: render_row(item.subject, item.user, item.date, i),
+					html: render_row(item.subject, item.user, item.date, item.id, item.read),
 				}).appendTo("#message-list-tbody");
 				$("<tr/>",{
 					html: $("<div/>",{
 						text: item.body,
 						class: "message-body",
-						id: "message-body-" + i,
+						id: "message-body-" + item.id,
 					}),
 				}).appendTo("#message-list-tbody");
 			});
@@ -54,11 +54,33 @@ function load_messages(type, page){
 function show_msg(index){
 	$(".message-body").hide(100);
 	$("#message-body-" + index).toggle(100);
+	if($("#message-link-" + index).hasClass("unread")){
+		// Let server know we read this one.
+		send_data = {
+				message_id: index,
+		};
+		$.ajax({
+			url: 'Messages?action=read',
+			type: "POST",
+			data: JSON.stringify(send_data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function(){
+				console.log("Read");
+			}
+		});
+		// Change the class of the url.
+		$("#message-link-" + index).removeClass("unread");
+		$("#message-link-" + index).addClass("read");
+	}
 }
 
-function render_row(subject, user, date, index){
+function render_row(subject, user, date, index, isread){
 	var html = "<td class='subject'>"
-		+ "<a href='#' onclick='show_msg("  
+		+ "<a href='#' id='message-link-" 
+		+ index + "' class='"  
+		+ (isread ? "read" : "unread")
+		+ "' onclick='show_msg("  
 		+ index + ")'>" + subject + "</a></td>";
 	html += "<td class='user'>" + user + "</td>";
 	html += "<td class='date'>" + date + "</td>";

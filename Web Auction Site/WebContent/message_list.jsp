@@ -42,6 +42,12 @@
 	.message-body{
 		display: none;
 	}
+	.unread{
+		font-weight: bold;
+	}
+	.read{
+		font-weight: normal;
+	}
 </style>
 <script src="jquery-3.1.0.min.js"></script>
 <script src="res/messages.js"></script>

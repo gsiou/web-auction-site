@@ -117,6 +117,8 @@ public class MessageServlet extends HttpServlet {
 					// Create message.
 					Message msg = new Message();
 					msg.setIs_read(false);
+					msg.setShow_received(true);
+					msg.setShow_sent(true);
 					msg.setUser_to(recipient);
 					msg.setSubject(subject);
 					msg.setText(text);
@@ -186,6 +188,7 @@ public class MessageServlet extends HttpServlet {
 					msg.addProperty("date", sdf.format(m.getTime()));
 					msg.addProperty("read", m.getIs_read());
 					msg.addProperty("body", m.getText());
+					msg.addProperty("id", m.getId());
 					msg_arr.add(msg);
 				}
 				
@@ -203,6 +206,15 @@ public class MessageServlet extends HttpServlet {
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(reply.toString());
+			}
+		}
+		else if(action.equals("read")){
+			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
+			int message_id = (int) data.get("message_id").getAsInt();
+			MessageDAOI msgdao = new MessageDAO();
+			Message msg = msgdao.find(message_id);
+			if(msg != null) {
+				msg.setIs_read(true);
 			}
 		}
 	}
