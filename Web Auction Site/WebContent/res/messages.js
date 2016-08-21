@@ -33,8 +33,15 @@ function load_messages(type, page){
 		success: function(data){
 			$("#message-list-tbody").html("");
 			$.each(data.messages, function(i, item){
-				$("<tr/>",{
-					html: render_row(item.subject, item.user, item.date, item.id, item.read),
+				$("<td/>", {
+					class: 'subject',
+					html: $("<a/>",{
+						href: "#",
+						id: "message-link-" + item.id,
+						class: item.read ? "read" : "unread",
+						onclick: "show_msg(" + item.id + ")",
+						text: item.subject
+					})
 				}).appendTo("#message-list-tbody");
 				$("<tr/>",{
 					html: $("<div/>",{
@@ -73,18 +80,6 @@ function show_msg(index){
 		$("#message-link-" + index).removeClass("unread");
 		$("#message-link-" + index).addClass("read");
 	}
-}
-
-function render_row(subject, user, date, index, isread){
-	var html = "<td class='subject'>"
-		+ "<a href='#' id='message-link-" 
-		+ index + "' class='"  
-		+ (isread ? "read" : "unread")
-		+ "' onclick='show_msg("  
-		+ index + ")'>" + subject + "</a></td>";
-	html += "<td class='user'>" + user + "</td>";
-	html += "<td class='date'>" + date + "</td>";
-	return html;
 }
 
 function render_pages(){
