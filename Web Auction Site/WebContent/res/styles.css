@@ -9,12 +9,69 @@ footer{
     text-align:right;
 }
 
+.jssorb21 {
+	position: absolute;
+}
+.jssorb21 div, .jssorb21 div:hover, .jssorb21 .av {
+position: absolute;
+width: 19px;
+height: 19px;
+text-align: center;
+line-height: 19px;
+color: white;
+font-size: 12px;
+background: url(../b21.png) no-repeat;
+overflow: hidden;
+cursor: pointer;
+}
+.jssorb21 div { background-position: -5px -5px; }
+.jssorb21 div:hover, .jssorb21 .av:hover { background-position: -35px -5px; }
+.jssorb21 .av { background-position: -65px -5px; }
+.jssorb21 .dn, .jssorb21 .dn:hover { background-position: -95px -5px; }
+
+.slider_container{
+	position: relative;
+	left:100px;
+	top:100px;
+	width: 600px;
+    height: 300px;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+.page-background{
+	 width:100%;
+	 background: url(../background.jpg);
+}
+
+.view-table{
+	position:relative;
+	left:706px;
+	bottom:202px;
+	width:50%;
+	border-radius: 5px;
+    background-clip: content-box;
+    background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
+    padding: 20px;
+}
+
 .reg-table{
 	text-align:center;
+	width:80%;
+	margin:auto;
     border-radius: 5px;
     background-clip: content-box;
     background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
     padding: 20px;
+}
+
+.auction-name{
+	position:relative;
+	left:100px;
+	bottom:-82px;
+	font-family: "Georgia";
+	font-weight: bold;
+	font-size: 120%;
 }
 
 .menubar{
@@ -23,11 +80,11 @@ footer{
     color: black;
     text-align: right;
     width: 100%;
-    padding-top: 0.3%;
-    padding-bottom: 0.5%;
+    padding-top: 0.2%;
+    padding-bottom: 0.2%;
     padding-right: 1%;
     font-size: 15px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid grey;
 }
 
 .menubar a{
@@ -55,6 +112,14 @@ footer{
     cursor: pointer;
 }
 
+.tiny-logo-left{
+	width:100px;
+	height:75px;
+	right:50px;
+	position:relative;
+	vertical-align: middle;
+}
+
 .small-logo-left{
 	width:200px;
 	height:150px;
@@ -77,16 +142,42 @@ footer{
 	background-color: grey;
 }
 
+#view-map{
+	position:relative;
+    width:31%;
+    height:300px;
+    left:100px;
+	bottom:500px;
+	background-color: grey;
+}
+
+
 #search{
     text-align: center;
     padding: 20px;
     color: white;
     background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
 }
+
+#uni-search{
+    text-align: center;
+    color: white;
+    background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
+    padding-top: 1%;
+    padding-bottom: 0.6%;
+}
+
 .txtbtncontainer{
     display: inline-block;
     border-radius: 5px;
     height: 50%;
+    width: 80%;
+}
+
+.small-txtbtncontainer{
+    display: inline-block;
+    border-radius: 5px;
+    height: 40%;
     width: 80%;
 }
 
@@ -159,12 +250,12 @@ footer{
 }
 
 #username_check_button{
+	position:absolute;
+	top:387px;
   	display:inline-block;
-  	align: auto;
   	background-color: orange;
     color: white;
     padding: 10px 20px;
-    margin: 8px 0;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -198,4 +289,8 @@ footer{
 
 .user-table tr:first-child {
   border-top: none;
+}
+
+.big-image-frame{
+	
 }

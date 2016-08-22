@@ -9,7 +9,7 @@
 	<script src="jquery-3.1.0.min.js"></script>
 	<title>Admin Panel</title>
 </head>
-<body>
+<body class="page-background">
 	<header class="menubar">
 		<a href="${pageContext.request.contextPath}">Home</a>
 	</header>

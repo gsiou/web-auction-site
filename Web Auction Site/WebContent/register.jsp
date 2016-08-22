@@ -5,12 +5,12 @@
 	<link rel="stylesheet" type="text/css" href="res/styles.css">
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="res/maps.js"> </script> 
-    <script src="jquery-3.1.0.min.js"></script>
+	<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="res/username_check.js"> </script> 
 	<title>Register|Hammer Deals</title>
 		
 </head>
-<body>
+<body class="page-background">
 	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
 	<img class="big-logo-center" src="logo.png" >
 	</a>
@@ -19,7 +19,7 @@
 		<form action="Registration" method="post">
 			<h3 style="color: red">${message}</h3>
 			<input type="hidden" id="Action" name="Action" value="submit">
-			<input type="text" id="Username" name="Username" class="textbox-register" style="width:39%"
+			<input type="text" id="Username" name="Username" class="textbox-register" style="position:relative"
 				placeholder="Username">
 				<input type='button' id='username_check_button' value='Check Availability'>
 				<div id='username_check_result'></div>

@@ -30,7 +30,35 @@
 		}
 	</style>
 </head>
-<body>
+<body class="page-background">
+	<header class="menubar">
+    	<c:choose>
+    		<c:when test="${sessionScope.userID == null}">
+      			<a href="Login">Login</a> |
+      			<a href="Registration">Register</a>
+      		</c:when>
+      		<c:otherwise>
+      			Logged in as <strong>${sessionScope.userID}</strong> |
+      			<a href="/Messages">Messages()</a> |
+      			<a href="/Logout">Log Out</a>
+      		</c:otherwise>
+      	</c:choose>
+    </header>
+    <div id="uni-search">
+      <form>
+      	<a href="index.jsp" title="Hammer Deals"><img class="tiny-logo-left" src="logo.png" ></a>
+        <div class="small-txtbtncontainer">
+          <input type="text" placeholder="Search..." class="textbox-search" name="search_terms" />
+          <input type="submit" class="button-search" value="Search"/>
+          <select name="category" class="select-search">
+            <option value="all">All Categories</option>
+            <option value="tech">Technology</option>
+            <option value="clothes">Clothing</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <br>
 	<div class="reg-table">
 		<h1>Submit an auction</h1>
 		<form action="AuctionSubmit" method="post" id="form" autocomplete="off" enctype="multipart/form-data">

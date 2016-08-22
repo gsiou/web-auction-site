@@ -6,7 +6,7 @@
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
     <title>Web Auction Site by RobCo Industries</title>
   </head>
-  <body>
+  <body class="page-background">
     <header class="menubar">
     	<c:choose>
     		<c:when test="${sessionScope.userID == null}">
