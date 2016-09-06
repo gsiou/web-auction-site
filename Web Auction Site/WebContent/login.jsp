@@ -4,7 +4,7 @@
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
 	<title>Login|Hammer Deals</title>
 </head>
-<body>
+<body class="page-background">
 	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
 	<img class="big-logo-center" src="logo.png" >
 	</a>

@@ -18,11 +18,10 @@
 		<header class="Gtext" >Register</header>
 		<form action="Registration" method="post">
 			<h3 style="color: red">${message}</h3>
+			<div id='pop-up-message'></div>
 			<input type="hidden" id="Action" name="Action" value="submit">
-			<input type="text" id="Username" name="Username" class="textbox-register" style="position:relative"
-				placeholder="Username">
-				<input type='button' id='username_check_button' value='Check Availability'>
-				<div id='username_check_result'></div>
+			<input type="text" id="Username" name="Username" class="textbox-register"
+				placeholder="Username"><input type='button' id='username_check_button' value='Check Availability'>
 				<br> <input type="password"
 				name="Password" class="textbox-register" placeholder="Password"><br>
 			<input type="password" name="Password_conf" class="textbox-register"
