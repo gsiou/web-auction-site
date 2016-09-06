@@ -30,13 +30,19 @@ cursor: pointer;
 .jssorb21 .dn, .jssorb21 .dn:hover { background-position: -95px -5px; }
 
 .slider_container{
-	position: relative;
-	left:100px;
-	top:100px;
-	width: 600px;
-    height: 300px;
+	position:relative;
+	width:480px;
+    height:270px;
     border: 1px solid gray;
-    border-radius: 4px;
+    border-radius: 1%;
+}
+
+.slides{
+	position:relative;
+	cursor: move;
+	width:100%;
+    height:100%;
+    overflow: hidden;
 }
 
 .page-background{
@@ -46,32 +52,39 @@ cursor: pointer;
 
 .view-table{
 	position:relative;
-	left:706px;
-	bottom:202px;
-	width:50%;
-	border-radius: 5px;
+	width:36%;
+	margin:0.5%;
+	border-radius:0.5%;
     background-clip: content-box;
     background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
-    padding: 20px;
+    padding:0.9%;
+}
+
+.desc-table{
+	position:relative;
+	width:36%;
+	margin-top:0.6em;
+	border-radius: 0.5%;
+    background-clip: content-box;
+    background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
+    padding: 1%;
 }
 
 .reg-table{
 	text-align:center;
 	width:80%;
 	margin:auto;
-    border-radius: 5px;
+    border-radius: 0.6%;
     background-clip: content-box;
     background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
-    padding: 20px;
+    padding: 1em;
 }
 
 .auction-name{
-	position:relative;
-	left:100px;
-	bottom:-82px;
+	text-align:center; 
 	font-family: "Georgia";
 	font-weight: bold;
-	font-size: 120%;
+	font-size: 130%;
 }
 
 .menubar{
@@ -105,25 +118,26 @@ cursor: pointer;
 }
 
 .big-logo-center{
-	width:400px;
-	height:300px;
+	width:15%;
+	height:250%;
 	display: block;
     margin: auto;
     cursor: pointer;
 }
 
 .tiny-logo-left{
-	width:100px;
-	height:75px;
-	right:50px;
+	width:5.5%;
+	height:70%;
+	right:4%;
 	position:relative;
 	vertical-align: middle;
 }
 
 .small-logo-left{
-	width:200px;
-	height:150px;
-	vertical-align: middle;
+	width:8%;
+	height:90%;
+    vertical-align: middle;
+
 }
 
 .menubar a:hover{
@@ -144,10 +158,9 @@ cursor: pointer;
 
 #view-map{
 	position:relative;
-    width:31%;
+	margin:0.6em;
+    width:480px;
     height:300px;
-    left:100px;
-	bottom:500px;
 	background-color: grey;
 }
 
@@ -205,6 +218,16 @@ cursor: pointer;
     box-sizing: border-box;
 }
 
+.bid-input{
+	width:50%;
+	padding: 10px 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 
 .select-search{
 	text-align: center;
@@ -250,9 +273,17 @@ cursor: pointer;
 }
 
 #username_check_button{
-	position:absolute;
-	top:387px;
-  	display:inline-block;
+	margin-left:0.5%;
+	vertical-align:middle;
+  	background-color: orange;
+    color: white;
+    padding:0.7% 0.9%;
+    border: none;
+    border-radius: 5%;
+    cursor: pointer;
+}
+
+#orange_button{
   	background-color: orange;
     color: white;
     padding: 10px 20px;
@@ -261,9 +292,17 @@ cursor: pointer;
     cursor: pointer;
 }
 
-#username_check_result{
+#pop-up-message{
 	font-family: "Georgia";
-	
+	color:red;
+}
+
+#success-message{
+	font-family: "Georgia";
+	font-weight: bold;
+	color:green;
+	position:relative;
+	left:5%;
 }
 
 .button-search:hover{

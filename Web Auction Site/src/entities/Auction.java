@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="Auction")
 @NamedQuery(name="Auction.findAll", query="SELECT a FROM Auction a")
+
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -74,6 +75,7 @@ public class Auction implements Serializable {
 
 	//bi-directional many-to-one association to User_bid_Auction
 	@OneToMany(mappedBy="auction")
+	@OrderBy("price DESC")
 	private List<User_bid_Auction> userBidAuctions;
 
 	public Auction() {

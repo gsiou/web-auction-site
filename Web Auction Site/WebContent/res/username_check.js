@@ -6,7 +6,7 @@ $(document).ready(function() {
   
     $('#username_check_button').click(function(){
         if($('#Username').val().length < minimum_length){  
-            $('#username_check_result').html(length_error);  
+            $('#pop-up-message').html(length_error);  
         }else{
         	var username=$('#Username').val();
         	var object = {username:username};
@@ -27,5 +27,6 @@ $(document).ready(function() {
         	    }
         	 });
         }
+        $( "#pop-up-message" ).fadeIn(1).fadeOut(4000,0, function() {});
     });
 });
