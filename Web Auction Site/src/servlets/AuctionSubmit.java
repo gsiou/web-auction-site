@@ -302,7 +302,7 @@ public class AuctionSubmit extends HttpServlet {
 	public void forwardMessage(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
 		RequestDispatcher disp;
 		request.setAttribute("message", message);
-		disp = getServletContext().getRequestDispatcher("AuctionSubmit");
+		disp = getServletContext().getRequestDispatcher("/auction_submit.jsp");
 		disp.forward(request, response);
 	}
 }
