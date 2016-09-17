@@ -15,15 +15,30 @@
 	</header>
 	<div style="text-align: center">
 		<h3>${param.message}</h3>
-		<button id="btn-activate" class="button-register">Manage Users</button>
+		<button id="btn-activate" class="button-register">Hide/Show Users</button>
 	</div>
 	<div class="reg-table" id="useractivate">
 		<h2>Admin Panel</h2>
-		<button id="toggle-inactive">Toggle Not Activated</button>
+		<c:choose>
+			<c:when test="${userType == 'all'}">
+				<a href="Admin?page=${currentPage}&type=unactivated">Show Only Not Activated</a>
+			</c:when>
+			<c:otherwise>
+				<a href="Admin?page=${currentPage}&type=all">Show All</a>
+			</c:otherwise>
+		</c:choose>
+		
+		<br>
+		<c:if test="${currentPage-1 >= 0}">
+			<a href="Admin?page=${currentPage-1}&type=${userType}">Prev</a>
+		</c:if>
+		<c:if test="${currentPage+1 < totalPages}">
+			<a href="Admin?page=${currentPage+1}&type=${userType}">Next</a>
+		</c:if>
 		<table class="user-table">
 			<tr><th>UserID</th><th>Access Level</th><th>Action</th></tr>
 			<c:forEach items="${userList}" var="user">
-				<tr class="${(user.access_lvl == 0) ? 'activated':'deactivated'}">
+				<tr>
 					<td>${user.userId}</td>
 					<td>${user.access_lvl}</td>
 					<c:choose>
@@ -49,6 +64,13 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<c:if test="${currentPage-1 >= 0}">
+			<a href="Admin?page=${currentPage-1}&type=${userType}">Prev</a>
+		</c:if>
+		<c:if test="${currentPage+1 < totalPages}">
+			<a href="Admin?page=${currentPage+1}&type=${userType}">Next</a>
+		</c:if>
+		
 	</div>
 	<div style="text-align: center">
 		<button id="btn-dataset" class="button-register">Upload Dataset XML</button>
@@ -63,8 +85,7 @@
 		</form>
 	</div>
 	<script>
-		// Start with both hidden
-		$("#useractivate").hide();
+		// Hide dataset import on startup
 		$("#datasetupload").hide();
 		
 		// Expand on clicd
@@ -76,12 +97,6 @@
 			$("#datasetupload").toggle(1000);
 			//$("#useractivate").toggle(1000);
 		})
-		$("#toggle-active").click(function(){
-			$(".activated").toggle();
-		});
-		$("#toggle-inactive").click(function(){
-			$(".deactivated").toggle();
-		});
 	</script>
 </body>
 </html>

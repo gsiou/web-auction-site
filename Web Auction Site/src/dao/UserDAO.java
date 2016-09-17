@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import entities.User;
 import utils.EntityManagerHelper;
@@ -50,5 +51,37 @@ public class UserDAO implements UserDAOI {
 	@Override public void update(User tempUser){
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		em.merge(tempUser);
+	}
+
+	@Override
+	public List<User> listUsersOfPage(int page, int entries_per_page) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<User> getUsers = em.createNamedQuery("User.findAll", User.class);
+		getUsers.setFirstResult(page * entries_per_page);
+		getUsers.setMaxResults(entries_per_page);
+		return getUsers.getResultList();
+	}
+
+	@Override
+	public List<User> listUnactivatedUsersOfPage(int page, int entries_per_page) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<User> getUsers = em.createNamedQuery("User.findUnactivated", User.class);
+		getUsers.setFirstResult(page * entries_per_page);
+		getUsers.setMaxResults(entries_per_page);
+		return getUsers.getResultList();
+	}
+
+	@Override
+	public long userCount() {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		Query countUsers = em.createNamedQuery("User.countAll");
+		return ((Number) countUsers.getSingleResult()).intValue();
+	}
+
+	@Override
+	public long unactivatedUserCount() {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		Query countUsers = em.createNamedQuery("User.countUnactivated");
+		return ((Number) countUsers.getSingleResult()).intValue();
 	}
 }

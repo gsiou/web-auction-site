@@ -46,7 +46,7 @@ import entities.User;
 @MultipartConfig
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private static final int usersPerPage = 50;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -62,9 +62,51 @@ public class AdminServlet extends HttpServlet {
 		RequestDispatcher disp;
 		if(request.getSession().getAttribute("userID") != null && 
 				(int) request.getSession().getAttribute("access") == 100){
-			// Gather user list.
+			
+			// Type indicates whether we bring all users or unactivated only.
+			// If user request does not specify type, default is all
+			String type = request.getParameter("type");
 			UserDAOI dao = new UserDAO();
-			List<User> userList = dao.list();
+			if(type == null || (!type.equals("all") && !type.equals("unactivated"))){
+				type = "all";
+			}
+			
+			// Find total pages per type.
+			int max_pages;
+			if(type.equals("all")){
+				max_pages = (int) Math.ceil(dao.userCount() / usersPerPage);
+			}
+			else{
+				max_pages = (int) Math.ceil(dao.unactivatedUserCount() / usersPerPage);
+			}
+			
+			// If user did not request a page, default to the 1st (0 indexed).
+			int page = 0;
+			if(request.getParameter("page") != null){
+				page = Integer.parseInt(request.getParameter("page"));
+			}
+			
+			// If user requests negative page, he gets the 1st.
+			if(page < 0){
+				page = 0;
+			}
+			
+			// If user requests page > than max, get the last.
+			if(page > max_pages - 1){
+				page = max_pages - 1;
+			}
+			
+			List<User> userList = null;
+			if(type.equals("all")){
+				userList = dao.listUsersOfPage(page, usersPerPage);
+			}
+			else{
+				userList = dao.listUnactivatedUsersOfPage(page, usersPerPage);
+			}
+			
+			request.setAttribute("currentPage", page);
+			request.setAttribute("totalPages", max_pages);
+			request.setAttribute("userType", type);
 			request.setAttribute("userList", userList);
 			disp = getServletContext().getRequestDispatcher("/admin.jsp");
 			disp.forward(request, response);
@@ -134,7 +176,15 @@ public class AdminServlet extends HttpServlet {
 			message = "Invalid data";
 		}
 		if(success){
-			response.sendRedirect("Admin");
+			// We dont want the page to change so we send admin where he/she was.
+			String redir_url = "Admin?";
+			if(request.getParameter("page") != null){
+				redir_url += "page=" + request.getParameter("page"); // add page parameter
+			}
+			if(request.getParameter("type") != null){
+				redir_url += "&type=" + request.getParameter("type"); // add type parameter
+			}
+			response.sendRedirect(redir_url);
 		}
 		else{
 			RequestDispatcher disp;
