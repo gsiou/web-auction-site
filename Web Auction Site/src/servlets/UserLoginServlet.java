@@ -33,7 +33,14 @@ public class UserLoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher disp = getServletContext().getRequestDispatcher("/login.jsp");
+		RequestDispatcher disp;
+		if(request.getSession().getAttribute("userID") != null){
+			// User is already logged in, prevent him from double-logging.
+			disp = getServletContext().getRequestDispatcher("/already_logged.jsp");
+		}
+		else{
+			disp = getServletContext().getRequestDispatcher("/login.jsp");
+		}
 		disp.forward(request, response);
 	}
 

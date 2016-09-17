@@ -39,8 +39,14 @@ public class UserRegistrationServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doPost(request, response);
-		RequestDispatcher disp = getServletContext().getRequestDispatcher("/register.jsp");
+		RequestDispatcher disp;
+		if(request.getSession().getAttribute("userID") != null){
+			// User is already logged in, he can't register another account.
+			disp = getServletContext().getRequestDispatcher("/already_logged.jsp");
+		}
+		else{
+			disp = getServletContext().getRequestDispatcher("/register.jsp");
+		}
 		disp.forward(request, response);
 	}
 
