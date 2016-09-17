@@ -26,7 +26,8 @@ import utils.HelperFunctions;
 @WebServlet("/Registration")
 public class UserRegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private static final int minPassword = 4;
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -116,9 +117,11 @@ public class UserRegistrationServlet extends HttpServlet {
 			else{
 				// We have what we need.
 				
-				if(password1.length() == 0){
+				if(password1.length() < minPassword){
 					// We cannot accept empty passwords.
-					msg = "You cannot use an empty password.";
+					msg = "Password must be at least " + 
+							minPassword +
+							" characters long.";
 				}
 				else if(!password1.equals(password2)){
 					// Passwords must match.

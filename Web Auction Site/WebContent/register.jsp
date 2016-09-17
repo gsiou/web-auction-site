@@ -5,8 +5,10 @@
 	<link rel="stylesheet" type="text/css" href="res/styles.css">
     <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
     <script type="text/javascript" src="res/maps.js"> </script> 
-	<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="res/username_check.js"> </script> 
+	<script src="jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="res/username_check.js"> </script>
+    <script type="text/javascript" src="res/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="res/registration_validate.js"></script>
 	<title>Register|Hammer Deals</title>
 		
 </head>
@@ -16,7 +18,7 @@
 	</a>
 	<div class="reg-table">
 		<header class="Gtext" >Register</header>
-		<form action="Registration" method="post">
+		<form action="Registration" method="post" id="regform">
 			<h3 style="color: red">${message}</h3>
 			<div id='pop-up-message'></div>
 			<input type="hidden" id="Action" name="Action" value="submit">
