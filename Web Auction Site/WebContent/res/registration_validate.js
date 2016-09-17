@@ -13,7 +13,7 @@ $(document).ready(function () {
             Password_conf: {
             	required: true,
             	minlength: 4,
-            	equalTo: "Password"
+            	equalTo: "#password"
             },
             Email: {
             	required: true,

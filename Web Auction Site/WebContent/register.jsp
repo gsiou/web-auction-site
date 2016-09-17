@@ -25,7 +25,7 @@
 			<input type="text" id="Username" name="Username" class="textbox-register"
 				placeholder="Username"><input type='button' id='username_check_button' value='Check Availability'>
 				<br> <input type="password"
-				name="Password" class="textbox-register" placeholder="Password"><br>
+				name="Password" id="password" class="textbox-register" placeholder="Password"><br>
 			<input type="password" name="Password_conf" class="textbox-register"
 				placeholder="Confirm Password"><br> <input type="email"
 				name="Email" class="textbox-register" placeholder="Email"><br>
