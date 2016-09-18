@@ -41,8 +41,8 @@
 				<script async defer
 				    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeUHWIAbJ6ik1KM6PcqEHPM0uCWYF1cfM&callback=initMap">
 				</script>
-			<input type="text" name="Latitude" class="textbox-register" placeholder="Latitude" id="lat" />
-			<input type="text" name="Longitude" class="textbox-register" placeholder="Longitude" id="lng" />
+			<input type="hidden" name="Latitude" id="lat" />
+			<input type="hidden" name="Longitude" id="lng" />
 			
 			<input type="submit" class="button-register" value="Register">
 		</form>

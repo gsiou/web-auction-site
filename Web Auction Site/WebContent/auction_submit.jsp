@@ -125,8 +125,8 @@
 			<script async defer
 				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeUHWIAbJ6ik1KM6PcqEHPM0uCWYF1cfM&callback=initMap">
 			</script>
-			<input type="text" name="latitude" class="textbox-register" placeholder="Latitude" id="lat" />
-			<input type="text" name="longitude" class="textbox-register" placeholder="Longitude" id="lng" />
+			<input type="hidden" name="latitude" id="lat" />
+			<input type="hidden" name="longitude" id="lng" />
 			<input type="submit" class="button-register" value="Submit">
 		</form>
 	</div>
