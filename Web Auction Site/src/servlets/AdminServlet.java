@@ -46,7 +46,7 @@ import entities.User;
 @MultipartConfig
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private static final int usersPerPage = 50;
+    private static final int usersPerPage = 20;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -74,10 +74,10 @@ public class AdminServlet extends HttpServlet {
 			// Find total pages per type.
 			int max_pages;
 			if(type.equals("all")){
-				max_pages = (int) Math.ceil(dao.userCount() / usersPerPage);
+				max_pages = (int) Math.ceil((float) dao.userCount() / usersPerPage);
 			}
 			else{
-				max_pages = (int) Math.ceil(dao.unactivatedUserCount() / usersPerPage);
+				max_pages = (int) Math.ceil((float) dao.unactivatedUserCount() / usersPerPage);
 			}
 			
 			// If user did not request a page, default to the 1st (0 indexed).

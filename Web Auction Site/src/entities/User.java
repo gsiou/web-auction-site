@@ -15,7 +15,7 @@ import java.util.List;
 	@NamedQuery(name="User.findAll", query="SELECT u FROM User u"),
 	@NamedQuery(name="User.findUnactivated", query="SELECT u FROM User u WHERE u.access_lvl = 0"),
 	@NamedQuery(name="User.countAll", query="SELECT COUNT(u) FROM User u"),
-	@NamedQuery(name="User.countUnactivated", query="SELECT COUNT(u) FROM User u")
+	@NamedQuery(name="User.countUnactivated", query="SELECT COUNT(u) FROM User u WHERE u.access_lvl = 0")
 })
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -37,15 +40,18 @@
 		</c:if>
 		<table class="user-table">
 			<tr><th>UserID</th><th>Access Level</th><th>Action</th></tr>
-			<c:forEach items="${userList}" var="user">
+			<c:forEach items="${userList}" var="user" varStatus="count">
 				<tr>
-					<td>${user.userId}</td>
+					<td><a href="javascript:void(0);" onclick="details('${count.index}')">
+							<c:out value="${user.userId}"/>
+						</a>
+					</td>
 					<td>${user.access_lvl}</td>
 					<c:choose>
 						<c:when test="${user.access_lvl == 0}">
 							<td>
 								<form action="" method="post">
-									<input type="hidden" name="userid" value="${user.userId}">
+									<input type="hidden" name="userid" value="${fn:escapeXml(user.userId)}">
 									<input type="hidden" name="action" value="activate">
 									<input type="submit" value="Activate User">
 								</form>
@@ -54,13 +60,26 @@
 						<c:otherwise>
 							<td>
 								<form action="" method="post">
-									<input type="hidden" name="userid" value="${user.userId}">
+									<input type="hidden" name="userid" value="${fn:escapeXml(user.userId)}">
 									<input type="hidden" name="action" value="deactivate">
 									<input type="submit" value="Deactivate User">
 								</form>
 							</td>
 						</c:otherwise>
 					</c:choose>
+				</tr>
+				<tr class="details" id="details${count.index}">
+					<td>
+						<div>
+							Trn: <c:out value="${user.trn}"/> <br>
+							Phone: <c:out value="${user.phone}"/> <br>
+							Address: <c:out value="${user.address}"/> <br>
+							Country: <c:out value="${user.country}"/> <br>
+							Email: <c:out value="${user.email}"/> <br>
+							Bid Rating: <c:out value="${user.bid_rating}"/> <br>
+							Sell Rating: <c:out value="${user.sell_rating}"/> <br>
+						</div>
+					</td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -88,6 +107,9 @@
 		// Hide dataset import on startup
 		$("#datasetupload").hide();
 		
+		// Hide user details on startup
+		$(".details").hide();
+		
 		// Expand on clicd
 		$("#btn-activate").click(function() {
 			//$("#datasetupload").toggle(1000);
@@ -97,6 +119,11 @@
 			$("#datasetupload").toggle(1000);
 			//$("#useractivate").toggle(1000);
 		})
+		
+		var details = function (userindex){
+			$(".details").hide(10);
+			$("#details" + userindex).toggle(1000);
+		}
 	</script>
 </body>
 </html>
