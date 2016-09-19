@@ -13,4 +13,6 @@ public interface CategoryDAOI {
 	public boolean addAuctionTo(Auction auction, String category);
 	
 	public List<Category> listChildren(String parent);
+	
+	public List<Category> findAll();
 }

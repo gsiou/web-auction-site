@@ -100,7 +100,7 @@ cursor: pointer;
     border-bottom: 1px solid grey;
 }
 
-.menubar a{
+.menubar a, .link1{
     color: orange;
     font-family: serif;
     padding-right: 1.0%;
@@ -109,6 +109,10 @@ cursor: pointer;
     padding-bottom: 0.4%;
     text-decoration: none;
     cursor: pointer;
+}
+
+.link1{
+	background-color: white;
 }
 
 .Gtext{
@@ -140,11 +144,11 @@ cursor: pointer;
 
 }
 
-.menubar a:hover{
+.menubar a:hover, .link1:hover{
     border-bottom: 3px solid orange;
 }
 
-.menubar a:visited{
+.menubar a:visited, .link1:visited{
     text-decoration: none;
 }
 

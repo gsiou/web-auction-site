@@ -54,4 +54,12 @@ public class CategoryDAO implements CategoryDAOI{
 		List<Category> category_list = getChildrenQ.getResultList();
 		return category_list;
 	}
+
+	@Override
+	public List<Category> findAll() {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Category> getAll;
+		getAll = em.createNamedQuery("Category.findAll", Category.class);
+		return getAll.getResultList();
+	}
 }
