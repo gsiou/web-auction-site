@@ -14,31 +14,31 @@ import java.util.Date;
 @NamedQueries({
 	@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m"),
 	@NamedQuery(name="Message.getSentOf", 
-		query="SELECT m FROM Message m WHERE m.user_from = :user AND m.show_sent = TRUE ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.user_from = :user AND m.showSent = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.getReceivedOf",
-		query="SELECT m FROM Message m WHERE m.user_to = :user AND m.show_received = TRUE ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.countSent",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user AND m.show_sent = TRUE"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user AND m.showSent = TRUE"),
 	@NamedQuery(name="Message.countReceived",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user AND m.show_received = TRUE"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE"),
 })
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id 
+	
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="idMessages")
 	private int id;
 
 	@Column(name="Is_read")
 	private boolean is_read;
-	
-	@Column(name="show_sent")
-	private boolean show_sent;
 
 	@Column(name="show_received")
-	private boolean show_received;
-	
+	private boolean showReceived;
+
+	@Column(name="show_sent")
+	private boolean showSent;
+
 	@Lob
 	@Column(name="Subject")
 	private String subject;
@@ -68,8 +68,8 @@ public class Message implements Serializable {
 		return this.id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int idMessages) {
+		this.id = idMessages;
 	}
 
 	public boolean getIs_read() {
@@ -79,21 +79,21 @@ public class Message implements Serializable {
 	public void setIs_read(boolean is_read) {
 		this.is_read = is_read;
 	}
-	
-	public boolean getShow_sent() {
-		return this.show_sent;
+
+	public boolean getShowReceived() {
+		return this.showReceived;
 	}
-	
-	public void setShow_sent(boolean show_sent) {
-		this.show_sent = show_sent;
+
+	public void setShowReceived(boolean showReceived) {
+		this.showReceived = showReceived;
 	}
-	
-	public boolean getShow_received() {
-		return this.show_received;
+
+	public boolean getShowSent() {
+		return this.showSent;
 	}
-	
-	public void setShow_received(boolean show_received) {
-		this.show_received = show_received;
+
+	public void setShowSent(boolean showSent) {
+		this.showSent = showSent;
 	}
 
 	public String getSubject() {
@@ -120,20 +120,20 @@ public class Message implements Serializable {
 		this.time = time;
 	}
 
-	public User getUser_from() {
+	public User getUserFrom() {
 		return this.user_from;
 	}
 
-	public void setUser_from(User user_from) {
-		this.user_from = user_from;
+	public void setUserFrom(User user1) {
+		this.user_from = user1;
 	}
 
-	public User getUser_to() {
+	public User getUserTo() {
 		return this.user_to;
 	}
 
-	public void setUser_to(User user_to) {
-		this.user_to = user_to;
+	public void setUserTo(User user2) {
+		this.user_to = user2;
 	}
 
 }

@@ -117,13 +117,12 @@ public class MessageServlet extends HttpServlet {
 					// Create message.
 					Message msg = new Message();
 					msg.setIs_read(false);
-					msg.setShow_received(true);
-					msg.setShow_sent(true);
-					msg.setUser_to(recipient);
+					msg.setShowReceived(true);
+					msg.setShowSent(true);
 					msg.setSubject(subject);
 					msg.setText(text);
-					msg.setUser_from(sender);
-					msg.setUser_to(recipient);
+					msg.setUserFrom(sender);
+					msg.setUserTo(recipient);
 					msg.setTime(new Date());
 					System.out.println("Message: " + text);
 					MessageDAOI msgdao = new MessageDAO();
@@ -179,10 +178,10 @@ public class MessageServlet extends HttpServlet {
 				for(Message m : msg_list){
 					msg = new JsonObject();
 					if(type.equals("sent")){
-						msg.addProperty("user", m.getUser_to().getUserId());
+						msg.addProperty("user", m.getUserTo().getUserId());
 					}
 					else{
-						msg.addProperty("user", m.getUser_from().getUserId());
+						msg.addProperty("user", m.getUserFrom().getUserId());
 					}
 					msg.addProperty("subject", m.getSubject());
 					msg.addProperty("date", sdf.format(m.getTime()));

@@ -13,11 +13,10 @@ import java.util.List;
 @Entity
 @Table(name="Auction")
 @NamedQuery(name="Auction.findAll", query="SELECT a FROM Auction a")
-
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="AuctionId")
 	private int auctionId;
@@ -27,6 +26,10 @@ public class Auction implements Serializable {
 
 	@Column(name="Country")
 	private String country;
+
+	@JoinColumn(name="Creator")
+	@ManyToOne
+	private User creator;
 
 	@Column(name="Current_Bid")
 	private float current_Bid;
@@ -61,6 +64,11 @@ public class Auction implements Serializable {
 	@Column(name="Starting_Bid")
 	private float starting_Bid;
 
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="Buyout_user")
+	private User user;
+
 	//bi-directional many-to-many association to Category
 	@ManyToMany(mappedBy="auctions")
 	private List<Category> categories;
@@ -69,13 +77,8 @@ public class Auction implements Serializable {
 	@ManyToMany(mappedBy="auctions")
 	private List<Image> images;
 
-	//bi-directional many-to-many association to User
-	@ManyToMany(mappedBy="auctions")
-	private List<User> users;
-
 	//bi-directional many-to-one association to User_bid_Auction
 	@OneToMany(mappedBy="auction")
-	@OrderBy("price DESC")
 	private List<User_bid_Auction> userBidAuctions;
 
 	public Auction() {
@@ -103,6 +106,14 @@ public class Auction implements Serializable {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public User getCreator() {
+		return this.creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 
 	public float getCurrent_Bid() {
@@ -185,6 +196,14 @@ public class Auction implements Serializable {
 		this.starting_Bid = starting_Bid;
 	}
 
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public List<Category> getCategories() {
 		return this.categories;
 	}
@@ -199,14 +218,6 @@ public class Auction implements Serializable {
 
 	public void setImages(List<Image> images) {
 		this.images = images;
-	}
-
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
 	}
 
 	public List<User_bid_Auction> getUserBidAuctions() {

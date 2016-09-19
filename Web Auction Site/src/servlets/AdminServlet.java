@@ -297,12 +297,10 @@ public class AdminServlet extends HttpServlet {
 					auc.setStart_time(sdf.parse(e.getElementsByTagName("Started").item(0).getTextContent()));
 					auc.setExpiration_time(sdf.parse(e.getElementsByTagName("Ends").item(0).getTextContent()));
 					
-					List<User> users = new ArrayList<>();
 					String tempid;
 					tempid = ((Element) e.getElementsByTagName("Seller").item(0)).getAttribute("UserID");
 					User tempuser = udao.findByID(tempid);
-					users.add(tempuser);
-					auc.setUsers(users);
+					auc.setCreator(tempuser);
 					tempuser.getAuctions().add(auc);
 					
 					String lat = ((Element)e.getElementsByTagName("Location").item(0)).getAttribute("Latitude");

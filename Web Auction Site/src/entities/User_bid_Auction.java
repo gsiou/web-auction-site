@@ -18,9 +18,6 @@ public class User_bid_Auction implements Serializable {
 	@EmbeddedId
 	private User_bid_AuctionPK id;
 
-	@Column(name="Price")
-	private float price;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="Time")
 	private Date time;
@@ -44,14 +41,6 @@ public class User_bid_Auction implements Serializable {
 
 	public void setId(User_bid_AuctionPK id) {
 		this.id = id;
-	}
-
-	public float getPrice() {
-		return this.price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
 	}
 
 	public Date getTime() {
@@ -78,4 +67,11 @@ public class User_bid_Auction implements Serializable {
 		this.user = user;
 	}
 
+	public void setPrice(float price){
+		this.id.setPrice(price);
+	}
+	
+	public float getPrice(){
+		return this.id.getPrice();
+	}
 }

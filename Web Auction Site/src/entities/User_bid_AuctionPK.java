@@ -18,6 +18,9 @@ public class User_bid_AuctionPK implements Serializable {
 	@Column(name="Auction_AuctionId", insertable=false, updatable=false)
 	private int auction_AuctionId;
 
+	@Column(name="Price")
+	private float price;
+
 	public User_bid_AuctionPK() {
 	}
 	public String getUser_UserId() {
@@ -32,6 +35,12 @@ public class User_bid_AuctionPK implements Serializable {
 	public void setAuction_AuctionId(int auction_AuctionId) {
 		this.auction_AuctionId = auction_AuctionId;
 	}
+	public float getPrice() {
+		return this.price;
+	}
+	public void setPrice(float price) {
+		this.price = price;
+	}
 
 	public boolean equals(Object other) {
 		if (this == other) {
@@ -43,7 +52,8 @@ public class User_bid_AuctionPK implements Serializable {
 		User_bid_AuctionPK castOther = (User_bid_AuctionPK)other;
 		return 
 			this.user_UserId.equals(castOther.user_UserId)
-			&& (this.auction_AuctionId == castOther.auction_AuctionId);
+			&& (this.auction_AuctionId == castOther.auction_AuctionId)
+			&& (this.price == castOther.price);
 	}
 
 	public int hashCode() {
@@ -51,6 +61,7 @@ public class User_bid_AuctionPK implements Serializable {
 		int hash = 17;
 		hash = hash * prime + this.user_UserId.hashCode();
 		hash = hash * prime + this.auction_AuctionId;
+		hash = hash * prime + java.lang.Float.floatToIntBits(this.price);
 		
 		return hash;
 	}

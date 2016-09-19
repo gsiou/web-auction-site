@@ -215,9 +215,7 @@ public class AuctionSubmit extends HttpServlet {
 				// Add auction to seller
 				user = udao.findByID(request.getSession().getAttribute("userID").toString());
 				user.getAuctions().add(auc);
-				ArrayList<User> users_list = new ArrayList<>();
-				users_list.add(user);
-				auc.setUsers(users_list);
+				auc.setCreator(user);
 				
 				aucdao.create(auc);
 				

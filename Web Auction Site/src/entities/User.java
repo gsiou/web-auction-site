@@ -57,6 +57,10 @@ public class User implements Serializable {
 	@Column(name="Trn")
 	private String trn;
 
+	//bi-directional many-to-one association to Auction
+	@OneToMany(mappedBy="user")
+	private List<Auction> auctions;
+
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="user_from")
 	private List<Message> messages1;
@@ -64,19 +68,6 @@ public class User implements Serializable {
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="user_to")
 	private List<Message> messages2;
-
-	//bi-directional many-to-many association to Auction
-	@ManyToMany
-	@JoinTable(
-		name="User_has_Auction"
-		, joinColumns={
-			@JoinColumn(name="User_UserId")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="Auction_AuctionId")
-			}
-		)
-	private List<Auction> auctions;
 
 	//bi-directional many-to-one association to User_bid_Auction
 	@OneToMany(mappedBy="user")
@@ -181,6 +172,28 @@ public class User implements Serializable {
 		this.trn = trn;
 	}
 
+	public List<Auction> getAuctions() {
+		return this.auctions;
+	}
+
+	public void setAuctions(List<Auction> auctions) {
+		this.auctions = auctions;
+	}
+
+	public Auction addAuction(Auction auction) {
+		getAuctions().add(auction);
+		auction.setUser(this);
+
+		return auction;
+	}
+
+	public Auction removeAuction(Auction auction) {
+		getAuctions().remove(auction);
+		auction.setUser(null);
+
+		return auction;
+	}
+
 	public List<Message> getMessages1() {
 		return this.messages1;
 	}
@@ -191,14 +204,14 @@ public class User implements Serializable {
 
 	public Message addMessages1(Message messages1) {
 		getMessages1().add(messages1);
-		messages1.setUser_from(this);
+		messages1.setUserFrom(this);
 
 		return messages1;
 	}
 
 	public Message removeMessages1(Message messages1) {
 		getMessages1().remove(messages1);
-		messages1.setUser_from(null);
+		messages1.setUserFrom(null);
 
 		return messages1;
 	}
@@ -213,24 +226,16 @@ public class User implements Serializable {
 
 	public Message addMessages2(Message messages2) {
 		getMessages2().add(messages2);
-		messages2.setUser_to(this);
+		messages2.setUserTo(this);
 
 		return messages2;
 	}
 
 	public Message removeMessages2(Message messages2) {
 		getMessages2().remove(messages2);
-		messages2.setUser_to(null);
+		messages2.setUserTo(null);
 
 		return messages2;
-	}
-
-	public List<Auction> getAuctions() {
-		return this.auctions;
-	}
-
-	public void setAuctions(List<Auction> auctions) {
-		this.auctions = auctions;
 	}
 
 	public List<User_bid_Auction> getUserBidAuctions() {
