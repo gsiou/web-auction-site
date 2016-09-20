@@ -45,13 +45,13 @@ function load_messages(type, page){
 				}).appendTo("#message-list-tbody");
 				$("<td/>", {
 					html: $("<span/>",{
-						class: item.read ? "read" : "unread",
+						//class: item.read ? "read" : "unread",
 						text: item.user
 					})
 				}).appendTo("#message-list-tbody");
 				$("<td/>", {
 					html: $("<span/>",{
-						class: item.read ? "read" : "unread",
+						//class: item.read ? "read" : "unread",
 						text: item.date
 					})
 				}).appendTo("#message-list-tbody");
