@@ -43,6 +43,18 @@ function load_messages(type, page){
 						text: item.subject
 					})
 				}).appendTo("#message-list-tbody");
+				$("<td/>", {
+					html: $("<span/>",{
+						class: item.read ? "read" : "unread",
+						text: item.user
+					})
+				}).appendTo("#message-list-tbody");
+				$("<td/>", {
+					html: $("<span/>",{
+						class: item.read ? "read" : "unread",
+						text: item.date
+					})
+				}).appendTo("#message-list-tbody");
 				$("<tr/>",{
 					html: $("<div/>",{
 						text: item.body,
