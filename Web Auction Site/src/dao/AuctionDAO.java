@@ -1,9 +1,12 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import entities.Auction;
-import entities.User;
+import entities.Category;
 import utils.EntityManagerHelper;
 
 public class AuctionDAO implements AuctionDAOI{
@@ -26,6 +29,50 @@ public class AuctionDAO implements AuctionDAOI{
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		Auction auction = em.find(Auction.class, id); 
         return auction;
+	}
+
+	@Override
+	public List<Auction> search(AuctionSearchOptions search_options) {
+		// Construct the query.
+		String query_str = "SELECT a FROM Auction a WHERE a.expiration_time >= :date";
+		if(search_options.hasCategory()){
+			query_str += " AND :category MEMBER OF a.categories";
+		}
+		if(search_options.hasDescription()){
+			query_str += " AND (a.description LIKE :description OR a.name LIKE :description)";
+		}
+		if(search_options.hasLocation()){
+			query_str += " AND a.location LIKE :location";
+		}
+		if(search_options.hasPrice()){
+			// TODO
+		}
+
+		// Fill in the parameters.
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createQuery(query_str, Auction.class);
+		searchQuery.setParameter("date", search_options.getMinDate());
+		if(search_options.hasCategory()){
+			CategoryDAOI cdao = new CategoryDAO();
+			Category category_obj = cdao.find(search_options.getCategory());
+			if(category_obj == null){ // Category does not exist, return nothing.
+				return null;
+			}
+			else{ // Category exists, add it to the query.
+				searchQuery.setParameter("category", category_obj);
+			}
+		}
+		if(search_options.hasDescription()){
+			searchQuery.setParameter("description", "%" + search_options.getDescription() + "%");
+		}
+		if(search_options.hasLocation()){
+			searchQuery.setParameter("location", search_options.getLocation());
+		}
+		if(search_options.hasPrice()){
+			// TODO
+		}
+		
+		return searchQuery.getResultList();
 	}
 	
 }
