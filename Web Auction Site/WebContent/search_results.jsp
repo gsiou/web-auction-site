@@ -8,39 +8,46 @@
 <jsp:include page="/common/common.jsp" />
 <title>Insert title here</title>
 <style>
-	.preview-img{
-		width:200px;
-		height:auto;
-	}
-	.search-table{
-		text-align: center;
-	}
+.preview-img {
+	width: 200px;
+	height: auto;
+}
+
+.search-table {
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+}
 </style>
 </head>
 <body>
 	<jsp:include page="/common/header_bar.jsp" />
-	<table class="search-table">
-		<tr>
-			<th>Name</th>
-			<th>Description</th>
-			<th>Location</th>
-			<th>Price</th>
-			<th>Image</th>
-		</tr>
-		<c:forEach items="${searchResults}" var="auction" varStatus="count">
+	<div class="reg-table">
+		<table class="search-table">
 			<tr>
-				<td><a
-					href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-						<c:out value="${auction.name}" />
-				</a></td>
-				<td><c:out value="${auction.description}"/></td>
-				<td><c:out value="${auction.location}"/></td>
-				<td></td>
-				<td>
-					<img class="preview-img" src="${pageContext.request.contextPath}/image/${auction.images[0].url}"/>
-				</td>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Location</th>
+				<th>Price</th>
+				<th>Image</th>
 			</tr>
-		</c:forEach>
-	</table>
+			<c:forEach items="${searchResults}" var="auction" varStatus="count">
+				<tr>
+					<td><a class="link1"
+						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
+							<c:out value="${auction.name}" />
+					</a></td>
+					<td><c:out value="${auction.description}" /></td>
+					<td><c:out value="${auction.location}" /></td>
+					<td></td>
+					<td><img class="preview-img"
+						src="${pageContext.request.contextPath}/image/${auction.images[0].url}" />
+					</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
 </body>
 </html>
