@@ -34,7 +34,6 @@
 		background-color: orange
 	}
 	#message-form{
-		display: none;
 		margin-left: auto;
 		margin-right: auto; 
 		
@@ -66,11 +65,11 @@
 		<button class="button-register" id="btn-show-send" >Send a message</button>
 		<div id="message-send">
 			<h4 id="result"></h4>
-			<form id="message-form">			 
+			<form id="message-form" ${empty requestScope.send_username ? "style='display:none'" : ""}">
 				Send To:
-				<br><input type="text" class="textbox-register" id="msg-to" value="${send-username}">
+				<br><input type="text" class="textbox-register" id="msg-to" value="${requestScope.send_username}">
 				<br>Subject:
-				<br><input type="text" class="textbox-register" id="msg-subject">	
+				<br><input type="text" class="textbox-register" id="msg-subject" value="${requestScope.subject}">
 				<br>Body:
 				<br><textarea class="textbox-register" cols="86" rows="20" id="msg-body"></textarea>
 				<button class="button-register">Send</button>

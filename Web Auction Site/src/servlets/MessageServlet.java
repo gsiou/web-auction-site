@@ -53,10 +53,11 @@ public class MessageServlet extends HttpServlet {
 		}
 		
 		if(request.getParameter("sendto") != null){
-			request.setAttribute("send-username", request.getParameter("sendto"));
+			request.setAttribute("send_username", request.getParameter("sendto"));
 		}
-		else{
-			request.setAttribute("send-username", "");
+		
+		if(request.getParameter("subject") != null){
+			request.setAttribute("subject", request.getParameter("subject"));
 		}
 		disp = request.getRequestDispatcher("/message_list.jsp");
 		disp.forward(request, response);

@@ -14,15 +14,18 @@ $(document).ready(function(){
 	
 	$("#btn-received").click(function(){
 		window.msg_type = "received";
+		$("#message-form").hide(1000);
 		load_messages(window.msg_type, window.current_page);
 	});
 	
 	$("#btn-sent").click(function(){
 		window.msg_type = "sent";
+		$("#message-form").hide(1000);
 		load_messages(window.msg_type, window.current_page);
 	});
 	
 	$("#btn-refresh").click(function(){
+		$("#message-form").hide(1000);
 		load_messages(window.msg_type, window.current_page)
 	});
 	
@@ -57,7 +60,7 @@ function load_messages(type, page){
 				$("<td/>", {
 					class: 'subject',
 					html: $("<a/>",{
-						href: "#",
+						href:"javascript:void(0)",
 						id: "message-link-" + item.id,
 						class: item.read ? "read" : "unread",
 						onclick: "show_msg(" + item.id + ")",
@@ -78,7 +81,7 @@ function load_messages(type, page){
 				}).appendTo("#message-list-tbody");
 				$("<tr/>",{
 					html: $("<div/>",{
-						text: item.body,
+						html: escape(item.body) + render_reply(item.user, item.subject) + "<hr>",
 						class: "message-body",
 						id: "message-body-" + item.id,
 					}),
@@ -89,6 +92,16 @@ function load_messages(type, page){
 		}
 			
 	});
+}
+
+function escape(htmlstr){
+	return $('<div/>').text(htmlstr).html() // Weird hack to escape html.
+}
+
+function render_reply(user, subject){
+	return " <a href='Messages?sendto=" +
+		user + "&subject=RE:" + subject +
+		"'>[Reply]</a>";
 }
 
 function show_msg(index){
