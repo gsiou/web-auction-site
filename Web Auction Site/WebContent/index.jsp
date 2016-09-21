@@ -4,25 +4,11 @@
 
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="res/styles.css">
-    <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
+  	<jsp:include page="/common/common.jsp" />
     <title>Web Auction Site by RobCo Industries</title>
-    <script src="jquery-3.1.0.min.js"></script>
   </head>
   <body class="page-background">
-    <header class="menubar">
-    	<c:choose>
-    		<c:when test="${sessionScope.userID == null}">
-      			<a href="Login">Login</a> |
-      			<a href="Registration">Register</a>
-      		</c:when>
-      		<c:otherwise>
-      			Logged in as <strong>${sessionScope.userID}</strong> |
-      			<a href="${pageContext.request.contextPath}/Messages">Messages()</a> |
-      			<a href="${pageContext.request.contextPath}/Logout">Log Out</a>
-      		</c:otherwise>
-      	</c:choose>
-    </header>
+	<jsp:include page="/common/header_bar.jsp" />
     <div id="search">
       <form>
       	<input type="hidden" name="action" value="search">

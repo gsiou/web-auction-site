@@ -216,5 +216,17 @@ public class MessageServlet extends HttpServlet {
 				msg.setIs_read(true);
 			}
 		}
+		else if(action.equals("count")){
+			String userid = request.getSession().getAttribute("userID").toString();
+			UserDAOI udao = new UserDAO();
+			User myuser = udao.findByID(userid); // Get logged in user.
+			MessageDAOI msgdao = new MessageDAO();
+			long msg_count = msgdao.getCountUnreadOf(myuser);
+			JsonObject reply = new JsonObject();
+			reply.addProperty("count", msg_count);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(reply.toString());
+		}
 	}
 }

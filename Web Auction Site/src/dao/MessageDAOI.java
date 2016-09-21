@@ -17,4 +17,6 @@ public interface MessageDAOI {
 	public long getCountSent(User user);
 	
 	public long getCountReceived(User user);
+	
+	public long getCountUnreadOf(User user);
 }

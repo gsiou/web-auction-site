@@ -62,4 +62,12 @@ public class MessageDAO implements MessageDAOI{
 		return ((Number) getCountQ.getSingleResult()).longValue();
 	}
 
+	@Override
+	public long getCountUnreadOf(User user) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		Query getUnreadMsgQ = em.createNamedQuery("Message.getUnreadOf");
+		getUnreadMsgQ.setParameter("user", user);
+		return ((Number) getUnreadMsgQ.getSingleResult()).longValue();
+	}
+
 }

@@ -21,6 +21,8 @@ import java.util.Date;
 		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user AND m.showSent = TRUE"),
 	@NamedQuery(name="Message.countReceived",
 		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE"),
+	@NamedQuery(name="Message.getUnreadOf",
+	query="SELECT COUNT(m) FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE AND m.is_read = FALSE"),
 })
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
