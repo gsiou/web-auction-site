@@ -1,25 +1,46 @@
 window.current_page = 1;
 window.total_pages = 1;
-window.msg_type = "received";
+window.msg_type = "received"; //Valid types: received, sent
 
 $(document).ready(function(){
 	$("#btn-show-send").click(function(){
 		$("#message-form").toggle(1000);
 	});
+	
 	$("#message-form").submit(function(e){
 		send_message();
 		e.preventDefault();
 	});
-	load_messages(window.msg_type, window.current_page);
+	
+	$("#btn-received").click(function(){
+		window.msg_type = "received";
+		load_messages(window.msg_type, window.current_page);
+	});
+	
+	$("#btn-sent").click(function(){
+		window.msg_type = "sent";
+		load_messages(window.msg_type, window.current_page);
+	});
+	
 	$("#btn-refresh").click(function(){
 		load_messages(window.msg_type, window.current_page)
 	});
+	
+	load_messages(window.msg_type, window.current_page);
 });
 
-/*
- * type is "incoming" or "sent"
- */
 function load_messages(type, page){
+	// Style the buttons depending on what state we are.
+	if(window.msg_type == "received"){
+		$("#btn-received").addClass("selected-tab");
+		$("#btn-sent").removeClass("selected-tab");
+	}
+	else{
+		$("#btn-sent").addClass("selected-tab");
+		$("#btn-received").removeClass("selected-tab");
+	}
+	
+	// Request messages.
 	send_data = {
 		type: type,
 		page: page-1,

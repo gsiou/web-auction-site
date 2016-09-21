@@ -77,7 +77,6 @@ public class MessageServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		
 		if(action == null){
-			System.out.println("Null action");
 			return ;
 		}
 		
@@ -124,7 +123,6 @@ public class MessageServlet extends HttpServlet {
 					msg.setUserFrom(sender);
 					msg.setUserTo(recipient);
 					msg.setTime(new Date());
-					System.out.println("Message: " + text);
 					MessageDAOI msgdao = new MessageDAO();
 					msgdao.create(msg);
 					success = true;
@@ -185,9 +183,17 @@ public class MessageServlet extends HttpServlet {
 					}
 					msg.addProperty("subject", m.getSubject());
 					msg.addProperty("date", sdf.format(m.getTime()));
-					msg.addProperty("read", m.getIs_read());
 					msg.addProperty("body", m.getText());
 					msg.addProperty("id", m.getId());
+					if(myuser.getUserId().equals(m.getUserTo().getUserId())){
+						// In this case we care about read status
+						msg.addProperty("read", m.getIs_read());
+					}
+					else{
+						// When user is the one that sent the message
+						// he/she does not care whether it is read or not.
+						msg.addProperty("read", true);
+					}
 					msg_arr.add(msg);
 				}
 				
@@ -209,10 +215,16 @@ public class MessageServlet extends HttpServlet {
 		}
 		else if(action.equals("read")){
 			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
-			int message_id = (int) data.get("message_id").getAsInt();
+			int message_id = (int) data.get("message_id").getAsInt();	
+			
 			MessageDAOI msgdao = new MessageDAO();
 			Message msg = msgdao.find(message_id);
-			if(msg != null) {
+			
+			String userid = request.getSession().getAttribute("userID").toString();
+			UserDAOI udao = new UserDAO();
+			User myuser = udao.findByID(userid); // Get logged in user.
+			
+			if(msg != null && msg.getUserTo().getUserId().equals(myuser.getUserId())) {
 				msg.setIs_read(true);
 			}
 		}

@@ -48,6 +48,10 @@
 	.read{
 		font-weight: normal;
 	}
+	.selected-tab{
+		font-weight: bold;
+		border-bottom: 3px solid orange;
+	}
 </style>
 <script src="jquery-3.1.0.min.js"></script>
 <script src="res/messages.js"></script>
@@ -62,7 +66,7 @@
 		<button class="button-register" id="btn-show-send" >Send a message</button>
 		<div id="message-send">
 			<h4 id="result"></h4>
-			<form id="message-form">					 
+			<form id="message-form">			 
 				Send To:
 				<br><input type="text" class="textbox-register" id="msg-to" value="${send-username}">
 				<br>Subject:
@@ -73,7 +77,9 @@
 				<hr>
 			</form>
 		</div>
-		<button id="btn-refresh">Refresh</button>
+		<br>
+		<a id="btn-received" class="link1">Inbox</a><a id="btn-sent" class="link1">Sent</a><a id="btn-refresh" class="link1">Refresh</a>
+		<hr>
 		<table id="message-list">
 			<tr><th>Subject</th><th>User</th><th>Date</th></tr>
 			<tbody id="message-list-tbody">
