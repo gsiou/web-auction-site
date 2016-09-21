@@ -42,7 +42,13 @@ public class ImageServlet extends HttpServlet {
 		try{
 			Files.copy(file.toPath(), response.getOutputStream());
 		}
-		catch(NoSuchFileException e){
+		catch(IOException e){
+			RequestDispatcher disp = getServletContext().getRequestDispatcher("/404.html");
+			disp.forward(request, response);
+		}
+		catch(Exception e){
+			// We display 404 on other exceptions too, but we log the error.
+			e.printStackTrace(System.err);
 			RequestDispatcher disp = getServletContext().getRequestDispatcher("/404.html");
 			disp.forward(request, response);
 		}
