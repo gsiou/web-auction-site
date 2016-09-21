@@ -77,17 +77,27 @@ public class IndexServlet extends HttpServlet {
 		if(category_param != null && !category_param.equals("") && !category_param.equals("all")){
 			options.setCategory(category_param);
 		}
-		if(price_from_param != null && price_to_param != null){
-			float price_from_safe, price_to_safe;
+		if(price_from_param != null){
+			float price_from_safe;
 			try{
 				price_from_safe = Float.parseFloat(price_from_param);
-				price_to_safe = Float.parseFloat(price_to_param);
-				options.setPrice(price_from_safe, price_to_safe);
+				options.setMinPrice(price_from_safe);
 				
 			} catch(NumberFormatException e){
-				// Nothing to be handled, we just ignore the float.
+				// Nothing to be handled, we just dont add the option.
 			}
 		}
+		if(price_to_param != null){
+			float price_to_safe;
+			try{
+				price_to_safe = Float.parseFloat(price_to_param);
+				options.setMaxPrice(price_to_safe);
+				
+			} catch(NumberFormatException e){
+				// Nothing to be handled, we just dont add the option.
+			}
+		}
+		
 		if(location_param != null && !location_param.equals("")){
 			options.setLocation(location_param);
 		}

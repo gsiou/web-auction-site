@@ -41,7 +41,12 @@
 					</a></td>
 					<td><c:out value="${auction.description}" /></td>
 					<td><c:out value="${auction.location}" /></td>
-					<td></td>
+					<td><strong>Current Bid:</strong> <c:out value="${auction.current_Bid}" />
+						<c:if test="${auction.buy_Price > 0}">
+							<br>
+							<strong>Buy Price:</strong> <c:out value="${auction.buy_Price}" />
+						</c:if>
+					</td>
 					<td><img class="preview-img"
 						src="${pageContext.request.contextPath}/image/${auction.images[0].url}" />
 					</td>

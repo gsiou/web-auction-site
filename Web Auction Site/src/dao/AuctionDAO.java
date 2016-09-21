@@ -46,8 +46,11 @@ public class AuctionDAO implements AuctionDAOI{
 		if(search_options.hasLocation()){
 			query_str += " AND a.location LIKE :location";
 		}
-		if(search_options.hasPrice()){
-			// TODO
+		if(search_options.hasMinPrice()){
+			query_str += " AND (a.current_Bid > :minprice OR a.buy_Price > :minprice)";
+		}
+		if(search_options.hasMaxPrice()){
+			query_str += " AND (a.current_Bid < :maxprice OR a.buy_Price < :maxprice)";
 		}
 
 		// Fill in the parameters.
@@ -70,8 +73,11 @@ public class AuctionDAO implements AuctionDAOI{
 		if(search_options.hasLocation()){
 			searchQuery.setParameter("location", search_options.getLocation());
 		}
-		if(search_options.hasPrice()){
-			// TODO
+		if(search_options.hasMinPrice()){
+			searchQuery.setParameter("minprice", search_options.getMinPrice());
+		}
+		if(search_options.hasMaxPrice()){
+			searchQuery.setParameter("maxprice", search_options.getMaxPrice());
 		}
 		
 		return searchQuery.getResultList();

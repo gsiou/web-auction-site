@@ -3,7 +3,8 @@ package dao;
 import java.util.Date;
 
 public class AuctionSearchOptions {
-	private boolean price_search = false;
+	private boolean price_min_search = false;
+	private boolean price_max_search = false;
 	private float price_min = 0;
 	private float price_max = 0;
 	
@@ -26,14 +27,22 @@ public class AuctionSearchOptions {
 		return this.min_date;
 	}
 	
-	public void setPrice(float min, float max){
-		this.price_search = true;
+	public void setMinPrice(float min){
+		this.price_min_search = true;
 		this.price_min = min;
+	}
+	
+	public void setMaxPrice(float max){
+		this.price_max_search = true;
 		this.price_max = max;
 	}
 	
-	public boolean hasPrice(){
-		return this.price_search;
+	public boolean hasMinPrice(){
+		return this.price_min_search;
+	}
+	
+	public boolean hasMaxPrice(){
+		return this.price_max_search;
 	}
 	
 	public float getMinPrice(){
