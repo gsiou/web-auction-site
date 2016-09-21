@@ -86,14 +86,9 @@ public class AdminServlet extends HttpServlet {
 				page = Integer.parseInt(request.getParameter("page"));
 			}
 			
-			// If user requests negative page, he gets the 1st.
-			if(page < 0){
+			// If user requests invalid page he gets the 1st.
+			if(page < 0 || page > max_pages - 1){
 				page = 0;
-			}
-			
-			// If user requests page > than max, get the last.
-			if(page > max_pages - 1){
-				page = max_pages - 1;
 			}
 			
 			List<User> userList = null;
