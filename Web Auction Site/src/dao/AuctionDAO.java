@@ -36,7 +36,7 @@ public class AuctionDAO implements AuctionDAOI{
 		// Construct the query.
 		// We only care about active auctions.
 		String query_str = "SELECT a FROM Auction a WHERE " +
-				"(a.expiration_time >= :date AND a.user IS NULL)";
+				"(a.expiration_time >= :date AND a.user IS NULL AND a.start_time IS NOT NULL)";
 		if(search_options.hasCategory()){
 			query_str += " AND :category MEMBER OF a.categories";
 		}
