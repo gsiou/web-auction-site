@@ -22,7 +22,7 @@ import entities.Category;
 /**
  * Servlet implementation class IndexServlet
  */
-@WebServlet("")
+@WebServlet(urlPatterns = {"", "/Search"})
 public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +39,12 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String action = request.getParameter("action");
+		// String action = request.getParameter("action");
+		String url_path = request.getRequestURI().substring(request.getContextPath().length());
+		String action = null;
+		if(url_path.equals("/Search")){
+			action = "search";
+		}
 		if (action != null && action.equals("search")) { // Load search results
 			search(request, response);
 

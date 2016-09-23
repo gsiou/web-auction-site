@@ -10,8 +10,7 @@
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
     <div id="search">
-      <form>
-      	<input type="hidden" name="action" value="search">
+      <form action="${pageContext.request.contextPath}/Search" method="GET">
       	<a href="${pageContext.request.contextPath}" title="Hammer Deals"><img class="small-logo-left" src="logo.png" ></a>
         <div class="txtbtncontainer">
           <input type="text" placeholder="Search..." class="textbox-search" name="description" />
