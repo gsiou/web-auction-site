@@ -270,6 +270,7 @@ public class AuctionSubmit extends HttpServlet {
 					}
 					auc.setImages(auction_images);
 				}
+				response.sendRedirect(request.getContextPath() + "/Manage");
 			}
 			//System.out.println(message);
 		}

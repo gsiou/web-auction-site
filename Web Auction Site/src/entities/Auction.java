@@ -12,7 +12,26 @@ import java.util.List;
  */
 @Entity
 @Table(name="Auction")
-@NamedQuery(name="Auction.findAll", query="SELECT a FROM Auction a")
+@NamedQueries({
+	@NamedQuery(name="Auction.findAll", query="SELECT a FROM Auction a"),
+	@NamedQuery(name="Auction.findInactiveOfUser",
+		query="SELECT a FROM Auction a WHERE a.creator = :user AND a.start_time IS NULL"),
+	@NamedQuery(name="Auction.findActiveOfUser",
+		query="SELECT a FROM Auction a WHERE a.creator = :user AND "
+				+ "a.expiration_time >= :date AND a.user IS NULL AND a.start_time IS NOT NULL"),
+	@NamedQuery(name="Auction.findSoldOfUser",
+		query="SELECT a FROM Auction a WHERE a.creator = :user AND"
+				+ "(a.user IS NOT NULL OR a.expiration_time < :date)"),
+	@NamedQuery(name="Auction.findUserBiddedAuctions",
+		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a "
+				+ "AND a.expiration_time > :date"),
+	@NamedQuery(name="Auction.findUserWonAuctions",
+		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
+				+ "a.expiration_time < :date AND (u.id.price = a.current_Bid OR a.user = :user)"),
+	@NamedQuery(name="Auction.findUserLostAuctions",
+		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
+			+ "a.expiration_time < :date AND u.id.price != a.current_Bid"),
+})
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;
 

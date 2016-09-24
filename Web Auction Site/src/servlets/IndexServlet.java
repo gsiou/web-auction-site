@@ -16,13 +16,16 @@ import dao.AuctionDAOI;
 import dao.AuctionSearchOptions;
 import dao.CategoryDAO;
 import dao.CategoryDAOI;
+import dao.UserDAO;
+import dao.UserDAOI;
 import entities.Auction;
 import entities.Category;
+import entities.User;
 
 /**
  * Servlet implementation class IndexServlet
  */
-@WebServlet(urlPatterns = {"", "/Search"})
+@WebServlet(urlPatterns = {"", "/Search", "/Manage"})
 public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -41,14 +44,13 @@ public class IndexServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// String action = request.getParameter("action");
 		String url_path = request.getRequestURI().substring(request.getContextPath().length());
-		String action = null;
-		if(url_path.equals("/Search")){
-			action = "search";
-		}
-		if (action != null && action.equals("search")) { // Load search results
+		if (url_path.equals("/Search")) { // Load search results
 			search(request, response);
-
-		} else { // Load front page
+		}
+		else if (url_path.equals("/Manage")) { // Manage auctions
+			manageAuctions(request, response);
+		}
+		else { // Load front page
 			CategoryDAOI cdao = new CategoryDAO();
 			List<Category> categories = cdao.listChildren(null);
 			request.setAttribute("categoryList", categories);
@@ -112,6 +114,47 @@ public class IndexServlet extends HttpServlet {
 		search_results = aucdao.search(options);
 		request.setAttribute("searchResults", search_results);
 		RequestDispatcher disp = getServletContext().getRequestDispatcher("/search_results.jsp");
+		disp.forward(request, response);
+	}
+	
+	protected void manageAuctions(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		RequestDispatcher disp;
+		if(request.getSession().getAttribute("userID") == null){
+			disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
+			disp.forward(request, response);
+			return ;
+		}
+		
+		// Get current user.
+		UserDAOI userdao = new UserDAO();
+		User user = userdao.findByID(request.getSession().getAttribute("userID").toString());
+		
+		// We have 4 types of auctions, inactive, active, sold and bidded.
+		// Fetch them in different lists.
+		List<Auction> inactive;
+		List<Auction> active;
+		List<Auction> sold;
+		List<Auction> won;
+		List<Auction> lost;
+		List<Auction> bidded;
+		
+		AuctionDAOI aucdao = new AuctionDAO();
+		inactive = aucdao.findInactiveOf(user);
+		active = aucdao.findActiveOf(user, new Date());
+		sold = aucdao.findSoldOf(user, new Date());
+		won = aucdao.findUserWonAuctions(user, new Date());
+		lost = aucdao.findUserLostAuctions(user, new Date());
+		bidded = aucdao.findUserWonAuctions(user, new Date());
+		
+		request.setAttribute("inactiveList", inactive);
+		request.setAttribute("activeList", active);
+		request.setAttribute("soldList", sold);
+		request.setAttribute("wonList", won);
+		request.setAttribute("lostList", lost);
+		request.setAttribute("biddedList", bidded);
+		
+		disp = getServletContext().getRequestDispatcher("/auction_manage.jsp");
 		disp.forward(request, response);
 	}
 }

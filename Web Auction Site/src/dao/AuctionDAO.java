@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,6 +8,7 @@ import javax.persistence.TypedQuery;
 
 import entities.Auction;
 import entities.Category;
+import entities.User;
 import utils.EntityManagerHelper;
 
 public class AuctionDAO implements AuctionDAOI{
@@ -80,6 +82,59 @@ public class AuctionDAO implements AuctionDAOI{
 			searchQuery.setParameter("maxprice", search_options.getMaxPrice());
 		}
 		
+		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findInactiveOf(User user) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findInactiveOfUser", Auction.class);
+		searchQuery.setParameter("user", user);
+		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findActiveOf(User user, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findActiveOfUser", Auction.class);
+		searchQuery.setParameter("user", user);
+		searchQuery.setParameter("date", date);
+		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findSoldOf(User user, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findSoldOfUser", Auction.class);
+		searchQuery.setParameter("user", user);
+		searchQuery.setParameter("date", date);
+		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findUserBiddedAuctions(User user, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserBiddedAuctions", Auction.class);
+		searchQuery.setParameter("user", user);
+		searchQuery.setParameter("date", date);
+		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findUserWonAuctions(User user, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserWonAuctions", Auction.class);
+		searchQuery.setParameter("user", user);
+		searchQuery.setParameter("date", date);
+		return searchQuery.getResultList();
+	}
+	
+	@Override
+	public List<Auction> findUserLostAuctions(User user, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserLostAuctions", Auction.class);
+		searchQuery.setParameter("user", user);
+		searchQuery.setParameter("date", date);
 		return searchQuery.getResultList();
 	}
 	
