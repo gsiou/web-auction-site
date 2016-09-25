@@ -337,3 +337,22 @@ cursor: pointer;
 .big-image-frame{
 	
 }
+
+.link2, .link2:visited{
+	color: orange;
+	text-decoration: none;
+}
+
+.link2:hover{
+	color: orange;
+	text-decoration: underline;
+}
+
+
+.search-table {
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+}

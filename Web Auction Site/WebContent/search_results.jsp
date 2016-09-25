@@ -12,14 +12,6 @@
 	width: 200px;
 	height: auto;
 }
-
-.search-table {
-	background-color: white;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
-	text-align: center;
-}
 </style>
 </head>
 <body>
