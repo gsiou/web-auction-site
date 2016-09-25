@@ -24,7 +24,7 @@ import java.util.List;
 				+ "(a.user IS NOT NULL OR a.expiration_time < :date)"),
 	@NamedQuery(name="Auction.findUserBiddedAuctions",
 		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a "
-				+ "AND a.expiration_time > :date"),
+				+ "AND a.expiration_time > :date AND a.user IS NULL"),
 	@NamedQuery(name="Auction.findUserWonAuctions",
 		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
 				+ "a.expiration_time < :date AND (u.id.price = a.current_Bid OR a.user = :user)"),
