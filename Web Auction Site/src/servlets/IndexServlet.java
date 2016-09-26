@@ -51,9 +51,6 @@ public class IndexServlet extends HttpServlet {
 			manageAuctions(request, response);
 		}
 		else { // Load front page
-			CategoryDAOI cdao = new CategoryDAO();
-			List<Category> categories = cdao.listChildren(null);
-			request.setAttribute("categoryList", categories);
 			RequestDispatcher disp = getServletContext().getRequestDispatcher("/index.jsp");
 			disp.forward(request, response);
 		}

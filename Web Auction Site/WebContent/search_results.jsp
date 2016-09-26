@@ -14,8 +14,10 @@
 }
 </style>
 </head>
-<body>
+<body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
+	<jsp:include page="/common/search_small.jsp" />
+	<br>
 	<div class="reg-table">
 		<table class="search-table">
 			<tr>

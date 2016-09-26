@@ -5,6 +5,7 @@
 <html>
   <head>
   	<jsp:include page="/common/common.jsp" />
+  	<script src="res/load_top_categories.js"></script>
     <title>Web Auction Site by RobCo Industries</title>
   </head>
   <body class="page-background">
@@ -15,13 +16,8 @@
         <div class="txtbtncontainer">
           <input type="text" placeholder="Search..." class="textbox-search" name="description" />
           <input type="submit" class="button-search" value="Search"/>
-          <select name="category" class="select-search">
+          <select name="category" id="category-dropdown" class="select-search">
             <option value="all">All Categories</option>
-            <c:forEach items="${categoryList}" var="category" varStatus="count">
-            	<option value="${fn:escapeXml(category.name)}">
-            		<c:out value="${category.name}"/>
-            	</option>
-           	</c:forEach>
           </select>
         </div><br>
         <a href="#" class="link1" id="advanced-activate">Advanced Search...</a>
@@ -39,6 +35,28 @@
     	$("#advanced-activate").click(function(){
     		$("#advanced-activate").hide();
     		$("#advanced-search").show(1000);
+    	});
+    });
+    </script>
+    <script>
+    $(function() {
+    	var send_data = {
+    		parent_category : "",
+    	};
+    	$.ajax({
+    			url : '${pageContext.request.contextPath}/AuctionSubmit?action=fetch_categories',
+    			type : "POST",
+    			data : JSON.stringify(send_data),
+    			contentType : "application/json; charset=utf-8",
+    			dataType : 'json',
+    			success : function(data) {
+    				$.each(data.categories, function(i, item) {
+    					$("#category-dropdown").append($("<option/>", {
+    						value : item,
+    						text : item,
+    					}));
+    				});
+    			},
     	});
     });
     </script>

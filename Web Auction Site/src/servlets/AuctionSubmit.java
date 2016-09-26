@@ -176,23 +176,25 @@ public class AuctionSubmit extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// First check if our user is logged in.
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		RequestDispatcher disp;
-		if(request.getSession().getAttribute("userID") == null){
-			disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
-			disp.forward(request, response);
-			return;
-		}
 		
 		String action = request.getParameter("action");
 		if(action == null){
 			return ;
 		}
+		
 		if(action.equals("submit") || action.equals("edit")){
 			// Action submit and edit are identical to a great extent.
 			// Their difference is that submit creates a new entity and persists it
 			// while edit updates the fields of an existing one.
+			
+			// First check if our user is logged in.
+			if(request.getSession().getAttribute("userID") == null){
+				disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
+				disp.forward(request, response);
+				return;
+			}
 			
 			boolean isSubmit = false;
 			boolean isEdit = false;
