@@ -6,7 +6,7 @@
 <html>
 <head>
 <jsp:include page="/common/common.jsp" />
-<title>Insert title here</title>
+<title>Manage Auctions</title>
 <style>
 .auction-type{
 	text-align: center;

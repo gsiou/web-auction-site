@@ -6,7 +6,7 @@
 <html>
 <head>
 <jsp:include page="/common/common.jsp" />
-<title>Insert title here</title>
+<title>Search Results</title>
 <style>
 .preview-img {
 	width: 200px;
