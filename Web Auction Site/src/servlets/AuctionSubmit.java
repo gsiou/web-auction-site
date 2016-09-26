@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,16 +67,110 @@ public class AuctionSubmit extends HttpServlet {
 			disp.forward(request, response);
 			return ;
 		}
-		// Get user country and location to be preloaded on the submission interface.
-		UserDAOI dao = new UserDAO();
-		User currentUser = dao.findByID(request.getSession().getAttribute("userID").toString());
-		String userCountry = currentUser.getCountry();
-		String userLocation = currentUser.getAddress();
-		request.setAttribute("userCountry", userCountry);
-		request.setAttribute("userLocation", userLocation);
+		
+		String action = request.getParameter("action");
+		if(action == null){
+			// No action
+			disp = getServletContext().getRequestDispatcher("/404.html");
+			disp.forward(request, response);
+			return ;
+		}
+		else if (action.equals("submit")) {
 
-		disp = getServletContext().getRequestDispatcher("/auction_submit.jsp");
-		disp.forward(request, response);
+			// Get user country and location to be preloaded on the submission
+			// interface.
+			UserDAOI dao = new UserDAO();
+			User currentUser = dao.findByID(request.getSession().getAttribute("userID").toString());
+			String userCountry = currentUser.getCountry();
+			String userLocation = currentUser.getAddress();
+			request.setAttribute("auctionCountry", userCountry);
+			request.setAttribute("auctionLocation", userLocation);
+			
+			// Set the submission action.
+			request.setAttribute("action", "submit");
+
+			disp = getServletContext().getRequestDispatcher("/auction_submit.jsp");
+			disp.forward(request, response);
+			return ;
+		}
+		else if (action.equals("edit")){
+			
+			// Check if we have "id" parameter.
+			String strId = request.getParameter("id");
+			if(strId == null){
+				disp = getServletContext().getRequestDispatcher("/404.html");
+				disp.forward(request, response);
+				return ;
+			}
+			
+			// Safely parse the id.
+			int id;
+			try{
+				id = Integer.parseInt(strId);
+			}
+			catch (NumberFormatException e){
+				disp = getServletContext().getRequestDispatcher("/404.html");
+				disp.forward(request, response);
+				return ;
+			}
+			
+			// We try to load the auction.
+			AuctionDAOI aucdao = new AuctionDAO();
+			Auction auction = aucdao.findByID(id);
+			if (auction == null){
+				disp = getServletContext().getRequestDispatcher("/404.html");
+				disp.forward(request, response);
+				return ;
+			}
+			
+			// If auction has started, we cannot allow it to be edited.
+			if (auction.getStart_time() != null){
+				disp = getServletContext().getRequestDispatcher("/404.html");
+				disp.forward(request, response);
+				return ;
+			}
+			
+			// Specify action and id
+			request.setAttribute("action", "edit");
+			request.setAttribute("auctionId", id);
+			
+			// Preload auction data in form fields.
+			request.setAttribute("auctionName", auction.getName());
+			request.setAttribute("auctionDescription", auction.getDescription());
+			request.setAttribute("auctionStartingBid", auction.getStarting_Bid());
+			request.setAttribute("auctionBuyPrice", auction.getBuy_Price());
+			
+			// Date has to be broken into parts first.
+			Date exp_time = auction.getExpiration_time();
+			
+			request.setAttribute("auctionEndYear",new SimpleDateFormat("yyyy").format(exp_time));
+			request.setAttribute("auctionEndMonth",new SimpleDateFormat("MM").format(exp_time));
+			request.setAttribute("auctionEndDay", new SimpleDateFormat("dd").format(exp_time));
+			request.setAttribute("auctionEndHour", new SimpleDateFormat("HH").format(exp_time));
+			request.setAttribute("auctionEndMinute", new SimpleDateFormat("mm").format(exp_time));
+			request.setAttribute("auctionLocation", auction.getLocation());
+			request.setAttribute("auctionCountry", auction.getCountry());
+			request.setAttribute("auctionLongitude", auction.getLongitude());
+			request.setAttribute("auctionLatitude", auction.getLatitude());
+			
+			// Categories must be in >parentCategory>childCategory format
+			// for the interface to function properly.
+			String category_formatted = ">";
+			for (Category cat : auction.getCategories()){
+				category_formatted += cat.getName() + ">";
+			}
+			request.setAttribute("auctionCategory", category_formatted);
+			
+			disp = getServletContext().getRequestDispatcher("/auction_submit.jsp");
+			disp.forward(request, response);
+			return ;
+		}
+		else {
+			// Invalid action
+			disp = getServletContext().getRequestDispatcher("/404.html");
+			disp.forward(request, response);
+			return ;
+		}
 	}
 
 	/**
@@ -92,11 +187,60 @@ public class AuctionSubmit extends HttpServlet {
 		
 		String action = request.getParameter("action");
 		if(action == null){
-			System.out.println("Null action");
 			return ;
 		}
-		if(action.equals("submit")){
-			// Create new Auction.
+		if(action.equals("submit") || action.equals("edit")){
+			// Action submit and edit are identical to a great extent.
+			// Their difference is that submit creates a new entity and persists it
+			// while edit updates the fields of an existing one.
+			
+			boolean isSubmit = false;
+			boolean isEdit = false;
+			
+			if(action.equals("submit")){
+				isSubmit = true;
+			}
+			else{
+				isEdit = true;
+			}
+			
+			AuctionDAOI aucdao = new AuctionDAO();
+			Auction auc = null;
+			
+			if (isEdit) {
+				// When action is "edit" we have to make sure we are given an id 
+				// of the auction to update.
+				String strId = request.getParameter("id");
+				if (strId == null) {
+					forwardMessage(request, response, "No auction specified!");
+					return;
+				}
+
+				// Safely parse the id.
+				int id;
+				try {
+					id = Integer.parseInt(strId);
+				} catch (NumberFormatException e) {
+					forwardMessage(request, response, "Invalid auction id!");
+					return;
+				}
+
+				// Fetch the auction.
+				auc = aucdao.findByID(id);
+				if (auc == null) {
+					forwardMessage(request, response, "Auction does not exist!");
+					return;
+				}
+				
+				// If auction has started, we cannot allow it to be edited.
+				if (auc.getStart_time() != null){
+					forwardMessage(request, response, "Cannot edit an expired auction!");
+					return ;
+				}
+			}
+			else{ // Submit means we create a new auction
+				auc = new Auction();
+			}
 			
 			// Collect parameters.
 			String name = request.getParameter("name");
@@ -139,7 +283,7 @@ public class AuctionSubmit extends HttpServlet {
 			}
 			else{
 				// We are good.
-
+				
 				//Validate Date.
 				Date ends_date = null;
 
@@ -154,35 +298,31 @@ public class AuctionSubmit extends HttpServlet {
 				try {
 					ends_date = sdf.parse(sb.toString());
 				} catch (ParseException e) {
-					// TODO: handle this
-					e.printStackTrace();
 					message = "Invalid date format";
 					forwardMessage(request, response, message);
 					return;
 				}
 
 				// Starting date is current date.
-				Date starting_date = new Date();
+				Date current_date = new Date();
 
 				// Check if given date is older than current.
-				if(starting_date.after(ends_date)){
+				if(current_date.after(ends_date)){
 					message = "Ending date cannot be a past date";
 					forwardMessage(request, response, message);
 					return;
 				}
 				
 				// Start constructing data.
-				AuctionDAOI aucdao = new AuctionDAO();
 				CategoryDAOI catdao = new CategoryDAO();
 				UserDAOI udao = new UserDAO();
 				
-				Auction auc = new Auction();
 				Category cat;
 				User user;
 				
 				auc.setName(name);
 				auc.setDescription(description);
-				auc.setStart_time(starting_date);
+				auc.setStart_time(null); // Is set when user activates auction.
 				auc.setExpiration_time(ends_date);
 				auc.setCountry(country);
 				auc.setLocation(location);
@@ -201,15 +341,17 @@ public class AuctionSubmit extends HttpServlet {
 				String[] categories_list;
 				categories_list = categories.substring(1).split(">");
 				
+				
 				// Set the categories.
 				ArrayList<Category> catlist = new ArrayList<>();
 				for(String s : categories_list){
 					cat = catdao.find(s);
 					if(cat != null){
-						cat.getAuctions().add(auc);
+						//cat.getAuctions().add(auc);
 						catlist.add(cat);
 					}
 				}
+				
 				auc.setCategories(catlist);
 				
 				// Add auction to seller
@@ -217,7 +359,6 @@ public class AuctionSubmit extends HttpServlet {
 				user.getAuctions().add(auc);
 				auc.setCreator(user);
 				
-				aucdao.create(auc);
 				
 				// Upload images.
 				// Get all image parts from imagefiles input element.
@@ -270,9 +411,21 @@ public class AuctionSubmit extends HttpServlet {
 					}
 					auc.setImages(auction_images);
 				}
+				
+				if(isSubmit){
+					// In submission case we have to create a new entity.
+					aucdao.create(auc);
+				}
+				else{
+					// In edit we just update.
+					aucdao.updateAuction(auc);
+				}
+				
 				response.sendRedirect(request.getContextPath() + "/Manage");
+				return ;
 			}
-			//System.out.println(message);
+			forwardMessage(request, response, message);
+			return ;
 		}
 		else if(action.equals("fetch_categories")){
 			// Fetch categories for dynamic calls in category picking.
@@ -295,6 +448,47 @@ public class AuctionSubmit extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(message.toString());
+			return ;
+		}
+		else if(action.equals("activate")){
+			// First check if our user is logged in.
+			if(request.getSession().getAttribute("userID") == null){
+				disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
+				disp.forward(request, response);
+				return;
+			}
+			
+			String strId = request.getParameter("id");
+			if(strId == null){
+				response.getWriter().write("No auction specified");
+				return ;
+			}
+			
+			int id = -1;
+			try{
+				id = Integer.parseInt(strId);
+			}
+			catch (NumberFormatException e){
+				response.getWriter().write("Invalid id");
+			}
+			
+			// Activate given auction by setting the start time.
+			AuctionDAOI aucdao = new AuctionDAO();
+			Auction auction = aucdao.findByID(id);
+			if(auction == null){
+				response.getWriter().write("Auction does not exist!");
+				return ;
+			}
+			
+			if(auction.getExpiration_time().before(new Date())){
+				response.getWriter().write("Auction expiration date is a past date!");
+				return ;
+			}
+			
+			auction.setStart_time(new Date());
+			aucdao.updateAuction(auction);
+			
+			response.sendRedirect(request.getContextPath() + "/Manage");
 		}
 	}
 	

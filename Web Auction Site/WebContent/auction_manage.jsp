@@ -23,27 +23,28 @@
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
+							<c:out value="${auction.name}"/> </a></td>
 					<td>
-						<button class="button-register">Edit</button>
+						<a href="${pageContext.request.contextPath}/AuctionSubmit?action=edit&id=${auction.auctionId}" class="link2">Edit</button>
 					</td>
 					<td>
-						<button class="button-register">Start</button>
+						<form action="${pageContext.request.contextPath}/AuctionSubmit" method="post">
+							<input type="hidden" name="action" value="activate">
+							<input type="hidden" name="id" value="${auction.auctionId}">
+							<input type="submit" class="button-register" value="Start">
+						</form>
 					</td>
 				</tr>
 			</c:forEach>
 		</table>
 		<hr>
-		<h2>Sold Auctions</h2>
+		<h2>Expired Auctions</h2>
 		<table class="search-table auction-list">
 			<c:forEach items="${soldList}" var="auction" varStatus="count">
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
-					<td>
-						<button class="button-register">Send Message</button>
-					</td>
+							<c:out value="${auction.name}"/> </a></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -54,7 +55,7 @@
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
+							<c:out value="${auction.name}"/> </a></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -65,7 +66,7 @@
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
+							<c:out value="${auction.name}"/> </a></td>
 					<td><a class="link2" 
 						href="${pageContext.request.contextPath}/Messages?sendto=${auction.creator.userId}">Send message</a>
 					</td>
@@ -79,7 +80,7 @@
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
+							<c:out value="${auction.name}"/> </a></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -90,7 +91,7 @@
 				<tr>
 					<td><a class="link2"
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
-							${auction.name} </a></td>
+							<c:out value="${auction.name}"/> </a></td>
 				</tr>
 			</c:forEach>
 		</table>

@@ -137,5 +137,11 @@ public class AuctionDAO implements AuctionDAOI{
 		searchQuery.setParameter("date", date);
 		return searchQuery.getResultList();
 	}
+
+	@Override
+	public void updateAuction(Auction updated_auction) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		em.merge(updated_auction);
+	}
 	
 }

@@ -25,4 +25,6 @@ public interface AuctionDAOI {
 	public List<Auction> findUserWonAuctions(User user, Date date);
 	
 	public List<Auction> findUserLostAuctions(User user, Date date);
+	
+	public void updateAuction(Auction updated_auction);
 }

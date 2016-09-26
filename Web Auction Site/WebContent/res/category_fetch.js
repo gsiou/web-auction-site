@@ -4,8 +4,11 @@ $(document).ready(function(){
 		window.categories_last = "0";
 		fetch("");
 	});
-	// Fetch root categories.
-	fetch("");
+	// If we submit new instead of editing
+	// fetch categories at startup
+	if($("#action").val() == "submit"){
+		fetch("");
+	}
 });
 
 window.categories_text = "";

@@ -61,28 +61,32 @@
     <br>
 	<div class="reg-table">
 		<h1>Submit an auction</h1>
+		<h2 style="color:red">${message}</h2>
 		<form action="AuctionSubmit" method="post" id="form" autocomplete="off" enctype="multipart/form-data">
-			<input type="hidden" name="action" value="submit">
+			<input type="hidden" id="action" name="action" value="${action}">
+			<input type="hidden" name="id" value="${auctionId}">
 			<h4>Product Category(Required)</h4>
 			<div id="category_list">
 			</div>
-			<input type="text" class="textbox-register" id="categories_tbox" name="categories" readonly>
+			<input type="text" class="textbox-register" id="categories_tbox" name="categories" value="${auctionCategory}" readonly>
 			<br>
 			<button type="button" id="category_btn">Reset</button>
 			<br>
 			<hr>
 			<br>
 			<h4>Product Name (Required)</h4>
-			<input type="text" name="name" class="textbox-register" placeholder="Product Name">
+			<input type="text" name="name" class="textbox-register" placeholder="Product Name" value="${auctionName}">
 			<hr>
 			<br>
 			<h4>Product Description (Required)</h4>
-			<textarea name="description" class="textbox-register" cols="86" rows="20" placeholder="Description"></textarea>
+			<textarea name="description" class="textbox-register" cols="86" rows="20" placeholder="Description">${auctionDescription}</textarea>
 			<hr>
 			<br>
 			<h4>Starting Bid (Required) / Buy Price (Optional)</h4>
-			<input type="number" name="starting" class="textbox-register" placeholder="Starting Bid" style="width:auto">
-			<input type="number" name="buyprice" class="textbox-register" placeholder="Buy Price (Optional)" style="width:auto">
+			<input type="number" name="starting" class="textbox-register" 
+				placeholder="Starting Bid" style="width:auto" value="${auctionStartingBid}">
+			<input type="number" name="buyprice" class="textbox-register" 
+				placeholder="Buy Price (Optional)" style="width:auto" value="${auctionBuyPrice}">
 			<hr>
 			<br>
 			<h4>Auction end time (Required)</h4>
@@ -96,19 +100,19 @@
 				</tr>
 				<tr>
 					<td><input type="number" name="endsyear"
-						class="textbox-register" style="width: 100%;" placeholder="Year"></td>
+						class="textbox-register" style="width: 100%;" placeholder="Year" value="${auctionEndYear}"></td>
 					<td><input type="number" name="endsmonth"
 						class="textbox-register" style="width: 100%;" placeholder="Month"
-						max="12" min="1"></td>
+						max="12" min="1" value="${auctionEndMonth}"></td>
 					<td><input type="number" name="endsday"
 						class="textbox-register" style="width: 100%;" placeholder="Day"
-						max="31" min="1"></td>
+						max="31" min="1" value="${auctionEndDay}"></td>
 					<td><input type="number" name="endshour"
 						class="textbox-register" style="width: 100%;"
-						placeholder="Hour(24h)" max="23" min="0"></td>
+						placeholder="Hour(24h)" max="23" min="0" value="${auctionEndHour}"></td>
 					<td><input type="number" name="endsminute"
 						class="textbox-register" style="width: 100%;" placeholder="Minute"
-						max="59" min="0"></td>
+						max="59" min="0" value="${auctionEndMinute}"></td>
 				</tr>
 			</table>
 			<hr>
@@ -118,8 +122,8 @@
 			<br>
 			<hr>
 			<h4>Auction Location (Required)</h4>
-			<input type="text" name="country" class="textbox-register" placeholder="Country" value="${userCountry}">
-			<input type="text" name="location" class="textbox-register" placeholder="Location" value="${userLocation}">
+			<input type="text" name="country" class="textbox-register" placeholder="Country" value="${auctionCountry}">
+			<input type="text" name="location" class="textbox-register" placeholder="Location" value="${auctionLocation}">
 			<h4>Auction Location on the map (Optional)</h4>
     		<div id="map"></div>
 			<script async defer
