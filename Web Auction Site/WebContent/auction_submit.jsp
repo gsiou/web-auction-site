@@ -3,10 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 	<head>
-	<link rel="stylesheet" type="text/css" href="res/styles.css">
-    <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
+	<jsp:include page="/common/common.jsp" />
     <script type="text/javascript" src="res/maps.js"> </script> 
-    <script src="jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="res/category_fetch.js"> </script> 
     <script type="text/javascript" src="res/jquery.validate.min.js"></script>
     <script type="text/javascript" src="res/auction_submit_validate.js"></script>
@@ -31,33 +29,8 @@
 	</style>
 </head>
 <body class="page-background">
-	<header class="menubar">
-    	<c:choose>
-    		<c:when test="${sessionScope.userID == null}">
-      			<a href="Login">Login</a> |
-      			<a href="Registration">Register</a>
-      		</c:when>
-      		<c:otherwise>
-      			Logged in as <strong>${sessionScope.userID}</strong> |
-      			<a href="/Messages">Messages()</a> |
-      			<a href="/Logout">Log Out</a>
-      		</c:otherwise>
-      	</c:choose>
-    </header>
-    <div id="uni-search">
-      <form>
-      	<a href="index.jsp" title="Hammer Deals"><img class="tiny-logo-left" src="logo.png" ></a>
-        <div class="small-txtbtncontainer">
-          <input type="text" placeholder="Search..." class="textbox-search" name="search_terms" />
-          <input type="submit" class="button-search" value="Search"/>
-          <select name="category" class="select-search">
-            <option value="all">All Categories</option>
-            <option value="tech">Technology</option>
-            <option value="clothes">Clothing</option>
-          </select>
-        </div>
-      </form>
-    </div>
+	<jsp:include page="/common/header_bar.jsp" />
+	<jsp:include page="/common/search_small.jsp" />
     <br>
 	<div class="reg-table">
 		<h1>Submit an auction</h1>

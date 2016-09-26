@@ -3,10 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<jsp:include page="/common/common.jsp" />
 <title>Messages|Hammer Deals</title>
-<link rel="stylesheet" type="text/css" href="res/styles.css">
-<link rel="icon" href="res/favicon.ico" type="image/x-icon">
 <style type="text/css">
 	#message-list{
 		background-color: white;
@@ -55,12 +53,8 @@
 <script src="jquery-3.1.0.min.js"></script>
 <script src="res/messages.js"></script>
 </head>
-<body>
-	<header class="menubar">
-		Logged in as <strong>${sessionScope.userID}</strong> |
-      	<a href="${pageContext.request.contextPath}">Home</a> |
-      	<a href="${pageContext.request.contextPath}/Logout">Log Out</a>
-	</header>
+<body class="page-background">
+	<jsp:include page="/common/header_bar.jsp" />
 	<div class="reg-table">
 		<button class="button-register" id="btn-show-send" >Send a message</button>
 		<div id="message-send">

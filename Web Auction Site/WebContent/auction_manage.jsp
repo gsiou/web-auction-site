@@ -6,15 +6,16 @@
 <html>
 <head>
 <jsp:include page="/common/common.jsp" />
-<title>Insert title here</title>
+<title>Manage Auctions</title>
 <style>
 .auction-type{
 	text-align: center;
 }
 </style>
 </head>
-<body>
+<body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
+	<jsp:include page="/common/search_small.jsp" />
 	<h2 class="auction-type">My Auctions</h2>
 	<div class="reg-table">
 		<h2>Inactive Auctions</h2>

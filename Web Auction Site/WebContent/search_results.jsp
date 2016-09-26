@@ -6,7 +6,7 @@
 <html>
 <head>
 <jsp:include page="/common/common.jsp" />
-<title>Insert title here</title>
+<title>Search Results</title>
 <style>
 .preview-img {
 	width: 200px;
@@ -14,8 +14,10 @@
 }
 </style>
 </head>
-<body>
+<body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
+	<jsp:include page="/common/search_small.jsp" />
+	<br>
 	<div class="reg-table">
 		<table class="search-table">
 			<tr>
