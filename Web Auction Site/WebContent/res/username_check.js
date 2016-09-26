@@ -19,10 +19,10 @@ $(document).ready(function() {
         	    success:function(data){
         	    	var response=data.response;
         	    	if(Boolean(response)){
-        	    		$('#username_check_result').html(invalid);
+        	    		$('#pop-up-message').html(invalid);
         	    	}
         	    	else{
-        	    		$('#username_check_result').html(valid);
+        	    		$('#pop-up-message').html(valid);
         	    	}
         	    }
         	 });
