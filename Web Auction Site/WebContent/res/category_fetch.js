@@ -42,6 +42,9 @@ function fetch(parent){
 						})
 					}).appendTo("#category_list");
 				});
+			},
+			error: function(){
+				alert("Connection to database failed! Try refreshing the page.");
 			}
 		});
 		//$(document).scrollTop($("#category_list").offset().top ); // Scroll back to categories
