@@ -123,6 +123,15 @@ public class AuctionSubmit extends HttpServlet {
 				return ;
 			}
 			
+			// If logged in user is not the creator, we cannot allow him to edit.
+			UserDAOI userdao = new UserDAO();
+			User myuser = userdao.findByID(request.getSession().getAttribute("userID").toString());
+			if(!auction.getCreator().getUserId().equals(myuser.getUserId())){
+				disp = getServletContext().getRequestDispatcher("/404.html");
+				disp.forward(request, response);
+				return ;
+			}
+			
 			// If auction has started, we cannot allow it to be edited.
 			if (auction.getStart_time() != null){
 				disp = getServletContext().getRequestDispatcher("/404.html");
@@ -361,6 +370,14 @@ public class AuctionSubmit extends HttpServlet {
 				user.getAuctions().add(auc);
 				auc.setCreator(user);
 				
+				if(isSubmit){
+					// In submission case we have to create a new entity.
+					aucdao.create(auc);
+				}
+				else{
+					// In edit we just update.
+					aucdao.updateAuction(auc);
+				}
 				
 				// Upload images.
 				// Get all image parts from imagefiles input element.
@@ -382,7 +399,7 @@ public class AuctionSubmit extends HttpServlet {
 				ImageDAOI imgdao = new ImageDAO();
 				ArrayList<Image> auction_images = new ArrayList<>();
 				ArrayList<Auction> auctions; // To save image's auctions.
-				
+				int already_stored = auc.getImages().size();
 				for(Part file_part : file_parts){
 					file_name = Paths.get(file_part.getSubmittedFileName()).getFileName().toString();
 					if(file_name.lastIndexOf(".") != -1){ // No extension.
@@ -394,7 +411,8 @@ public class AuctionSubmit extends HttpServlet {
 
 							if(file_size < max_file_size){ // Accept only small files.
 								content = file_part.getInputStream();
-								save_file_name = auction_id + "_" + counter + extension;// Name and extension.
+								int image_id = counter + already_stored;
+								save_file_name = auction_id + "_" + image_id + extension;// Name and extension.
 								image_file = new File(savepath, save_file_name); 
 								Files.copy(content, image_file.toPath()); // Write file.
 
@@ -411,16 +429,8 @@ public class AuctionSubmit extends HttpServlet {
 							}
 						}
 					}
-					auc.setImages(auction_images);
-				}
-				
-				if(isSubmit){
-					// In submission case we have to create a new entity.
-					aucdao.create(auc);
-				}
-				else{
-					// In edit we just update.
-					aucdao.updateAuction(auc);
+					//auc.setImages(auction_images);
+					auc.getImages().addAll(auction_images);
 				}
 				
 				response.sendRedirect(request.getContextPath() + "/Manage");
