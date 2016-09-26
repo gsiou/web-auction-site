@@ -13,8 +13,9 @@
 }
 </style>
 </head>
-<body>
+<body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
+	<jsp:include page="/common/search_small.jsp" />
 	<h2 class="auction-type">My Auctions</h2>
 	<div class="reg-table">
 		<h2>Inactive Auctions</h2>
