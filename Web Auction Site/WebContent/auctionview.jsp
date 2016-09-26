@@ -76,12 +76,22 @@
     	<p>Start Time:${start_time}</p>
     	<p>Expiration Time:${expiration_time}</p>
     	<c:choose>
-    		<c:when test="${buy_price == 0}">
+    		<c:when test="${buy_price == 12}">
     			<p>Buy Price:(-) Bid-only</p>
     		</c:when>
     		<c:otherwise>
-    			<p>Buy Price:${buy_price}$ <input type='submit' id='orange_button' value='Buy item'></p>   
-    		</c:otherwise>
+    			<c:choose>
+    				<c:when test="${buy_out == false and expired==false}">
+    					<form action="AuctionView?auctionID=${param.auctionID}" method="post">
+    						<input type="hidden" name="action" value="buyout"> 
+    						<p> Buy Price:${buy_price}$ <input type='submit' id='orange_button' value='Buy item'></p>
+    					</form> 
+    				</c:when>
+    				<c:otherwise>
+    		  			<p> Buy Price:${buy_price}$</p>
+    		  		</c:otherwise>
+    		  	</c:choose>
+    		</c:otherwise>    		
 		</c:choose>
     	<p>Starting Price:${starting_bid}$</p>
     	<form action="bid-history">    
@@ -90,10 +100,15 @@
   		</form>
   		<div id='pop-up-message'>${sessionScope.bid_response}</div>
   		<c:remove var="bid_response"/>
-  		<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
-    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input">
-    		<input type='submit' id='orange_button' value='Place Bid'>
-    	</form>
+  		<c:choose>
+    		<c:when test="${buy_out == false and expired==false}">
+		  		<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
+		  			<input type="hidden" name="action" value="bidAuction"> 
+		    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input">
+		    		<input type='submit' id='orange_button' value='Place Bid'>
+		    	</form>
+		    </c:when>
+		</c:choose>
     	<p>Location:${location}</p>
     	<p>Country:${country}</p>
     </div>

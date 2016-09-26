@@ -30,7 +30,10 @@ import java.util.List;
 				+ "a.expiration_time < :date AND (u.id.price = a.current_Bid OR a.user = :user)"),
 	@NamedQuery(name="Auction.findUserLostAuctions",
 		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
-			+ "a.expiration_time < :date AND u.id.price != a.current_Bid"),
+				+ "a.expiration_time < :date AND u.id.price <> a.current_Bid"),
+	@NamedQuery(name="Auction.findAuctionBids",
+		query="SELECT u FROM Auction a, User_bid_Auction u WHERE u.auction = :auction AND u.auction=a "
+				+ " ORDER BY u.time DESC"),
 })
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;

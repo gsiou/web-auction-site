@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="res/styles.css">
-    <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
-    <script src="jquery-3.1.0.min.js"></script>
+	<jsp:include page="/common/common.jsp" />
     <script type="text/javascript"> 
     var cur_bid = <%=request.getAttribute("current_bid")%>;
 	var buy_price = <%=request.getAttribute("buy_price")%>;</script>
@@ -71,10 +69,14 @@
 	    	
 	    	<div style="font-size:110%">Current Bid:${current_bid}$</div><br>
 	    	<div id='pop-up-message'></div>
-	    	<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
-	    		<input type="number" id='Bid_amount' name="Bid_input" class="bid-input" placeholder="Place Bid">
-    			<input type='submit' id='orange_button' value='Place Bid'>
-    		</form>
+	    	<c:choose>
+    			<c:when test="${buy_out == false and expired==false}">
+			    	<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
+			    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input" placeholder="Place Bid">
+		    			<input type='submit' id='orange_button' value='Place Bid'>
+		    		</form>
+		    	</c:when>
+			</c:choose>		    		
 		</div>
 	
 	</div>

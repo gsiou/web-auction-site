@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import entities.Auction;
 import entities.Category;
 import entities.User;
+import entities.User_bid_Auction;
 import utils.EntityManagerHelper;
 
 public class AuctionDAO implements AuctionDAOI{
@@ -135,6 +136,14 @@ public class AuctionDAO implements AuctionDAOI{
 		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserLostAuctions", Auction.class);
 		searchQuery.setParameter("user", user);
 		searchQuery.setParameter("date", date);
+		return searchQuery.getResultList();
+	}
+	
+	@Override
+	public List<User_bid_Auction> findAuctionBids(Auction auction) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<User_bid_Auction> searchQuery = em.createNamedQuery("Auction.findAuctionBids", User_bid_Auction.class);
+		searchQuery.setParameter("auction", auction);
 		return searchQuery.getResultList();
 	}
 
