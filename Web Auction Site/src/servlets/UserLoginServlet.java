@@ -17,7 +17,7 @@ import utils.HelperFunctions;
 /**
  * Servlet implementation class UserLoginServlet
  */
-@WebServlet("/Login")
+@WebServlet(urlPatterns = {"/Login", "/Logout"})
 public class UserLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -34,14 +34,23 @@ public class UserLoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher disp;
-		if(request.getSession().getAttribute("userID") != null){
-			// User is already logged in, prevent him from double-logging.
-			disp = getServletContext().getRequestDispatcher("/already_logged.jsp");
+		String url_path = request.getRequestURI().substring(request.getContextPath().length());
+		if (url_path.equals("/Login")) {
+			if (request.getSession().getAttribute("userID") != null) {
+				// User is already logged in, prevent him from double-logging.
+				disp = getServletContext().getRequestDispatcher("/already_logged.jsp");
+			} else {
+				disp = getServletContext().getRequestDispatcher("/login.jsp");
+			}
+			disp.forward(request, response);
 		}
-		else{
-			disp = getServletContext().getRequestDispatcher("/login.jsp");
+		else if (url_path.equals("/Logout")){
+			if (request.getSession().getAttribute("userID") != null) {
+				// Destroy session.
+				request.getSession().invalidate();
+			}
+			response.sendRedirect(request.getContextPath());
 		}
-		disp.forward(request, response);
 	}
 
 	/**
