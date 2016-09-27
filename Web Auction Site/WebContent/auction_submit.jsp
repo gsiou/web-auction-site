@@ -90,7 +90,7 @@
 			</table>
 			<hr>
 			<br>
-			<h4>Product Image(s) (Optional):</h4>
+			<h4>Product Image(s) (Optional, up to 6 images in total):</h4>
 			<input type="file" name="imagefiles" multiple="true">
 			<br>
 			<hr>

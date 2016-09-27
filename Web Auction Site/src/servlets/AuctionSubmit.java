@@ -48,6 +48,7 @@ import entities.User;
 @MultipartConfig
 public class AuctionSubmit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final int maxImages = 6;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -400,37 +401,46 @@ public class AuctionSubmit extends HttpServlet {
 				ArrayList<Image> auction_images = new ArrayList<>();
 				ArrayList<Auction> auctions; // To save image's auctions.
 				int already_stored = auc.getImages().size();
-				for(Part file_part : file_parts){
-					file_name = Paths.get(file_part.getSubmittedFileName()).getFileName().toString();
-					if(file_name.lastIndexOf(".") != -1){ // No extension.
-						extension = file_name.substring(file_name.lastIndexOf("."));
-						file_size = file_part.getSize();
-						if(extension.equalsIgnoreCase(".png") 
-								|| extension.equalsIgnoreCase(".jpg") 
-								|| extension.equals(".jpeg")){ // Only accept png, jpg and jpeg.
+				if (already_stored + file_parts.size() <= maxImages) {
+					for (Part file_part : file_parts) {
+						file_name = Paths.get(file_part.getSubmittedFileName()).getFileName().toString();
+						if (file_name.lastIndexOf(".") != -1) { // No extension.
+							extension = file_name.substring(file_name.lastIndexOf("."));
+							file_size = file_part.getSize();
+							if (extension.equalsIgnoreCase(".png") || extension.equalsIgnoreCase(".jpg")
+									|| extension.equals(".jpeg")) { // Only
+																	// accept
+																	// png, jpg
+																	// and jpeg.
 
-							if(file_size < max_file_size){ // Accept only small files.
-								content = file_part.getInputStream();
-								int image_id = counter + already_stored;
-								save_file_name = auction_id + "_" + image_id + extension;// Name and extension.
-								image_file = new File(savepath, save_file_name); 
-								Files.copy(content, image_file.toPath()); // Write file.
+								if (file_size < max_file_size) { // Accept only
+																	// small
+																	// files.
+									content = file_part.getInputStream();
+									int image_id = counter + already_stored;
+									save_file_name = auction_id + "_" + image_id + extension;// Name
+																								// and
+																								// extension.
+									image_file = new File(savepath, save_file_name);
+									Files.copy(content, image_file.toPath()); // Write
+																				// file.
 
-								// Store image in db.
-								image = new Image();
-								image.setUrl(save_file_name);
-								auctions = new ArrayList<>();
-								auctions.add(auc);
-								image.setAuctions(auctions);
-								imgdao.create(image);
-								auction_images.add(image);
+									// Store image in db.
+									image = new Image();
+									image.setUrl(save_file_name);
+									auctions = new ArrayList<>();
+									auctions.add(auc);
+									image.setAuctions(auctions);
+									imgdao.create(image);
+									auction_images.add(image);
 
-								counter ++; // Prevent duplicate names.
+									counter++; // Prevent duplicate names.
+								}
 							}
 						}
+						// auc.setImages(auction_images);
+						auc.getImages().addAll(auction_images);
 					}
-					//auc.setImages(auction_images);
-					auc.getImages().addAll(auction_images);
 				}
 				
 				response.sendRedirect(request.getContextPath() + "/Manage");
