@@ -1,9 +1,10 @@
 $(document).ready(function () {
-
+	// Set up rules for validation
     $('#form').validate({
         rules: {
             name: {
-                required: true
+                required: true,
+                maxlength: 45
             },
             description: {
                 required: true
@@ -13,28 +14,43 @@ $(document).ready(function () {
             	minlength: 2
             },
             starting:{
-            	required: true
+            	required: true,
+            	min: 0.01
             },
             endsyear:{
-            	required: true
+            	required: true,
+            	min: 0,
             },
             endsmonth:{
-            	required: true
+            	required: true,
+            	min: 1,
+            	max: 12
             },
             endsday:{
-            	required: true
+            	required: true,
+            	min: 1,
+            	max: 31
             },
             endshour:{
-            	required: true
+            	required: true,
+            	min: 0,
+            	max: 23
             },
             endsminute:{
-            	required: true
+            	required: true,
+            	min: 0,
+            	max: 59
             },
             country:{
-            	required: true
+            	required: true,
+            	maxlength: 45
             },
             location:{
-            	required: true
+            	required: true,
+            	maxlength: 255
+            },
+            buyprice:{
+            	min: 0.01
             },
         },
         errorElement: 'div'

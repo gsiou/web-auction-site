@@ -49,6 +49,9 @@ import entities.User;
 public class AuctionSubmit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int maxImages = 6;
+	private static final int maxNameChars = 45;
+	private static final int maxLocationChars = 255;
+	private static final int maxCountryChars = 45;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -274,8 +277,8 @@ public class AuctionSubmit extends HttpServlet {
 			// Check if we have everything.
 			boolean success = false;
 			String message = "";
-			if(name == null){
-				message = "You have to specify a name";
+			if(name == null || name.length() > maxNameChars){
+				message = "You have to specify a name! (Max characters: " + maxNameChars +")";
 			}
 			else if(description == null){
 				message = "You have to give a description of the product";
@@ -283,8 +286,11 @@ public class AuctionSubmit extends HttpServlet {
 			else if(starting == null){
 				message = "You have to give a starting bid";
 			}
-			else if(country == null || location == null){
-				message = "You have to provide your location";
+			else if(country == null || country.length() > maxCountryChars){
+				message = "You have to provide your country! (Max characters: " + maxCountryChars +")";
+			}
+			else if(location == null || location.length() > maxLocationChars){
+				message = "You have to provide your location! (Max characters: " + maxLocationChars +")";
 			}
 			else if (categories == null || categories.length() < 2){
 				message = "You have to provide categories for your item";
@@ -325,6 +331,42 @@ public class AuctionSubmit extends HttpServlet {
 					return;
 				}
 				
+				// Check numbers first
+				float starting_f = 0, 
+						latitude_f = 0, 
+						longitude_f = 0, 
+						buyprice_f = 0;
+				try {
+					starting_f = Float.parseFloat(starting);
+					if(starting_f <= 0){
+						forwardMessage(request, response, "Zero/Negative starting price!");
+						return ;
+					}
+					
+					if (!latitude.equals("") && !longitude.equals("")) {
+						latitude_f = Float.parseFloat(latitude);
+						longitude_f = Float.parseFloat(longitude);
+						
+						if(latitude_f <= 0 || longitude_f <= 0){
+							forwardMessage(request, response, "Invalid/Negative coordinates!");
+							return ;
+						}
+						
+					}
+					
+					if (!buyprice.equals("")) {
+						buyprice_f = Float.parseFloat(buyprice);
+						if(buyprice_f <= 0){
+							forwardMessage(request, response, "Zero/Negative buy price!");
+							return ;
+						}
+					}
+				} catch (NumberFormatException e) {
+					forwardMessage(request, response, "Invalid number data.");
+					return ;
+				}
+				
+				
 				// Start constructing data.
 				CategoryDAOI catdao = new CategoryDAO();
 				UserDAOI udao = new UserDAO();
@@ -332,22 +374,26 @@ public class AuctionSubmit extends HttpServlet {
 				Category cat;
 				User user;
 				
+
+				
+				// Set numberic values first.
+				auc.setStarting_Bid(starting_f);
+				if (!latitude.equals("") && !longitude.equals("")) {
+					auc.setLatitude(latitude_f);
+					auc.setLongitude(longitude_f);
+				}
+				if (!buyprice.equals("")) {
+					auc.setBuy_Price(buyprice_f);
+				}
+				
 				auc.setName(name);
 				auc.setDescription(description);
 				auc.setStart_time(null); // Is set when user activates auction.
 				auc.setExpiration_time(ends_date);
 				auc.setCountry(country);
 				auc.setLocation(location);
-				auc.setStarting_Bid(Float.parseFloat(starting));
 				auc.setNum_of_bids(0);
 				auc.setCurrent_Bid(auc.getStarting_Bid());
-				if(!latitude.equals("") && !longitude.equals("")){
-					auc.setLatitude(Float.parseFloat(latitude));
-					auc.setLongitude(Float.parseFloat(longitude));
-				}
-				if(!buyprice.equals("")){
-					auc.setBuy_Price(Float.parseFloat(buyprice));
-				}
 				
 				// Parse categories
 				String[] categories_list;
@@ -517,7 +563,7 @@ public class AuctionSubmit extends HttpServlet {
 	public void forwardMessage(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
 		RequestDispatcher disp;
 		request.setAttribute("message", message);
-		disp = getServletContext().getRequestDispatcher("/auction_submit.jsp");
+		disp = getServletContext().getRequestDispatcher("/error.jsp");
 		disp.forward(request, response);
 	}
 }
