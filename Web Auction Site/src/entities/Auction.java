@@ -23,14 +23,14 @@ import java.util.List;
 		query="SELECT a FROM Auction a WHERE a.creator = :user AND"
 				+ "(a.user IS NOT NULL OR a.expiration_time < :date)"),
 	@NamedQuery(name="Auction.findUserBiddedAuctions",
-		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a "
+		query="SELECT DISTINCT(a) FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a "
 				+ "AND a.expiration_time > :date AND a.user IS NULL"),
 	@NamedQuery(name="Auction.findUserWonAuctions",
-		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
-				+ "a.expiration_time < :date AND (u.id.price = a.current_Bid OR a.user = :user)"),
+		query="SELECT DISTINCT(a) FROM Auction a, User_bid_Auction u WHERE (u.user = :user AND u.auction=a AND "
+				+ "a.expiration_time < :date AND u.id.price = a.current_Bid) OR (a.user = :user)"),
 	@NamedQuery(name="Auction.findUserLostAuctions",
-		query="SELECT a FROM Auction a, User_bid_Auction u WHERE u.user = :user AND u.auction=a AND "
-				+ "a.expiration_time < :date AND u.id.price <> a.current_Bid"),
+		query="SELECT DISTINCT(a) FROM Auction a, User_bid_Auction u WHERE (u.user = :user AND u.auction=a AND "
+				+ "a.expiration_time < :date AND u.id.price <> a.current_Bid) AND (a.user IS NULL OR a.user <> :user)"),
 	@NamedQuery(name="Auction.findAuctionBids",
 		query="SELECT u FROM Auction a, User_bid_Auction u WHERE u.auction = :auction AND u.auction=a "
 				+ " ORDER BY u.time DESC"),
