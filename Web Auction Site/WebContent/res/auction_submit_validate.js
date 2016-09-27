@@ -39,4 +39,12 @@ $(document).ready(function () {
         },
         errorElement: 'div'
     });
+    
+    $("input[type='submit']").click(function(){
+        var $imagesUploaded = $("input[type='file']");
+        if (parseInt($imagesUploaded.get(0).files.length)>6){
+         alert("You can only upload a maximum of 6 images");
+         return false;
+        }
+    });
 });
