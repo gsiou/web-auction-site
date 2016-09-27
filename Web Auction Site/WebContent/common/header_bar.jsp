@@ -22,6 +22,7 @@ $.ajax({
 		</c:when>
 		<c:otherwise>
       		Logged in as <strong>${sessionScope.userID}</strong> |
+      		<a href="${pageContext.request.contextPath}/AuctionSubmit?action=submit">Submit an Auction</a> |
       		<a href="${pageContext.request.contextPath}/Manage">Manage Auctions</a> |
       		<a href="${pageContext.request.contextPath}/Messages">Messages(<span id="msg-count"></span>)</a> |
       		<a href="${pageContext.request.contextPath}/Logout">Log Out</a>
