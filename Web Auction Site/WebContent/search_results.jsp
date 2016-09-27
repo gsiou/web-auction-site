@@ -8,8 +8,11 @@
 <title>Search Results</title>
 <style>
 .preview-img {
-	width: 200px;
+	width: 90%;
 	height: auto;
+}
+.search-table td{
+	width: 20%;
 }
 </style>
 </head>

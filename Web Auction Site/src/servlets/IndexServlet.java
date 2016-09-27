@@ -191,7 +191,7 @@ public class IndexServlet extends HttpServlet {
 		sold = aucdao.findSoldOf(user, new Date());
 		won = aucdao.findUserWonAuctions(user, new Date());
 		lost = aucdao.findUserLostAuctions(user, new Date());
-		bidded = aucdao.findUserWonAuctions(user, new Date());
+		bidded = aucdao.findUserBiddedAuctions(user, new Date());
 		
 		request.setAttribute("inactiveList", inactive);
 		request.setAttribute("activeList", active);
