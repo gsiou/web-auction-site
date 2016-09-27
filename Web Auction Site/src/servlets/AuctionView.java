@@ -205,7 +205,6 @@ public class AuctionView extends HttpServlet {
 			}
 		}
 		else if(action.equals("buyout")){
-			System.out.println("OOOOOOOOK");
 			RequestDispatcher disp;
 			if(request.getSession().getAttribute("userID") == null){
 				disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
@@ -228,8 +227,6 @@ public class AuctionView extends HttpServlet {
 			request.getSession().setAttribute("bid_response", "Item successfully bought");
 			response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=view");
 		}
-		else
-			System.out.println("SHIIIIIT");
 	}
 
 }

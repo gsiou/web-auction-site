@@ -186,14 +186,14 @@ cursor: pointer;
 
 .txtbtncontainer{
     display: inline-block;
-    border-radius: 5px;
+    border-radius: 0.1em;
     height: 50%;
     width: 80%;
 }
 
 .small-txtbtncontainer{
     display: inline-block;
-    border-radius: 5px;
+    border-radius: 0.1em;
     height: 40%;
     width: 80%;
 }
@@ -205,9 +205,9 @@ cursor: pointer;
 .textbox-search{
     height:100%;
     border: 0;
-    border-radius: 5px;
+    border-radius: 0.25em;
     background-color: white;
-    font-size: 19px;
+    font-size: 140%;
     outline: none;
     width: 65%;
 }
