@@ -11,7 +11,10 @@ import java.util.List;
  */
 @Entity
 @Table(name="Image")
-@NamedQuery(name="Image.findAll", query="SELECT i FROM Image i")
+@NamedQueries({
+	@NamedQuery(name="Image.findAll", query="SELECT i FROM Image i"),
+	@NamedQuery(name="Image.findImagesofAuction", query="SELECT i FROM Image i WHERE :auction MEMBER OF i.auctions "),
+})
 public class Image implements Serializable {
 	private static final long serialVersionUID = 1L;
 
