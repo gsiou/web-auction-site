@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.UserDAO;
 import dao.UserDAOI;
+import dao.ImageDAO;
+import dao.ImageDAOI;
 import entities.User;
 import entities.Image;
 import entities.Category;
@@ -93,7 +95,8 @@ public class AuctionView extends HttpServlet {
 			Auction currentAuction = dao.findByID(auctionid);
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
-			List<Image> auction_images=currentAuction.getImages();
+			ImageDAOI imgdao = new ImageDAO();
+			List<Image> auction_images=imgdao.findImagesofAuction(currentAuction);
 			ArrayList<String> image_paths=new ArrayList<>();
 			for (Image auct_im : auction_images) {
 	            image_paths.add(auct_im.getUrl());

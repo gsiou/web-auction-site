@@ -1,7 +1,12 @@
 package dao;
 
-import javax.persistence.EntityManager;
+import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import entities.Auction;
+import entities.Category;
 import entities.Image;
 import entities.User;
 import utils.EntityManagerHelper;
@@ -26,6 +31,15 @@ public class ImageDAO implements ImageDAOI{
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		Image image = em.find(Image.class, url); 
         return image;
+	}
+	
+	@Override
+	public List<Image> findImagesofAuction(Auction auction) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Image> getAuctImages;
+		getAuctImages = em.createNamedQuery("Image.findImagesofAuction", Image.class);
+		getAuctImages.setParameter("auction", auction);
+		return getAuctImages.getResultList();
 	}
 	
 }
