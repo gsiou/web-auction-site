@@ -76,7 +76,7 @@
     	<p>Start Time:${start_time}</p>
     	<p>Expiration Time:${expiration_time}</p>
     	<c:choose>
-    		<c:when test="${buy_price == 12}">
+    		<c:when test="${buy_price == 0}">
     			<p>Buy Price:(-) Bid-only</p>
     		</c:when>
     		<c:otherwise>
