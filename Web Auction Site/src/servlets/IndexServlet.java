@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ import dao.UserDAOI;
 import entities.Auction;
 import entities.Category;
 import entities.User;
+import entities.Image;
 
 /**
  * Servlet implementation class IndexServlet
@@ -147,6 +149,20 @@ public class IndexServlet extends HttpServlet {
 		}
 		else {
 			has_prev_page = false;
+		}
+		
+		Image default_img=new Image();
+		default_img.setUrl("default_img.png");
+		default_img.setAuctions(null);
+		List<Image> default_list=new ArrayList<>();
+		default_list.add(default_img);
+		
+		for (Auction s_res : search_results) {
+			System.out.println(s_res.getAuctionId());
+            if((s_res.getImages()).isEmpty()){
+            	System.out.println(s_res.getAuctionId());
+            	s_res.setImages(default_list);
+            }
 		}
 		
 		request.setAttribute("searchResults", search_results);
