@@ -13,7 +13,7 @@ public interface AuctionDAOI {
 	
 	public Auction findByID(int id);
 	
-	public List<Auction> search(AuctionSearchOptions search_options);
+	public List<Auction> search(AuctionSearchOptions search_options, int page, int entries_per_page);
 	
 	public List<Auction> findInactiveOf(User user);
 	

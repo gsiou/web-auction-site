@@ -28,7 +28,8 @@ import entities.User;
 @WebServlet(urlPatterns = {"", "/Search", "/Manage"})
 public class IndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static final int searchResultsPerPage = 15;
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -105,11 +106,59 @@ public class IndexServlet extends HttpServlet {
 		if(location_param != null && !location_param.equals("")){
 			options.setLocation(location_param);
 		}
+		
+		// Determine which page we have to present
+		String pageStr = request.getParameter("page");
+		int page = 0;
+		if(pageStr != null){
+			try{
+				page = Integer.parseInt(pageStr);
+			}
+			catch (NumberFormatException e){
+				// Page will remain 0, nothing to handle.
+			}
+		}
+		
+		if(page < 0){
+			// We cannot allow negative pages.
+			page = 0;
+		}
+		
 		// Inject the dao with our options.
 		AuctionDAOI aucdao = new AuctionDAO();
 		List<Auction> search_results;
-		search_results = aucdao.search(options);
+		search_results = aucdao.search(options, page, searchResultsPerPage);
+		
+		boolean has_next_page = false;
+		boolean has_prev_page = false;
+		
+		// Check if we have a next page.
+		if (aucdao.search(options, ((page + 1) * searchResultsPerPage), 1).size() > 0){
+			// Above line checks if next item of fetched page exists.
+			// If it does not exist, no more pages exist.
+			has_next_page = true;
+		}
+		else {
+			has_next_page = false;
+		}
+		
+		if (page != 0){
+			has_prev_page = true;
+		}
+		else {
+			has_prev_page = false;
+		}
+		
 		request.setAttribute("searchResults", search_results);
+		request.setAttribute("nextPage", has_next_page);
+		request.setAttribute("prevPage", has_prev_page);
+		request.setAttribute("currentPage", page);
+		request.setAttribute("descriptionParam", description_param);
+		request.setAttribute("locationParam", location_param);
+		request.setAttribute("categoryParam", category_param);
+		request.setAttribute("priceMinParam", price_from_param);
+		request.setAttribute("priceMaxParam", price_to_param);
+		
 		RequestDispatcher disp = getServletContext().getRequestDispatcher("/search_results.jsp");
 		disp.forward(request, response);
 	}

@@ -47,6 +47,23 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<hr>
+		<c:if test="${prevPage}">
+			<a class="link1" href="
+				${pageContext.request.contextPath}/Search?
+				description=${descriptionParam}&category=${categoryParam}&location=${locationParam}
+				&price-from=${priceMinParam}&price-to=${priceMaxParam}&page=${currentPage-1}">
+				Previous Page
+			</a>
+		</c:if>
+		<c:if test="${nextPage}">
+			<a class="link1" href="
+				${pageContext.request.contextPath}/Search?
+				description=${descriptionParam}&category=${categoryParam}&location=${locationParam}
+				&price-from=${priceMinParam}&price-to=${priceMaxParam}&page=${currentPage+1}">
+				Next Page
+			</a>
+		</c:if>
 	</div>
 </body>
 </html>

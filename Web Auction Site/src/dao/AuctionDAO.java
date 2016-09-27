@@ -35,7 +35,7 @@ public class AuctionDAO implements AuctionDAOI{
 	}
 
 	@Override
-	public List<Auction> search(AuctionSearchOptions search_options) {
+	public List<Auction> search(AuctionSearchOptions search_options, int page, int entries_per_page) {
 		// Construct the query.
 		// We only care about active auctions.
 		String query_str = "SELECT a FROM Auction a WHERE " +
@@ -83,6 +83,9 @@ public class AuctionDAO implements AuctionDAOI{
 			searchQuery.setParameter("maxprice", search_options.getMaxPrice());
 		}
 		
+		// Return only a page of the results
+		searchQuery.setFirstResult(page * entries_per_page);
+		searchQuery.setMaxResults(entries_per_page);
 		return searchQuery.getResultList();
 	}
 
@@ -151,6 +154,5 @@ public class AuctionDAO implements AuctionDAOI{
 	public void updateAuction(Auction updated_auction) {
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		em.merge(updated_auction);
-	}
-	
+	}	
 }
