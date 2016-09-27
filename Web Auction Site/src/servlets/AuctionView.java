@@ -121,6 +121,7 @@ public class AuctionView extends HttpServlet {
 			float current_bid=currentAuction.getCurrent_Bid();
 			int num_of_bids=currentAuction.getNum_of_bids();
 			String description=currentAuction.getDescription();
+			User creator=currentAuction.getCreator();
 			Date start_time=currentAuction.getStart_time();
 			Date expiration_time=currentAuction.getExpiration_time();
 			Date current_time = new Date();
@@ -134,6 +135,7 @@ public class AuctionView extends HttpServlet {
 			else
 				request.setAttribute("buy_out",true);
 			
+			
 			request.setAttribute("latitude",auct_latitude);
 			request.setAttribute("longitude",auct_longitude);
 			request.setAttribute("location",location);
@@ -143,6 +145,7 @@ public class AuctionView extends HttpServlet {
 			request.setAttribute("current_bid",current_bid);
 			request.setAttribute("num_of_bids",num_of_bids);
 			request.setAttribute("description",description);
+			request.setAttribute("creator",creator);
 			request.setAttribute("start_time",start_time);
 			request.setAttribute("expiration_time",expiration_time);
 			request.setAttribute("buy_user",buyout_user);

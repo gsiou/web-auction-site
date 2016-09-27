@@ -12,7 +12,9 @@
   </head>
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
-	<jsp:include page="/common/search_small.jsp" />    
+	<jsp:include page="/common/search_small.jsp" />
+	<br>
+	<a style="position:relative;left:5%;" href="${pageContext.request.contextPath}/AuctionView?auctionID=${param.auctionID}&page=view">Back to Auction</a>    
     <p class="Gtext" style="position:relative;left:5%;">Bid History</p>
     <div id='success-message'>${sessionScope.bid_response}</div>
   	<c:remove var="bid_response"/>
