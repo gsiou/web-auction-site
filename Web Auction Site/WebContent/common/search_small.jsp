@@ -27,7 +27,7 @@
 </script>
 
 <div id="uni-search">
-	<form>
+	<form action="${pageContext.request.contextPath}/Search" method="get">
 		<a href="${pageContext.request.contextPath}" title="Hammer Deals"><img
 			class="tiny-logo-left" src="logo.png"></a>
 		<div class="small-txtbtncontainer">
