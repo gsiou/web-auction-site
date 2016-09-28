@@ -10,7 +10,7 @@
 		<a href="${pageContext.request.contextPath}" title="Hammer Deals"><img
 			class="tiny-logo-left" src="logo.png"></a>
 		<div class="small-txtbtncontainer">
-			<input type="text" placeholder="Search..." class="textbox-search" name="search_terms" />
+			<input type="text" placeholder="Search..." class="textbox-search" name="description" />
 			<input type="submit" class="button-search" value="Search" />
 			<select id="category-dropdown" name="category" class="select-search">
 				<option value="all">All Categories</option>

@@ -176,7 +176,7 @@ public class AuctionView extends HttpServlet {
 			float buy_price=currentAuction.getBuy_Price();
 			String submited_bid=request.getParameter("Bid_input");
 			float sub_bid=Float.parseFloat(submited_bid);
-			if(sub_bid>=buy_price){
+			if(sub_bid>=buy_price && buy_price > 0){
 				request.getSession().setAttribute("bid_response", "Bid exceeds buy price.Please use buy option");
 				response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=view");
 			}
