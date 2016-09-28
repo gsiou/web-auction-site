@@ -48,6 +48,7 @@
 	    	<c:choose>
     			<c:when test="${buy_out == false and expired==false}">
 			    	<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
+			    		<input type="hidden" name="action" value="bidAuction"> 
 			    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input" placeholder="Place Bid">
 		    			<input type='submit' id='orange_button' value='Place Bid'>
 		    		</form>

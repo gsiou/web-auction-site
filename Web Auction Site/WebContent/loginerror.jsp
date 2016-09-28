@@ -5,9 +5,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="res/styles.css">
 <title>Error loading page</title>
 </head>
-<body>
+<body class="page-background">
+	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
+	<img class="big-logo-center" src="logo.png" >
+	</a>
 	<h2 style="color: red; text-align:center">${error}</h2>
 	<h3 style="text-align:center">
 		<a href="${pageContext.request.contextPath}/Login">Log In</a> to access this resource.

@@ -2,10 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="res/styles.css">
 <title>Resource not Found!</title>
 </head>
-<body>
-	<h1>Oops! The resource you requested cannot be found on the server.</h1>
-	<h2>Make sure you typed the url correctly.</h2>
+<body class="page-background">
+	
+	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
+	<img class="big-logo-center" src="logo.png" >
+	</a>
+	<div class="Gtext-small">
+		<h1>Oops! The resource you requested cannot be found on the server.</h1>
+		<h2>Make sure you typed the url correctly.</h2>
+	</div>
 </body>
 </html>
