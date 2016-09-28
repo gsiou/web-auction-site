@@ -8,6 +8,19 @@
     <script type="text/javascript" src="res/category_fetch.js"> </script> 
     <script type="text/javascript" src="res/jquery.validate.min.js"></script>
     <script type="text/javascript" src="res/auction_submit_validate.js"></script>
+    <script>
+    $(function(){
+    	$('#use-coords').change(function(){
+        	$("#map-container").append('<div id="map">'+
+        			'</div><script async defer'+
+        			' src="https://maps.googleapis.com/maps/api/'+
+        			'js?key=AIzaSyAeUHWIAbJ6ik1KM6PcqEHPM0uCWYF1cfM'+
+        			'&callback=initMap">');
+        	$("#use-coords").hide(1000);
+        	$("#use-coords-text").hide(1000);
+    	});
+    });
+    </script>
 	<title>Submit an Auction|Hammer Deals</title>
 	<style>
 		#category_list{
@@ -30,7 +43,6 @@
 </head>
 <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
-	<jsp:include page="/common/search_small.jsp" />
     <br>
 	<div class="reg-table">
 		<h1>Submit an auction</h1>
@@ -98,10 +110,12 @@
 			<input type="text" name="country" class="textbox-register" placeholder="Country" value="${auctionCountry}">
 			<input type="text" name="location" class="textbox-register" placeholder="Location" value="${auctionLocation}">
 			<h4>Auction Location on the map (Optional)</h4>
-    		<div id="map"></div>
-			<script async defer
-				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeUHWIAbJ6ik1KM6PcqEHPM0uCWYF1cfM&callback=initMap">
+			<input type="checkbox" id="use-coords" checked>
+			<span id="use-coords-text">Use my accounts coordinates</span><br>
+    		<div id="map-container">
+
 			</script>
+    		</div>
 			<input type="hidden" name="latitude" id="lat" />
 			<input type="hidden" name="longitude" id="lng" />
 			<input type="submit" class="button-register" value="Submit">
