@@ -151,18 +151,6 @@ public class IndexServlet extends HttpServlet {
 			has_prev_page = false;
 		}
 		
-		Image default_img=new Image();
-		default_img.setUrl("default_img.png");
-		default_img.setAuctions(null);
-		List<Image> default_list=new ArrayList<>();
-		default_list.add(default_img);
-		
-		for (Auction s_res : search_results) {
-            if((s_res.getImages()).isEmpty()){
-            	s_res.setImages(default_list);
-            }
-		}
-		
 		request.setAttribute("searchResults", search_results);
 		request.setAttribute("nextPage", has_next_page);
 		request.setAttribute("prevPage", has_prev_page);

@@ -290,8 +290,8 @@ public class AdminServlet extends HttpServlet {
 					auc.setCountry(e.getElementsByTagName("Country").item(0).getTextContent());
 					SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
 					auc.setStart_time(sdf.parse(e.getElementsByTagName("Started").item(0).getTextContent()));
-					auc.setExpiration_time(sdf.parse(e.getElementsByTagName("Ends").item(0).getTextContent()));
-					
+					//auc.setExpiration_time(sdf.parse(e.getElementsByTagName("Ends").item(0).getTextContent()));
+					auc.setExpiration_time(sdf.parse("Jan-01-2017 13:37:00"));
 					String tempid;
 					tempid = ((Element) e.getElementsByTagName("Seller").item(0)).getAttribute("UserID");
 					User tempuser = udao.findByID(tempid);

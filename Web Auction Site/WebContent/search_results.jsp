@@ -35,7 +35,7 @@
 						href="${pageContext.request.contextPath}/AuctionView?page=view&auctionID=${auction.auctionId}">
 							<c:out value="${auction.name}" />
 					</a></td>
-					<td><c:out value="${auction.description}" /></td>
+					<td><c:out value="${fn:substring(auction.description, 0, 100)}" /> [..]</td>
 					<td><c:out value="${auction.location}" /></td>
 					<td><strong>Current Bid:</strong> <c:out value="${auction.current_Bid}" />
 						<c:if test="${auction.buy_Price > 0}">
@@ -43,8 +43,15 @@
 							<strong>Buy Price:</strong> <c:out value="${auction.buy_Price}" />
 						</c:if>
 					</td>
-					<td><img class="preview-img"
-						src="${pageContext.request.contextPath}/image/${auction.images[0].url}" />
+					<td>
+						<c:choose>
+							<c:when test="${not empty auction.images[0].url}">
+								<img class="preview-img" src="${pageContext.request.contextPath}/image/${auction.images[0].url}" />
+							</c:when>
+							<c:otherwise>
+								<img class="preview-img" src="default_img.png"/>
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 			</c:forEach>
