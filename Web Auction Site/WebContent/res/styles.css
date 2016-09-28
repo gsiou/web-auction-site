@@ -121,6 +121,13 @@ cursor: pointer;
 	font-size: 200%;
 }
 
+.Gtext-small{
+	text-align:center;
+	font-family: "Georgia";
+	font-weight: bold;
+	font-size: 80%;
+}
+
 .big-logo-center{
 	width:15%;
 	height:250%;

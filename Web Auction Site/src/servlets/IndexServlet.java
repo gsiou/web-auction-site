@@ -158,9 +158,7 @@ public class IndexServlet extends HttpServlet {
 		default_list.add(default_img);
 		
 		for (Auction s_res : search_results) {
-			System.out.println(s_res.getAuctionId());
             if((s_res.getImages()).isEmpty()){
-            	System.out.println(s_res.getAuctionId());
             	s_res.setImages(default_list);
             }
 		}

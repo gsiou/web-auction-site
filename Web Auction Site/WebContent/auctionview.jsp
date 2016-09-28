@@ -29,6 +29,10 @@
 	<div class="auction-name">
 	    <p>${name}</p>
 	</div>
+	
+	<div class="Gtext-small">
+	    <p>Creator:${creator.userId} (${creator.sell_rating})</p>
+	</div>
     
     <div style="display:flex; flex-wrap: wrap; width: 100%; justify-content: center;">
     	
