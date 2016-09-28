@@ -22,8 +22,20 @@ $(function() {
 		window.categories_last = "0";
 		fetch("");
 	});
+	
+	$("#advanced-activate").click(function(){
+		$("#advanced-activate").hide();
+		$("#advanced-search").show(1000);
+	});
+	$("#category-pick-activate").click(function(){
+		$("#category-pick-activate").hide();
+		$("#category-dropdown").replaceWith(
+				"<input type='text' name='category' class='select-search' id='categories_tbox' readonly>"
+		); 
+		$("#category-pick").show(1000);
+		fetch("");
+	})
 });
-
 
 window.categories_text = "";
 window.categories_last = "0";

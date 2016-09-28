@@ -6,6 +6,7 @@
   <head>
   	<jsp:include page="/common/common.jsp" />
     <title>Web Auction Site by RobCo Industries</title>
+    <script src="res/search_fetch_categories.js"></script>
   </head>
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
@@ -38,23 +39,6 @@
       </form>
     </div>
     <footer>RobCo Industries 2016</footer>
-    <script src="res/search_fetch_categories.js"></script>
-    <script>
-    $(function(){
-    	$("#advanced-activate").click(function(){
-    		$("#advanced-activate").hide();
-    		$("#advanced-search").show(1000);
-    	});
-    	$("#category-pick-activate").click(function(){
-    		$("#category-pick-activate").hide();
-    		$("#category-dropdown").replaceWith(
-    				"<input type='text' name='category' class='select-search' id='categories_tbox' readonly>"
-    		); 
-    		$("#category-pick").show(1000);
-    		fetch("");
-    	})
-    });
-    </script>
   </body>
 </html>
   

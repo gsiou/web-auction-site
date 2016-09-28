@@ -16,5 +16,22 @@
 				<option value="all">All Categories</option>
 			</select>
 		</div>
+		<br>
+        <a href="#" class="link1" id="advanced-activate">Advanced Search...</a>
+      	<div id="advanced-search" style="display: none;">
+        	<br>
+      		Price range: <input type="number" name="price-from" placeholder="Minimum...">
+      		<input type="number" name="price-to" placeholder="Maximum...">
+    		Location: <input type="text" name="location" placeholder="Location...">
+    		<br>
+    		<br>
+    		<a href="#" class="link1" id="category-pick-activate">Show all categories</a>
+    		<div id="category-pick" style="display: none;">
+    			<input type="hidden" value="pick" id="action"/>
+    			<button type="button" id="refresh_btn">Reload</button>
+    			<div id="category_list">
+				</div>
+    		</div>
+      	</div>
 	</form>
 </div>
