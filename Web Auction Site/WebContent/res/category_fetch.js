@@ -6,7 +6,7 @@ $(document).ready(function(){
 	});
 	// If we submit new instead of editing
 	// fetch categories at startup
-	if($("#action").val() == "submit"){
+	if($("#action").val() == "submit" || $("#action").val() == "pick"){
 		fetch("");
 	}
 });

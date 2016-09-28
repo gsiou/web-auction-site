@@ -5,7 +5,6 @@
 <html>
   <head>
   	<jsp:include page="/common/common.jsp" />
-  	<script src="res/load_top_categories.js"></script>
     <title>Web Auction Site by RobCo Industries</title>
   </head>
   <body class="page-background">
@@ -26,38 +25,34 @@
       		Price range: <input type="number" name="price-from" placeholder="Minimum...">
       		<input type="number" name="price-to" placeholder="Maximum...">
     		Location: <input type="text" name="location" placeholder="Location...">
+    		<br>
+    		<br>
+    		<a href="#" class="link1" id="category-pick-activate">Show all categories</a>
+    		<div id="category-pick" style="display: none;">
+    			<input type="hidden" value="pick" id="action"/>
+    			<button type="button" id="refresh_btn">Reload</button>
+    			<div id="category_list">
+				</div>
+    		</div>
       	</div>
       </form>
     </div>
     <footer>RobCo Industries 2016</footer>
+    <script src="res/search_fetch_categories.js"></script>
     <script>
     $(function(){
     	$("#advanced-activate").click(function(){
     		$("#advanced-activate").hide();
     		$("#advanced-search").show(1000);
     	});
-    });
-    </script>
-    <script>
-    $(function() {
-    	var send_data = {
-    		parent_category : "",
-    	};
-    	$.ajax({
-    			url : '${pageContext.request.contextPath}/AuctionSubmit?action=fetch_categories',
-    			type : "POST",
-    			data : JSON.stringify(send_data),
-    			contentType : "application/json; charset=utf-8",
-    			dataType : 'json',
-    			success : function(data) {
-    				$.each(data.categories, function(i, item) {
-    					$("#category-dropdown").append($("<option/>", {
-    						value : item,
-    						text : item,
-    					}));
-    				});
-    			},
-    	});
+    	$("#category-pick-activate").click(function(){
+    		$("#category-pick-activate").hide();
+    		$("#category-dropdown").replaceWith(
+    				"<input type='text' name='category' class='select-search' id='categories_tbox' readonly>"
+    		); 
+    		$("#category-pick").show(1000);
+    		fetch("");
+    	})
     });
     </script>
   </body>

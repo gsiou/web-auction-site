@@ -3,28 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<script>
-	$(function() {
-		var send_data = {
-			parent_category : "",
-		};
-		$.ajax({
-				url : '${pageContext.request.contextPath}/AuctionSubmit?action=fetch_categories',
-				type : "POST",
-				data : JSON.stringify(send_data),
-				contentType : "application/json; charset=utf-8",
-				dataType : 'json',
-				success : function(data) {
-					$.each(data.categories, function(i, item) {
-						$("#category-dropdown").append($("<option/>", {
-							value : item,
-							text : item,
-						}));
-					});
-				},
-		});
-	});
-</script>
+<script src="res/search_fetch_categories.js"></script>
 
 <div id="uni-search">
 	<form action="${pageContext.request.contextPath}/Search" method="get">
