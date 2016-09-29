@@ -70,6 +70,15 @@ cursor: pointer;
     padding: 1%;
 }
 
+.recommendation-table{
+	width:80%;
+	margin:auto;
+    border-radius: 0.6%;
+    background-clip: content-box;
+    background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
+    padding: 1em;
+}
+
 .reg-table{
 	text-align:center;
 	width:80%;
@@ -130,7 +139,7 @@ cursor: pointer;
 
 .big-logo-center{
 	width:15%;
-	height:250%;
+	height:auto;
 	display: block;
     margin: auto;
     cursor: pointer;
@@ -138,15 +147,17 @@ cursor: pointer;
 
 .tiny-logo-left{
 	width:5.5%;
-	height:70%;
-	right:4%;
+	height:auto;
+	right:3%;
 	position:relative;
 	vertical-align: middle;
 }
 
 .small-logo-left{
 	width:8%;
-	height:90%;
+	right:3%;
+	height:auto;
+	position:relative;
     vertical-align: middle;
 
 }
