@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -88,6 +89,18 @@ public class UserLoginServlet extends HttpServlet {
 		if(login_success){
 			request.getSession().setAttribute("userID", username);
 			request.getSession().setAttribute("access", myuser.getAccess_lvl());
+			
+			// Calculate recommendations for user and give him appropriate cookies.
+	        if(request.getSession().getAttribute("userID") != null){
+	            UserDAOI userdao = new UserDAO();
+	            List<User> allusers = userdao.listFrequentBidders();
+	            System.out.println("Starting process with users: " + allusers.size());
+	            for(User u : allusers){
+	            	// Cosine similarity goes here.
+	            }
+	            System.out.println("Ending process..");
+	        }
+			
 			response.sendRedirect(request.getContextPath()); // Return to home page;
 		}
 		else{

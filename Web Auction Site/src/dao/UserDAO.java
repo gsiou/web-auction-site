@@ -84,4 +84,12 @@ public class UserDAO implements UserDAOI {
 		Query countUsers = em.createNamedQuery("User.countUnactivated");
 		return ((Number) countUsers.getSingleResult()).intValue();
 	}
+
+	@Override
+	public List<User> listFrequentBidders() {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<User> query = em.createNamedQuery("User.findFrequentBidders", User.class);
+		List<User> users = query.getResultList();  
+        return users;
+	}
 }
