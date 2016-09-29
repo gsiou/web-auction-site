@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -103,6 +104,10 @@ public class UserLoginServlet extends HttpServlet {
 			if (!my_user_bids.isEmpty()) {
 				int common_aucts;
 				double cosine_sim;
+				int k_neighbors=5;
+				User[] k_nearest_users=new User[k_neighbors];
+				double[] neighbors_cosine=new double[k_neighbors];
+				int neighbors_found=0;
 				for (User u : allusers) {
 					common_aucts = 0;
 					List<Auction> check_user_bids = auctdao.findUserUniqueBids(u);
@@ -113,8 +118,28 @@ public class UserLoginServlet extends HttpServlet {
 						}
 					}
 					cosine_sim = common_aucts / (Math.sqrt(check_user_bids.size()) * Math.sqrt(my_user_bids.size()));
+					if(cosine_sim>0){
+						if(neighbors_found<k_neighbors){
+							k_nearest_users[neighbors_found]=u;
+							neighbors_cosine[neighbors_found]=cosine_sim;
+							neighbors_found++;
+						}
+						else{
+							int less_similar=0;
+							for(int i=1;i<k_neighbors;i++){
+								if(neighbors_cosine[i]<neighbors_cosine[less_similar])
+									less_similar=i;
+							}
+							k_nearest_users[less_similar]=u;
+							neighbors_cosine[less_similar]=cosine_sim;
+						}
+					}
 					System.out.println(
-							"Cosice similarity(" + u.getUserId() + "," + myuser.getUserId() + ")=" + cosine_sim);
+							"Cosine similarity(" + u.getUserId() + "," + myuser.getUserId() + ")=" + cosine_sim);
+				}
+				for(int i=0;i<neighbors_found;i++){
+					System.out.println(
+							"Nearest Users(" + k_nearest_users[i].getUserId() + "," + neighbors_cosine[i] + ")");
 				}
 			} else {
 				System.out.println("User has no bids,print top items");
