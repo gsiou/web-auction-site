@@ -35,7 +35,11 @@ import java.util.List;
 		query="SELECT u FROM Auction a, User_bid_Auction u WHERE u.auction = :auction AND u.auction=a "
 				+ " ORDER BY u.time DESC"),
 	@NamedQuery(name="Auction.findUserUniqueBids",
-		query="SELECT DISTINCT(uba.auction) FROM User_bid_Auction uba WHERE uba.user = :user")
+		query="SELECT DISTINCT(uba.auction) FROM User_bid_Auction uba WHERE uba.user = :user"),
+	@NamedQuery(name="Auction.findPopular", 
+		query="SELECT a FROM Auction a WHERE "
+				+ "a.expiration_time >= :date AND a.user IS NULL AND a.start_time IS NOT NULL "
+				+ "ORDER BY a.num_of_bids DESC")
 })
 public class Auction implements Serializable {
 	private static final long serialVersionUID = 1L;

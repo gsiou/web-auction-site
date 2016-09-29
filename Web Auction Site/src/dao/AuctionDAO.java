@@ -162,5 +162,14 @@ public class AuctionDAO implements AuctionDAOI{
 		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserUniqueBids", Auction.class);
 		searchQuery.setParameter("user", user);
 		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> findPopular(int number_of_auctions, Date date) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findPopular", Auction.class);
+		searchQuery.setParameter("date", date);
+		searchQuery.setMaxResults(number_of_auctions);
+		return searchQuery.getResultList();
 	}	
 }
