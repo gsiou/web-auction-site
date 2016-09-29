@@ -41,7 +41,7 @@
 		
 		<div class="reg-table" style="width:30%;">
 	    	<p><b>${name}</b></p>
-	    	<img width=50%; height=40%; src="image/${image}" ><br><br>
+	    	<img width=50%; height=auto; src="image/${image}" ><br><br>
 	    	
 	    	<div style="font-size:110%">Current Bid:${current_bid}$</div><br>
 	    	<div id='pop-up-message'></div>
