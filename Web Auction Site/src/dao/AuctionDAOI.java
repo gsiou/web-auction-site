@@ -29,5 +29,7 @@ public interface AuctionDAOI {
 	
 	public List<User_bid_Auction> findAuctionBids(Auction auction);
 	
+	public List<Auction> findUserUniqueBids(User user);
+	
 	public void updateAuction(Auction updated_auction);
 }

@@ -154,5 +154,13 @@ public class AuctionDAO implements AuctionDAOI{
 	public void updateAuction(Auction updated_auction) {
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		em.merge(updated_auction);
+	}
+
+	@Override
+	public List<Auction> findUserUniqueBids(User user) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findUserUniqueBids", Auction.class);
+		searchQuery.setParameter("user", user);
+		return searchQuery.getResultList();
 	}	
 }
