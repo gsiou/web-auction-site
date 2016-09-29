@@ -11,7 +11,7 @@ public interface UserDAOI {
 
 	public List<User> list();
 	
-	public List<User> listFrequentBidders();
+	public List<User> listFrequentBidders(User caller);
 	
 	public List<User> listUsersOfPage(int page, int entries_per_page);
 	

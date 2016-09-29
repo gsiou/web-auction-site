@@ -86,9 +86,10 @@ public class UserDAO implements UserDAOI {
 	}
 
 	@Override
-	public List<User> listFrequentBidders() {
+	public List<User> listFrequentBidders(User caller) {
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		TypedQuery<User> query = em.createNamedQuery("User.findFrequentBidders", User.class);
+		query.setParameter("user", caller);
 		List<User> users = query.getResultList();  
         return users;
 	}

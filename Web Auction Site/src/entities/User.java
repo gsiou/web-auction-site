@@ -16,7 +16,7 @@ import java.util.List;
 	@NamedQuery(name="User.findUnactivated", query="SELECT u FROM User u WHERE u.access_lvl = 0"),
 	@NamedQuery(name="User.countAll", query="SELECT COUNT(u) FROM User u"),
 	@NamedQuery(name="User.countUnactivated", query="SELECT COUNT(u) FROM User u WHERE u.access_lvl = 0"),
-	@NamedQuery(name="User.findFrequentBidders", query="SELECT u FROM User u WHERE (SELECT DISTINCT COUNT(uba) FROM User_bid_Auction uba WHERE uba.user = u) > 2")
+	@NamedQuery(name="User.findFrequentBidders", query="SELECT u FROM User u WHERE u <> :user AND (SELECT DISTINCT COUNT(uba) FROM User_bid_Auction uba WHERE uba.user = u) > 2")
 })
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
