@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.UserDAO;
 import dao.UserDAOI;
+import dao.AuctionDAO;
+import dao.AuctionDAOI;
 import entities.User;
+import entities.Auction;
 import utils.HelperFunctions;
 
 /**
@@ -93,10 +96,28 @@ public class UserLoginServlet extends HttpServlet {
 			// Calculate recommendations for user and give him appropriate cookies.
 	        if(request.getSession().getAttribute("userID") != null){
 	            UserDAOI userdao = new UserDAO();
+	            AuctionDAOI auctdao= new AuctionDAO();
 	            List<User> allusers = userdao.listFrequentBidders();
+	            List<Auction> my_user_bids = auctdao.findUserUniqueBids(myuser);
 	            System.out.println("Starting process with users: " + allusers.size());
-	            for(User u : allusers){
-	            	// Cosine similarity goes here.
+	            if(!my_user_bids.isEmpty()){
+	            	int common_aucts;
+	            	double cosine_sim;
+	            	for(User u : allusers){
+	            		common_aucts=0;
+	            		List<Auction> check_user_bids = auctdao.findUserUniqueBids(u);
+	            		for(Auction check_aucts : check_user_bids){
+	            			for(Auction my_aucts : my_user_bids){
+	            				if(check_aucts.getAuctionId() == my_aucts.getAuctionId())
+	            					common_aucts++;
+	            			}
+	            		}
+	            		cosine_sim=common_aucts/(Math.sqrt(check_user_bids.size())*Math.sqrt(my_user_bids.size()));
+	            		System.out.println("Cosice similarity(" + u.getUserId() + "," + myuser.getUserId() + ")="+ cosine_sim);
+	            	}
+	            }
+	            else{
+	            	System.out.println("User has no bids,print top items");
 	            }
 	            System.out.println("Ending process..");
 	        }
