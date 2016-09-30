@@ -275,9 +275,13 @@ public class AdminServlet extends HttpServlet {
 					auc.setName(e.getElementsByTagName("Name").item(0).getTextContent());
 					
 					List<Category> categories = new ArrayList<>();
+					Category cur_cat;
 					for(int j = 0; j < e.getElementsByTagName("Category").getLength(); j++){
-						categories.add(dao.find(e.getElementsByTagName("Category").item(j).getTextContent()));
-						dao.addAuctionTo(auc, categories.get(j).getName());
+						cur_cat = dao.find(e.getElementsByTagName("Category").item(j).getTextContent());
+						if(!categories.contains(cur_cat)){
+							categories.add(cur_cat);
+						}
+						//dao.addAuctionTo(auc, categories.get(j).getName());
 					}
 					auc.setCategories(categories);
 					
