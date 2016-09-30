@@ -38,6 +38,11 @@
       	</div>
       </form>
     </div>
+    
+    <p class="Gtext" style="position:relative; left:10%;">Hot Deals</p>
+    <div class="recommendation-table">
+    
+    </div>
     <footer>RobCo Industries 2016</footer>
   </body>
 </html>
