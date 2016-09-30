@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
 import dao.AuctionDAO;
 import dao.AuctionDAOI;
@@ -168,6 +169,7 @@ public class UserLoginServlet extends HttpServlet {
 				// Find frequency of each auction id.
 				List<AuctionFrequency> common_picks = new ArrayList<>();
 				ArrayList<Integer> uncommon_picks = new ArrayList<>();
+				System.out.println("rec auctions:"+recommended_auctions);
 				for(Integer a : auction_set){
 					int freq = Collections.frequency(recommended_auctions, a);
 					if(freq > 1){ // Only care for common.
@@ -180,12 +182,48 @@ public class UserLoginServlet extends HttpServlet {
 				
 				// Sort common picks.
 				Collections.sort(common_picks, new AuctionFrequencyComparator());
+				System.out.println("commonpicks:"+common_picks);
 				
 				// Right here common_picks contains all common auctions between nn
 				// and uncommon picks contails the others mixed.
 				
 				
+				
 				// Populate cookies.
+				int max_auct_ids=5;
+				String common_picks_cookie="";
+				System.out.println("Common picks size:"+common_picks.size());
+				int picks_send=0;
+				for(AuctionFrequency cp : common_picks){	
+					if(picks_send<max_auct_ids){
+						common_picks_cookie+=cp.getAuctionId();
+						common_picks_cookie+="-";
+						picks_send++;
+					}
+				}
+				System.out.println("Common picks cookie:"+common_picks_cookie);
+				String uncommon_picks_cookie="";
+				System.out.println("Uncommon picks size:"+uncommon_picks.size());
+				if(picks_send<max_auct_ids){
+					for(Integer ucp : uncommon_picks){
+						if(picks_send<max_auct_ids){
+							uncommon_picks_cookie+=ucp.toString();
+							uncommon_picks_cookie+="-";
+							picks_send++;
+						}
+					}
+				}
+				System.out.println("Uncommon picks cookie:"+uncommon_picks_cookie);
+				/*
+				Cookie common_picks = new Cookie("common_picks",common_picks_cookie);
+			    Cookie uncommon_picks = new Cookie("uncommon_picks",uncommon_picks_cookie);
+		
+			    common_picks.setMaxAge(60*60*24*365);   
+			    uncommon_picks.setMaxAge(60*60*24*365); 
+		
+			    response.addCookie( common_picks );
+			    response.addCookie( uncommon_picks );
+			      */
 			} else {
 				System.out.println("User has no bids,print top items");
 			}

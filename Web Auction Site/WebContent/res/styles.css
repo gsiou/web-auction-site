@@ -13,16 +13,16 @@ footer{
 	position: absolute;
 }
 .jssorb21 div, .jssorb21 div:hover, .jssorb21 .av {
-position: absolute;
-width: 19px;
-height: 19px;
-text-align: center;
-line-height: 19px;
-color: white;
-font-size: 12px;
-background: url(../b21.png) no-repeat;
-overflow: hidden;
-cursor: pointer;
+	position: absolute;
+	width: 19px;
+	height: 19px;
+	text-align: center;
+	line-height: 19px;
+	color: white;
+	font-size: 12px;
+	background: url(../b21.png) no-repeat;
+	overflow: hidden;
+	cursor: pointer;
 }
 .jssorb21 div { background-position: -5px -5px; }
 .jssorb21 div:hover, .jssorb21 .av:hover { background-position: -35px -5px; }

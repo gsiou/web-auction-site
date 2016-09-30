@@ -6,7 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Web Auction Site</title>
 </head>
-<body>
+<body class="page-background">
+	<a href="${pageContext.request.contextPath}/" title="Hammer Deals">
+	<img class="big-logo-center" src="logo.png" >
+	</a>
 	<h1>Error accessing page!</h1>
 	<p>
 		You are already logged in!
