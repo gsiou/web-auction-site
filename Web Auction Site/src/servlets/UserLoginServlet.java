@@ -2,7 +2,13 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,12 +17,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.UserDAO;
-import dao.UserDAOI;
 import dao.AuctionDAO;
 import dao.AuctionDAOI;
-import entities.User;
+import dao.UserDAO;
+import dao.UserDAOI;
 import entities.Auction;
+import entities.User;
+import helper.AuctionFrequency;
+import helper.AuctionFrequencyComparator;
 import utils.HelperFunctions;
 
 /**
@@ -94,8 +102,7 @@ public class UserLoginServlet extends HttpServlet {
 			request.getSession().setAttribute("userID", username);
 			request.getSession().setAttribute("access", myuser.getAccess_lvl());
 			
-			// Calculate recommendations for user and give him appropriate
-			// cookies.
+			// Calculate recommendations for user using cosine similarity.
 			UserDAOI userdao = new UserDAO();
 			AuctionDAOI auctdao = new AuctionDAO();
 			List<User> allusers = userdao.listFrequentBidders(myuser);
@@ -137,14 +144,51 @@ public class UserLoginServlet extends HttpServlet {
 					System.out.println(
 							"Cosine similarity(" + u.getUserId() + "," + myuser.getUserId() + ")=" + cosine_sim);
 				}
+				
+				
+				
+
+				
+				// Gather the auctions we are about to recommend.
+				ArrayList<Integer> recommended_auctions = new ArrayList<>();
 				for(int i=0;i<neighbors_found;i++){
 					System.out.println(
 							"Nearest Users(" + k_nearest_users[i].getUserId() + "," + neighbors_cosine[i] + ")");
+					for(Auction a : auctdao.findUserUniqueBids(k_nearest_users[i])){
+						if(!my_user_bids.contains(a)){
+							recommended_auctions.add(a.getAuctionId());
+						}
+					}
 				}
+				
+				// Find unique auction ids.
+				Set<Integer> auction_set = new HashSet<>(); // SIngle instance of each auction id.
+				auction_set.addAll(recommended_auctions);
+				
+				// Find frequency of each auction id.
+				List<AuctionFrequency> common_picks = new ArrayList<>();
+				ArrayList<Integer> uncommon_picks = new ArrayList<>();
+				for(Integer a : auction_set){
+					int freq = Collections.frequency(recommended_auctions, a);
+					if(freq > 1){ // Only care for common.
+						common_picks.add(new AuctionFrequency(a, freq));
+					}
+					else{
+						uncommon_picks.add(a);
+					}
+				}
+				
+				// Sort common picks.
+				Collections.sort(common_picks, new AuctionFrequencyComparator());
+				
+				// Right here common_picks contains all common auctions between nn
+				// and uncommon picks contails the others mixed.
+				
+				
+				// Populate cookies.
 			} else {
 				System.out.println("User has no bids,print top items");
 			}
-			System.out.println("Ending process..");
 			
 			response.sendRedirect(request.getContextPath()); // Return to home page;
 		}
