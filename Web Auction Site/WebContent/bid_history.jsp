@@ -46,7 +46,7 @@
 	    	<div style="font-size:110%">Current Bid:${current_bid}$</div><br>
 	    	<div id='pop-up-message'></div>
 	    	<c:choose>
-    			<c:when test="${buy_out == false and expired==false}">
+    			<c:when test="${buy_out == false and expired==false and sessionScope.userID != null}">
 			    	<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
 			    		<input type="hidden" name="action" value="bidAuction"> 
 			    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input" placeholder="Place Bid">

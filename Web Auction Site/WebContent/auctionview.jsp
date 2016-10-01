@@ -77,7 +77,7 @@
   		<div id='pop-up-message'>${sessionScope.bid_response}</div>
   		<c:remove var="bid_response"/>
   		<c:choose>
-    		<c:when test="${buy_out == false and expired==false}">
+    		<c:when test="${buy_out == false and expired==false and sessionScope.userID != null}">
 		  		<form action="AuctionView?auctionID=${param.auctionID}" method="post" onsubmit="return validateBid()">
 		  			<input type="hidden" name="action" value="bidAuction"> 
 		    		<input type="text" id='Bid_amount' name="Bid_input" class="bid-input">
