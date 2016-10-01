@@ -214,16 +214,17 @@ public class UserLoginServlet extends HttpServlet {
 					}
 				}
 				System.out.println("Uncommon picks cookie:"+uncommon_picks_cookie);
-				/*
-				Cookie common_picks = new Cookie("common_picks",common_picks_cookie);
-			    Cookie uncommon_picks = new Cookie("uncommon_picks",uncommon_picks_cookie);
+				
+				Cookie common_picks_ck = new Cookie("common_picks",common_picks_cookie);
+			    Cookie uncommon_picks_ck = new Cookie("uncommon_picks",uncommon_picks_cookie);
 		
-			    common_picks.setMaxAge(60*60*24*365);   
-			    uncommon_picks.setMaxAge(60*60*24*365); 
+			    common_picks_ck.setMaxAge(60*60*24);   
+			    uncommon_picks_ck.setMaxAge(60*60*24); 
 		
-			    response.addCookie( common_picks );
-			    response.addCookie( uncommon_picks );
-			      */
+			    response.addCookie( common_picks_ck );
+			    response.addCookie( uncommon_picks_ck );
+			    response.setContentType("text/html");
+			     
 			} else {
 				System.out.println("User has no bids,print top items");
 			}

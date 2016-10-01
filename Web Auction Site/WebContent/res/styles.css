@@ -71,12 +71,22 @@ footer{
 }
 
 .recommendation-table{
+	display: -webkit-flex;
 	width:80%;
 	margin:auto;
     border-radius: 0.6%;
     background-clip: content-box;
     background: linear-gradient(to bottom right, #6395A6, #D9D9D9);
     padding: 1em;
+    display:flex;
+    flex-direction:row;
+}
+
+.rec-table-item{
+	display: -webkit-flex;
+	display:flex;
+	flex-direction:column;
+	align-items: center;
 }
 
 .reg-table{
@@ -365,7 +375,6 @@ footer{
 	color: orange;
 	text-decoration: underline;
 }
-
 
 .search-table {
 	background-color: white;
