@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="res/styles.css">
-    <link rel="icon" href="res/favicon.ico" type="image/x-icon" />
-    <script src="jquery-3.1.0.min.js"></script>
+	<jsp:include page="/common/common.jsp" />
     <script type="text/javascript"> 
     var latitude = <%=request.getAttribute("latitude")%>;
 	var longitude = <%=request.getAttribute("longitude")%>;
