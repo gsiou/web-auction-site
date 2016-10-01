@@ -28,7 +28,7 @@ public class User_bid_Auction implements Serializable {
 	private Auction auction;
 
 	//bi-directional many-to-one association to User
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="User_UserId")
 	private User user;
 

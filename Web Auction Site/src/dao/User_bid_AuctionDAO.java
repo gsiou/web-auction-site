@@ -36,6 +36,19 @@ public class User_bid_AuctionDAO implements User_bid_AuctionDAOI{
 			return false;
 		}
 	}
+	
+	@Override
+	public boolean create(User_bid_Auction uba){
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		if(find(uba.getId().getUser_UserId(), uba.getId().getAuction_AuctionId()) == null){
+			em.persist(uba);
+			em.flush();
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
 	@Override
 	public User_bid_Auction find(String userid, int aucid) {

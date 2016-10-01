@@ -56,7 +56,7 @@ public class Auction implements Serializable {
 	private String country;
 
 	@JoinColumn(name="Creator")
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private User creator;
 
 	@Column(name="Current_Bid")
@@ -98,7 +98,7 @@ public class Auction implements Serializable {
 	private User user;
 
 	//bi-directional many-to-many association to Category
-	@ManyToMany(mappedBy="auctions")
+	@ManyToMany(mappedBy="auctions", cascade = CascadeType.ALL)
 	private List<Category> categories;
 
 	//bi-directional many-to-many association to Image

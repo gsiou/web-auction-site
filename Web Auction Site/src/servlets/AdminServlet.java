@@ -1,10 +1,9 @@
 package servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,13 +18,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import dao.AuctionDAO;
 import dao.AuctionDAOI;
@@ -38,6 +33,9 @@ import dao.User_bid_AuctionDAOI;
 import entities.Auction;
 import entities.Category;
 import entities.User;
+import xmlentities.Bid;
+import xmlentities.Item;
+import xmlentities.Items;
 
 /**
  * Servlet implementation class AdminServlet
@@ -189,159 +187,129 @@ public class AdminServlet extends HttpServlet {
 
 	private void loadDataset(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		Part filePart = request.getPart("file");
-		InputStream content = filePart.getInputStream();
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		// factory.setValidating(true);
-		factory.setIgnoringElementContentWhitespace(true);
+		JAXBContext jc;
+		Items items;
 		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(content);
-			NodeList nodeList = doc.getElementsByTagName("Item");
-			Node current;
-			CategoryDAOI dao = new CategoryDAO();
-			UserDAOI udao = new UserDAO();
-			AuctionDAOI audao = new AuctionDAO();
-			User_bid_AuctionDAOI ubadao = new User_bid_AuctionDAO();
-			
-			// Import categories.
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				current = nodeList.item(i);
-				if (current.getNodeType() == Node.ELEMENT_NODE) {
-					Element e = (Element) current;
-					ArrayList<String> elemList = new ArrayList<>();
-					for (int j = 0; j < e.getElementsByTagName("Category").getLength(); j++) {
-						Category cat = new Category();
-						cat.setName(e.getElementsByTagName("Category").item(j).getTextContent());
-						if (j != 0) { // A parent category exists.
-							cat.setParent(elemList.get(j - 1));
-						}
-						dao.create(cat);
-						elemList.add(e.getElementsByTagName("Category").item(j).getTextContent());
-					}
-				}
-			}
-			
-			// Import bidding users.
-			nodeList = doc.getElementsByTagName("Bidder");
-			for(int i = 0; i < nodeList.getLength(); i++){
-				current = nodeList.item(i);
-				if(current.getNodeType() == Node.ELEMENT_NODE){
-					Element e = (Element) current;
-					User user = new User();
-					user.setUserId(e.getAttribute("UserID"));
-					user.setBid_rating(Float.parseFloat(e.getAttribute("Rating")));
-					user.setPassword("");
-					user.setAccess_lvl(1);
-					if(e.getElementsByTagName("Location").item(0) != null){
-						user.setAddress(e.getElementsByTagName("Location").item(0).getTextContent());
-					}
-					if(e.getElementsByTagName("Country").item(0) != null){
-						user.setCountry(e.getElementsByTagName("Country").item(0).getTextContent());
-					}
-					udao.create(user);
-				}
-			}
-			
-			// Import sellers.
-			nodeList = doc.getElementsByTagName("Seller");
-			for(int i = 0; i < nodeList.getLength(); i++){
-				current = nodeList.item(i);
-				if(current.getNodeType() == Node.ELEMENT_NODE){
-					Element e = (Element) current;
-					User user = new User();
-					user.setUserId(e.getAttribute("UserID"));
-					user.setSell_rating(Float.parseFloat(e.getAttribute("Rating")));
-					user.setPassword("");
-					user.setAccess_lvl(1);
-					if(!udao.create(user)){
-						// User exists, we have to update him.
-						User temp = udao.findByID(user.getUserId());
-						temp.setSell_rating(user.getSell_rating());
-						udao.update(temp);
-					}
-				}
-			}
-			// Import auctions.
-			nodeList = doc.getElementsByTagName("Item");
-			for(int i = 0; i < nodeList.getLength(); i++){
-				//System.out.println("Test");
-				current = nodeList.item(i);
-				if(current.getNodeType() == Node.ELEMENT_NODE){
-					Element e = (Element) current;
-					Boolean addCat = true;
-					Auction auc = new Auction();
-					//auc.setAuctionId(Integer.parseInt(e.getAttribute("ItemID")));
-					auc.setName(e.getElementsByTagName("Name").item(0).getTextContent());
-					
-					List<Category> categories = new ArrayList<>();
-					Category cur_cat;
-					for(int j = 0; j < e.getElementsByTagName("Category").getLength(); j++){
-						cur_cat = dao.find(e.getElementsByTagName("Category").item(j).getTextContent());
-						if(!categories.contains(cur_cat)){
-							categories.add(cur_cat);
-						}
-						//dao.addAuctionTo(auc, categories.get(j).getName());
-					}
-					auc.setCategories(categories);
-					
-					auc.setCurrent_Bid(Float.parseFloat(e.getElementsByTagName("Currently").item(0).getTextContent()
-							.substring(1).replace(",", "")));
-					auc.setStarting_Bid(Float.parseFloat(e.getElementsByTagName("First_Bid").item(0).getTextContent()
-							.substring(1).replace(",", "")));
-					auc.setNum_of_bids(Integer.parseInt(e.getElementsByTagName("Number_of_Bids").item(0).getTextContent()));
-					auc.setDescription(e.getElementsByTagName("Description").item(0).getTextContent());
-					auc.setCountry(e.getElementsByTagName("Country").item(0).getTextContent());
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
-					auc.setStart_time(sdf.parse(e.getElementsByTagName("Started").item(0).getTextContent()));
-					//auc.setExpiration_time(sdf.parse(e.getElementsByTagName("Ends").item(0).getTextContent()));
-					auc.setExpiration_time(sdf.parse("Jan-01-2017 13:37:00"));
-					String tempid;
-					tempid = ((Element) e.getElementsByTagName("Seller").item(0)).getAttribute("UserID");
-					User tempuser = udao.findByID(tempid);
-					auc.setCreator(tempuser);
-					tempuser.getAuctions().add(auc);
-					
-					String lat = ((Element)e.getElementsByTagName("Location").item(0)).getAttribute("Latitude");
-					String lon = ((Element)e.getElementsByTagName("Location").item(0)).getAttribute("Longitude");
-					if(!lat.equals("") && !lon.equals("")){
-						auc.setLatitude(Float.parseFloat(lat));
-						auc.setLongitude(Float.parseFloat(lon));
-					}
-					auc.setLocation(e.getElementsByTagName("Location").item(0).getTextContent());
-					if(e.getElementsByTagName("Buy_Price").item(0) != null){
-						auc.setBuy_Price(Float.parseFloat(e.getElementsByTagName("Buy_Price").item(0).getTextContent()
-								.substring(1).replace(",", "")));
-					}
-					audao.create(auc);
-					
-					// User bid auction import.
-					String userid;
-					//int aucid = auc.getAuctionId();
-					Date dt;
-					float price;
-					Node temp;
-					Element bid;
-					if(e.getElementsByTagName("Bid") != null){
-						for(int j = 0; j < e.getElementsByTagName("Bid").getLength(); j++){
-							bid = (Element) e.getElementsByTagName("Bid").item(j);
-							dt = sdf.parse(bid.getElementsByTagName("Time").item(0).getTextContent());
-							price = Float.parseFloat(bid.getElementsByTagName("Amount").item(0).getTextContent()
-									.substring(1).replace(",", ""));
-							temp = bid.getElementsByTagName("Bidder").item(0);
-							userid = ((Element) temp).getAttribute("UserID");
-							tempuser = udao.findByID(userid);
-							ubadao.create(tempuser, auc, dt, price);
-						}
-					}
-					//System.out.println("Im here");
-				}
-			}
-			response.sendRedirect("Admin?message=" + URLEncoder.encode("Import successful.", "UTF-8"));
-		} catch (Exception e) {
-			System.out.println("An error occured while importing data.");
-			System.out.println(e.getMessage());
+			jc = JAXBContext.newInstance(Items.class);
+	        Unmarshaller unmarshaller = jc.createUnmarshaller();
+			Part filePart = request.getPart("file");
+			InputStream content = filePart.getInputStream();
+	        items = (Items) unmarshaller.unmarshal(content);
+		} catch (Exception e1) {
 			response.sendRedirect("Admin?message=" + URLEncoder.encode("Import failed.", "UTF-8"));
+			return;
 		}
+
+
+        for(Item i : items.getItems()){
+        	Category cat;
+        	CategoryDAOI catdao = new CategoryDAO();
+        	String parent;
+        	parent = null;
+        	Auction auc = new Auction();
+        	List<Category> categories = new ArrayList<>();
+        	System.out.println("------");
+        	for(String c : i.getCategories()){
+        		cat = catdao.find(c);
+        		if(cat == null){
+        			cat = new Category();
+        			cat.setName(c);
+        			cat.setParent(parent);
+        			System.out.println("Create");
+        		}
+        		System.out.println(cat.getName());
+        		categories.add(cat);
+        		parent = c;
+        	}
+        	auc.setCategories(categories);
+
+        	UserDAOI userdao = new UserDAO();
+        	User creator = userdao.findByID(i.getSeller().getUserID());
+        	if(creator == null){
+        		creator = new User();
+        		creator.setUserId(i.getSeller().getUserID());
+        		creator.setAccess_lvl(1);
+        		creator.setPassword("");
+        		creator.setEmail("");
+        	}
+        	creator.setCountry(i.getCountry());
+    		creator.setSell_rating(i.getSeller().getRating());
+    		if(i.getLocation().getLatitude() != 0 && i.getLocation().getLatitude() != 0){
+        		creator.setLatitude(i.getLocation().getLatitude());
+        		creator.setLongitude(i.getLocation().getLongitude());
+    		}
+    		
+    		//System.out.println("Loc: " + i.getLocation().getLatitude() + i.getLocation().getLongitude());
+        	auc.setName(i.getName());
+        	auc.setDescription(i.getDescription());
+        	auc.setCreator(creator);
+        	auc.setCountry(i.getCountry());
+        	auc.setLocation(i.getLocation().getLocation());
+        	auc.setLatitude(i.getLocation().getLatitude());
+        	auc.setLongitude(i.getLocation().getLongitude());
+        	auc.setNum_of_bids(i.getNumber_of_bids());
+        	
+        	try{
+        		auc.setStarting_Bid(Float.parseFloat(i.getFirst_bid().substring(1)));
+        	} catch (NumberFormatException ex){
+        		auc.setStarting_Bid(0);
+        	}
+        	
+        	try{
+        		auc.setCurrent_Bid(Float.parseFloat(i.getCurrently().substring(1)));
+        	} catch (NumberFormatException ex){
+        		auc.setCurrent_Bid(0);
+        	}
+        	
+        	SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
+			try {
+				auc.setStart_time(sdf.parse(i.getStarted()));
+			} catch (ParseException e) {
+				auc.setStart_time(null);
+			}
+			
+			try{
+				//auc.setExpiration_time(sdf.parse(i.getEnds()));
+				auc.setExpiration_time(sdf.parse("Jan-01-17 23:30:01"));
+			} catch (ParseException e){
+				auc.setExpiration_time(null);
+			}
+			
+        	AuctionDAOI aucdao = new AuctionDAO();
+        	aucdao.create(auc);
+			
+			if (i.getBids().getBids() != null) {
+				User_bid_AuctionDAOI ubadao = new User_bid_AuctionDAO();
+				for (Bid b : i.getBids().getBids()) {
+					User bidder = userdao.findByID(b.getBidder().getUserID());
+					if(bidder == null){
+						bidder = new User();
+						bidder.setUserId(b.getBidder().getUserID());
+						bidder.setPassword("");
+						bidder.setAccess_lvl(1);
+						bidder.setEmail("");
+					}
+					bidder.setCountry(b.getBidder().getCountry());
+					bidder.setAddress(b.getBidder().getLocation());
+					bidder.setBid_rating(b.getBidder().getRating());
+					
+					float price;
+					try{
+						price = Float.parseFloat(b.getAmount().substring(1));
+					} catch (NumberFormatException ex){
+						price = 0;
+					}
+					
+					Date time;
+					try {
+						time = sdf.parse(i.getStarted());
+					} catch (ParseException e) {
+						time = null;
+					}
+					ubadao.create(bidder, auc, time, price);
+				}
+			}
+        }
+        response.sendRedirect("Admin?message=" + URLEncoder.encode("Import successful.", "UTF-8"));
 	}
 }
