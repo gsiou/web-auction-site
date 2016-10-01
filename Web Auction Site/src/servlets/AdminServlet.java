@@ -208,18 +208,27 @@ public class AdminServlet extends HttpServlet {
         	parent = null;
         	Auction auc = new Auction();
         	List<Category> categories = new ArrayList<>();
-        	System.out.println("------");
+        	Category placeholder = null;
         	for(String c : i.getCategories()){
         		cat = catdao.find(c);
         		if(cat == null){
-        			cat = new Category();
-        			cat.setName(c);
-        			cat.setParent(parent);
-        			System.out.println("Create");
+        			// Does not exist in db yet.
+        			placeholder = new Category();
+        			placeholder.setName(c);
+        			placeholder.setParent(parent);
+            		if(categories.contains(placeholder)){
+        				cat = new Category();
+        				cat.setName(c + " (" + parent + ")");
+        				cat.setParent(parent);
+            		}
+            		else{
+            			cat = new Category();
+            			cat.setName(c);
+            			cat.setParent(parent);
+            		}
         		}
-        		System.out.println(cat.getName());
         		categories.add(cat);
-        		parent = c;
+        		parent = cat.getName();
         	}
         	auc.setCategories(categories);
 

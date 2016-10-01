@@ -65,5 +65,25 @@ public class Category implements Serializable {
 	public void setAuctions(List<Auction> auctions) {
 		this.auctions = auctions;
 	}
+	
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof Category)) {
+			return false;
+		}
+		Category castOther = (Category)other;
+		return 
+			this.name.equals(castOther.name);
+	}
+	
+	public int hashCode() {
+		final int prime = 31;
+		int hash = 17;
+		hash = hash * prime + this.name.hashCode();
+		
+		return hash;
+	}
 
 }
