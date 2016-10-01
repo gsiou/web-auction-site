@@ -220,13 +220,16 @@ public class AdminServlet extends HttpServlet {
         				cat = new Category();
         				cat.setName(c + " (" + parent + ")");
         				cat.setParent(parent);
+        				cat.setAuctions(new ArrayList<Auction>());
             		}
             		else{
             			cat = new Category();
             			cat.setName(c);
             			cat.setParent(parent);
+            			cat.setAuctions(new ArrayList<Auction>());
             		}
         		}
+        		cat.getAuctions().add(auc);
         		categories.add(cat);
         		parent = cat.getName();
         	}
