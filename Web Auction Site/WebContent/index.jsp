@@ -39,13 +39,13 @@
       </form>
     </div>
     
-    <p class="Gtext" style="position:relative; left:10%;">Hot Deals</p>
+    <p class="Gtext" style="position:relative; left:10%;">Recommended Deals</p>
     
     <div class="recommendation-table">
     	<c:forEach items="${recommended_aucts}" var="recs" varStatus="status">
     			<div class="rec-table-item">
  					<a class="link3" href="${pageContext.request.contextPath}/AuctionView?auctionID=${recs.auctionId}&page=view" title="auction">${recs.name}</a><br>
-   					<img width=44%; height=100%; src="${pageContext.request.contextPath}/image/${rec_aucts_imgs[status.index]}">
+   					<img class="rec-image" src="${pageContext.request.contextPath}/image/${rec_aucts_imgs[status.index]}">
     				<p>Current Bid: ${recs.current_Bid} $</p>
     			</div>
     	</c:forEach>

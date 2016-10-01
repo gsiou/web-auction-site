@@ -147,9 +147,6 @@ public class UserLoginServlet extends HttpServlet {
 				}
 				
 				
-				
-
-				
 				// Gather the auctions we are about to recommend.
 				ArrayList<Integer> recommended_auctions = new ArrayList<>();
 				for(int i=0;i<neighbors_found;i++){

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Collections;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,16 +65,14 @@ public class IndexServlet extends HttpServlet {
 			String common_picks="";
 			String uncommon_picks="";
 			
-			for(Cookie ck : cookies){
+			if(cookies != null){
+				for(Cookie ck : cookies){
 					if(ck.getName().equals("common_picks"))
 						common_picks+=ck.getValue();
 					if(ck.getName().equals("uncommon_picks"))
 						uncommon_picks+=ck.getValue();
+				}
 			}
-			if(common_picks.isEmpty() && uncommon_picks.isEmpty())
-				System.out.println("Unlogged visitor");
-			else
-				System.out.println("Logged visitor");
 			
 			//Parse auction ids strings
 			AuctionDAOI aucdao = new AuctionDAO();
@@ -120,18 +119,22 @@ public class IndexServlet extends HttpServlet {
 			}
 			if(recommendations.size()<max_recommendations){
 				Date curr_date=new Date();
-				List<Auction> pop_aucts=aucdao.findPopular(max_recommendations, curr_date);
+				int top_auctions_pool_size=20;
+				List<Auction> pop_aucts=aucdao.findPopular(top_auctions_pool_size, curr_date);
+				Collections.shuffle(pop_aucts);
 				for(Auction paucs : pop_aucts){
-					recommendations.add(paucs);
-					List<Image> auction_images=imgdao.findImagesofAuction(paucs);
-					if(auction_images.isEmpty()){
-						image_paths.add("default_img.png");
+					if(!recommendations.contains(paucs)){
+						recommendations.add(paucs);
+						List<Image> auction_images=imgdao.findImagesofAuction(paucs);
+						if(auction_images.isEmpty()){
+							image_paths.add("default_img.png");
+						}
+						else{
+							image_paths.add(auction_images.get(0).getUrl());
+						}
+						if(recommendations.size()==max_recommendations)
+							break;
 					}
-					else{
-						image_paths.add(auction_images.get(0).getUrl());
-					}
-					if(recommendations.size()==max_recommendations)
-						break;
 				}
 			}
 			
