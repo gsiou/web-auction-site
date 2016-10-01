@@ -105,10 +105,20 @@ public class AuctionView extends HttpServlet {
 				image_paths.add("default_img.png");
 			}	
 			request.setAttribute("imageList",image_paths);
-			List<Category> auction_categories=currentAuction.getCategories();
+			List<Category> auction_categories = new ArrayList<>(currentAuction.getCategories());
 			ArrayList<String> categories=new ArrayList<>();
-			for (Category auct_cat : auction_categories) {
-	            categories.add(auct_cat.getName());
+			String prev_category = "";
+			int categories_number = auction_categories.size();
+			for(int i = 0; i < categories_number; i++){
+				for (Category auct_cat : auction_categories) {
+					if(auct_cat.getParent() == null ||
+							auct_cat.getParent().equals(prev_category)){
+						categories.add(auct_cat.getName());
+						prev_category = auct_cat.getName();
+						auction_categories.remove(auct_cat);
+						break;
+					}
+				}
 			}
 			request.setAttribute("categories",categories);
 			
