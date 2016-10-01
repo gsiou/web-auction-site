@@ -29,7 +29,7 @@
 	</div>
 	
 	<div class="Gtext-small">
-	    <p>Creator:${creator.userId} (${creator.sell_rating})</p>
+	    <p>Creator:<c:out value="${creator.userId}"/> (${creator.sell_rating})</p>
 	</div>
     
     <div style="display:flex; flex-wrap: wrap; width: 100%; justify-content: center;">
@@ -57,7 +57,7 @@
     		</c:when>
     		<c:otherwise>
     			<c:choose>
-    				<c:when test="${buy_out == false and expired==false}">
+    				<c:when test="${buy_out == false and expired==false and sessionScope.userID != null}">
     					<form action="AuctionView?auctionID=${param.auctionID}" method="post">
     						<input type="hidden" name="action" value="buyout"> 
     						<p> Buy Price:${buy_price}$ <input type='submit' id='orange_button' value='Buy item'></p>
