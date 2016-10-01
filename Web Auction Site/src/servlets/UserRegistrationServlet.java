@@ -131,10 +131,11 @@ public class UserRegistrationServlet extends HttpServlet {
 					// Hash password.
 					hashed_password = HelperFunctions.hash(password1);
 					
-					// Create user object.
+					UserDAOI dao = new UserDAO();
+					
+					// Populate user object.
 					User user = new User();
 					user.setUserId(userid);
-					user.setAccess_lvl(0); // Default access level.
 					user.setPassword(hashed_password);
 					user.setBid_rating(0);
 					user.setSell_rating(0);
@@ -143,12 +144,20 @@ public class UserRegistrationServlet extends HttpServlet {
 					user.setPhone(phone);
 					user.setEmail(email);
 					user.setTrn(trn);
+					
+					// If this is the first user of the system, make him admin.
+					if(dao.userCount() == 0){
+						user.setAccess_lvl(100);
+					}
+					else{
+						user.setAccess_lvl(0); // Default access level.
+					}
+					
 					if(!latitude.equals("") && !longitude.equals("")){
 						user.setLatitude(Float.parseFloat(latitude));
 						user.setLongitude(Float.parseFloat(longitude));
 					}
-					// Create dao object to insert user to db.
-					UserDAOI dao = new UserDAO();
+
 					if(dao.create(user)){
 						// Success.
 						msg = "User registration succeded.";
