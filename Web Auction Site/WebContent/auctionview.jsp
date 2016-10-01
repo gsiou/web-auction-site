@@ -85,13 +85,15 @@
 		    	</form>
 		    </c:when>
 		</c:choose>
-    	<p>Location:${location}</p>
-    	<p>Country:${country}</p>
+    	<p>Location:<c:out value="${location}"/></p>
+    	<p>Country:<c:out value="${country}"/></p>
     </div>
     
     <div class="desc-table" >
 	<p>Description:</p>
-    	<textarea readonly name="description" class="textbox-register" style="width:100%; height:75%" >${description}</textarea>
+    	<textarea readonly name="description" class="textbox-register" style="width:100%; height:75%" >
+    		<c:out value="${description}" />
+    	</textarea>
     </div>
     
     <div id="view-map" ></div>
