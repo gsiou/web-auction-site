@@ -70,4 +70,17 @@ public class MessageDAO implements MessageDAOI{
 		return ((Number) getUnreadMsgQ.getSingleResult()).longValue();
 	}
 
+	@Override
+	public void delete(int msg_id) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		Message mymsg = em.find(Message.class, msg_id);
+		em.remove(mymsg);
+	}
+
+	@Override
+	public void update(Message message) {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		em.merge(message);
+	}
+
 }

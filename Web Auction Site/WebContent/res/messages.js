@@ -81,7 +81,10 @@ function load_messages(type, page){
 				}).appendTo("#message-list-tbody");
 				$("<tr/>",{
 					html: $("<div/>",{
-						html: escape(item.body) + render_reply(item.user, item.subject) + "<hr>",
+						html: escape(item.body) + 
+							render_reply(item.user, item.subject, type) +
+							render_delete(item.id) +
+							"<hr>",
 						class: "message-body",
 						id: "message-body-" + item.id,
 					}),
@@ -98,10 +101,37 @@ function escape(htmlstr){
 	return $('<div/>').text(htmlstr).html() // Weird hack to escape html.
 }
 
-function render_reply(user, subject){
-	return " <a href='Messages?sendto=" +
-		user + "&subject=RE:" + subject +
-		"'>[Reply]</a>";
+function msg_delete(id){
+	send_data = {
+			message_id : id,
+			message_type : window.msg_type
+	}
+	$.ajax({
+		url: 'Messages?action=delete',
+		type: "POST",
+		data: JSON.stringify(send_data),
+		contentType: "application/json; charset=utf-8",
+		dataType: 'json',
+		complete: function(){
+			load_messages(window.msg_type, window.current_page);
+		}
+	});
+}
+
+function render_delete(id){
+	return " <a href='javascript:void(0)' " +
+			"onclick='msg_delete(" + id + ")'>[Delete]</a>";
+}
+
+function render_reply(user, subject, type){
+	if(type == "received"){
+		return " <a href='Messages?sendto=" +
+			user + "&subject=RE:" + subject +
+			"'>[Reply]</a>";
+	}
+	else{
+		return "";
+	}
 }
 
 function show_msg(index){
@@ -168,5 +198,8 @@ function send_message(){
 				$(document).scrollTop($("#result").offset().top); // So user can see the message.
 			}
 		},
+		complete: function(){
+			load_messages(window.msg_type, window.current_page);
+		}
 	});
 }

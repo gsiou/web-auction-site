@@ -10,6 +10,10 @@ public interface MessageDAOI {
 	
 	public Message find(int msg_id);
 	
+	public void delete(int msg_id);
+	
+	public void update(Message message);
+	
 	public List<Message> getSentOf(User user, int page, int entries_per_page);
 	
 	public List<Message> getReceivedOf(User user, int page, int entries_per_page);

@@ -241,5 +241,43 @@ public class MessageServlet extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(reply.toString());
 		}
+		else if(action.equals("delete")){
+			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
+			int message_id = (int) data.get("message_id").getAsInt();
+			String message_type = data.get("message_type").getAsString();
+			String userid = request.getSession().getAttribute("userID").toString();
+			
+			UserDAOI udao = new UserDAO();
+			User myuser = udao.findByID(userid);
+			MessageDAOI msgdao = new MessageDAO();
+			
+			Message mymsg = msgdao.find(message_id);
+			if(message_type.equals("sent")){
+				if(!mymsg.getUserFrom().getUserId().equals(myuser.getUserId())){
+					return ; // Cant delete another persons messages.
+				}
+			}
+			else{
+				if(!mymsg.getUserTo().getUserId().equals(myuser.getUserId())){
+					return ;
+				}
+			}
+			
+			if(message_type.equals("sent")){
+				mymsg.setShowSent(false);
+			}
+			else if(message_type.equals("received")){
+				mymsg.setShowReceived(false);
+			}
+			
+			if(mymsg.getShowReceived() == false && mymsg.getShowSent() == false){
+				// Delete
+				msgdao.delete(mymsg.getId());
+			}
+			else{
+				// Update
+				msgdao.update(mymsg);
+			}
+		}
 	}
 }
