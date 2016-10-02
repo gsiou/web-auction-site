@@ -22,6 +22,9 @@ $.ajax({
 		</c:when>
 		<c:otherwise>
       		Logged in as <strong>${sessionScope.userID}</strong> |
+      		<c:if test="${sessionScope.access == 100}">
+      			<a href="${pageContext.request.contextPath}/Admin">Admin Panel</a> |
+      		</c:if>
       		<a href="${pageContext.request.contextPath}">Home</a> |
       		<a href="${pageContext.request.contextPath}/AuctionSubmit?action=submit">Submit an Auction</a> |
       		<a href="${pageContext.request.contextPath}/Manage">Manage Auctions</a> |
