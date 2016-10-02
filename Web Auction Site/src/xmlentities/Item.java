@@ -9,6 +9,7 @@ public class Item {
 	private List<String> categories;
 	private String currently;
 	private String first_bid;
+	private String buy_price;
 	private int number_of_bids;
 	private LocationElem location;
 	private String country;
@@ -40,6 +41,14 @@ public class Item {
 	}
 	public void setCurrently(String currently) {
 		this.currently = currently;
+	}
+	
+	@XmlElement(name="Buy_Price")
+	public String getBuy_Price(){
+		return this.buy_price;
+	}
+	public void setBuy_Price(String buy_price){
+		this.buy_price = buy_price;
 	}
 	
 	@XmlElement(name="First_Bid")

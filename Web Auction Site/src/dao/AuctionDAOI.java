@@ -15,6 +15,8 @@ public interface AuctionDAOI {
 	
 	public List<Auction> search(AuctionSearchOptions search_options, int page, int entries_per_page);
 	
+	public List<Auction> list();
+	
 	public List<Auction> findInactiveOf(User user);
 	
 	public List<Auction> findActiveOf(User user, Date date);

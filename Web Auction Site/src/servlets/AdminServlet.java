@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import dao.AuctionDAO;
@@ -33,9 +35,14 @@ import dao.User_bid_AuctionDAOI;
 import entities.Auction;
 import entities.Category;
 import entities.User;
+import entities.User_bid_Auction;
 import xmlentities.Bid;
+import xmlentities.Bidder;
+import xmlentities.Bids;
 import xmlentities.Item;
 import xmlentities.Items;
+import xmlentities.LocationElem;
+import xmlentities.UserElem;
 
 /**
  * Servlet implementation class AdminServlet
@@ -138,6 +145,9 @@ public class AdminServlet extends HttpServlet {
 			else if(action.equals("loadDataset")){
 				loadDataset(request, response);
 			}
+			else if(action.equals("exportDataset")){
+				exportDataset(request, response);
+			}
 			
 		}
 		else{
@@ -147,6 +157,125 @@ public class AdminServlet extends HttpServlet {
 		}
 	}
 	
+	private void exportDataset(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+		JAXBContext jc = null;
+		Items items = null;
+		Marshaller marshaller = null;
+		try {
+			jc = JAXBContext.newInstance(Items.class);
+			marshaller = jc.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		} catch (JAXBException e) {
+			response.sendRedirect("Admin?message=" + URLEncoder.encode("Export failed.", "UTF-8"));
+			return;
+		}
+		
+		// Populate xml entity classes.
+		
+		// Bring all auctions from db.
+		AuctionDAOI aucdao = new AuctionDAO();
+		List<Auction> auctions = aucdao.list();
+		
+		List<Item> item_list = new ArrayList<>();
+		Item current;
+		LocationElem current_loc;
+		UserElem current_user;
+		Bids current_bids;
+		Bid current_bid;
+		List<Bid> current_bid_list;
+		Bidder current_bidder;
+		List<String> current_categories;
+		List<Category> categories_copy;
+		String prev_category = "";
+		int categories_number;
+		
+		for(Auction a : auctions){
+			current = new Item();
+			current.setName(a.getName());
+			current.setDescription(a.getDescription());
+			current.setCountry(a.getCountry());
+			current.setCurrently("$" + a.getCurrent_Bid());
+			current.setFirst_bid("$" + a.getStarting_Bid());
+			current.setNumber_of_bids(a.getNum_of_bids());
+			if(a.getBuy_Price() != 0){
+				current.setBuy_Price("$" + a.getBuy_Price());;
+			}
+			
+			/* Location */
+			current_loc = new LocationElem();
+			current_loc.setLocation(a.getLocation());
+			current_loc.setLatitude(a.getLatitude());
+			current_loc.setLongitude(a.getLongitude());;
+			current.setLocation(current_loc);
+			
+			/* Seller */
+			current_user = new UserElem();
+			current_user.setUserID(a.getCreator().getUserId());
+			current_user.setRating((int) a.getCreator().getSell_rating());
+			current.setSeller(current_user);
+			
+			/* Start/End Dates */
+			SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
+			if(a.getStart_time() == null){
+				current.setStarted("");
+			}
+			else{
+				current.setStarted(sdf.format(a.getStart_time()));
+			}
+			current.setEnds(sdf.format(a.getExpiration_time()));
+			
+			/* Categories */
+			current_categories = new ArrayList<String>();
+			categories_copy = new ArrayList<Category>(a.getCategories());
+			categories_number = categories_copy.size();
+			for(int i = 0; i < categories_number; i++){ // Sort them
+				for (Category auct_cat : categories_copy) {
+					if(auct_cat.getParent() == null || 
+							auct_cat.getParent().equals(prev_category)){
+						current_categories.add(auct_cat.getName());
+						prev_category = auct_cat.getName();
+						categories_copy.remove(auct_cat);
+						break;
+					}
+				}
+			}
+			current.setCategories(current_categories);
+			
+			/* Bids */
+			current_bid_list = new ArrayList<Bid>();
+			for(User_bid_Auction uba : a.getUserBidAuctions()){
+				current_bidder = new Bidder();
+				current_bidder.setCountry(uba.getUser().getCountry());
+				current_bidder.setLocation(uba.getUser().getAddress());
+				current_bidder.setRating((int) uba.getUser().getBid_rating());
+				current_bidder.setUserID(uba.getUser().getUserId());
+				
+				current_bid = new Bid();
+				current_bid.setAmount("$" + uba.getPrice());
+				current_bid.setTime(sdf.format(uba.getTime()));
+				current_bid.setBidder(current_bidder);
+				current_bid_list.add(current_bid);
+			}
+			current_bids = new Bids();
+			current_bids.setBids(current_bid_list);
+			current.setBids(current_bids);
+			item_list.add(current);
+		}
+		items = new Items();
+		items.setItems(item_list);
+		
+		try {
+			response.setContentType("text/plain");
+			response.setHeader("Content-Disposition", "attachment;filename=itemsall.xml");
+			marshaller.marshal(items, response.getOutputStream());
+			
+		} catch (JAXBException e) {
+			response.sendRedirect("Admin?message=" + URLEncoder.encode("Export failed.", "UTF-8"));
+			return;
+		}
+		
+	}
+
 	private void activation(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String userid;
 		String action;
@@ -265,6 +394,14 @@ public class AdminServlet extends HttpServlet {
         		auc.setStarting_Bid(Float.parseFloat(i.getFirst_bid().substring(1)));
         	} catch (NumberFormatException ex){
         		auc.setStarting_Bid(0);
+        	}
+        	
+        	if(i.getBuy_Price() != null){
+        		try{
+        			auc.setBuy_Price(Float.parseFloat(i.getBuy_Price().substring(1)));
+        		} catch (NumberFormatException ex){
+        			auc.setBuy_Price(0);
+        		}
         	}
         	
         	try{

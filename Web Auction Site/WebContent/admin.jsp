@@ -103,6 +103,12 @@
 			<input type="submit" value="Upload File">
 		</form>
 	</div>
+	<div style="text-align: center">
+		<form action="" method="post">
+			<input type="hidden" name="action" value="exportDataset">
+			<button id="btn-export" class="button-register">Export Dataset XML</button>
+		</form>
+	</div>
 	<script>
 		// Hide dataset import on startup
 		$("#datasetupload").hide();

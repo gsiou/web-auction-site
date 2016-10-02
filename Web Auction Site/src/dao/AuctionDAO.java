@@ -171,5 +171,12 @@ public class AuctionDAO implements AuctionDAOI{
 		searchQuery.setParameter("date", date);
 		searchQuery.setMaxResults(number_of_auctions);
 		return searchQuery.getResultList();
+	}
+
+	@Override
+	public List<Auction> list() {
+		EntityManager em = EntityManagerHelper.getEntityManager();
+		TypedQuery<Auction> searchQuery = em.createNamedQuery("Auction.findAll", Auction.class);
+		return searchQuery.getResultList();
 	}	
 }
