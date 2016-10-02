@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -152,7 +153,7 @@ public class UserLoginServlet extends HttpServlet {
 				for(int i=0;i<neighbors_found;i++){
 					System.out.println(
 							"Nearest Users(" + k_nearest_users[i].getUserId() + "," + neighbors_cosine[i] + ")");
-					for(Auction a : auctdao.findUserUniqueBids(k_nearest_users[i])){
+					for(Auction a : auctdao.findUserUniqueActiveBids(k_nearest_users[i], new Date())){
 						if(!my_user_bids.contains(a)){
 							recommended_auctions.add(a.getAuctionId());
 						}
