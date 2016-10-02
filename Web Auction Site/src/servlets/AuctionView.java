@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -51,13 +49,17 @@ public class AuctionView extends HttpServlet {
 		RequestDispatcher disp;
 		String action=request.getParameter("page");
 		if(action == null){
-			System.out.println("Null action");
 			return ;
 		}
 		else if(action.equals("history")){
+			/* Bid history servlet implementation */
+			
 			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
 			Auction currentAuction = dao.findByID(auctionid);
+			
+			/* Get name,starting bid,bids and start time of the current auction */
+			
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
 			List<User_bid_Auction> bidding_users=dao.findAuctionBids(currentAuction);
@@ -66,13 +68,15 @@ public class AuctionView extends HttpServlet {
 			request.setAttribute("starting_bid",starting_bid);
 			Date start_time=currentAuction.getStart_time();
 			request.setAttribute("start_time",start_time);
-			List<Image> auction_images=currentAuction.getImages();
-			if(auction_images.isEmpty()){
-				request.setAttribute("image","default_img.png");
-			}
-			else{
-				request.setAttribute("image",auction_images.get(0).getUrl());
-			}
+			
+			/* Get auction's images */
+			
+			ImageDAOI imgdao = new ImageDAO();
+			List<Image> auction_images=imgdao.findImagesofAuction(currentAuction);
+			request.setAttribute("images",auction_images);
+			
+			/* Get auction's current bid and set if it is sold/expired or not */
+			
 			float current_bid=currentAuction.getCurrent_Bid();
 			request.setAttribute("current_bid",current_bid);
 			User buyout_user=currentAuction.getUser();
@@ -90,21 +94,28 @@ public class AuctionView extends HttpServlet {
 			disp.forward(request, response);
 		}
 		else if(action.equals("view")){
+			/* Auction View servlet implementation */
+			
+			/* Find current auction*/
+			
 			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
 			Auction currentAuction = dao.findByID(auctionid);
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
 			ImageDAOI imgdao = new ImageDAO();
+			
+			/* Find auction's images*/
+			
 			List<Image> auction_images=imgdao.findImagesofAuction(currentAuction);
 			ArrayList<String> image_paths=new ArrayList<>();
 			for (Image auct_im : auction_images) {
 	            image_paths.add(auct_im.getUrl());
 			}
-			if(image_paths.isEmpty()){
-				image_paths.add("default_img.png");
-			}	
 			request.setAttribute("imageList",image_paths);
+			
+			/* Find auction's listed categories*/
+			
 			List<Category> auction_categories = new ArrayList<>(currentAuction.getCategories());
 			ArrayList<String> categories=new ArrayList<>();
 			String prev_category = "";
@@ -121,6 +132,8 @@ public class AuctionView extends HttpServlet {
 				}
 			}
 			request.setAttribute("categories",categories);
+			
+			/* Set the attributes for the view */
 			
 			float auct_latitude=currentAuction.getLatitude();
 			float auct_longitude=currentAuction.getLongitude();
@@ -173,8 +186,11 @@ public class AuctionView extends HttpServlet {
 			return ;
 		}
 		else if(action.equals("bidAuction")){
+			/* Bid server implementation */
+			
 			RequestDispatcher disp;
 			if(request.getSession().getAttribute("userID") == null){
+				/* Do not work for unlogged users */
 				disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
 				disp.forward(request, response);
 				return;
@@ -187,10 +203,14 @@ public class AuctionView extends HttpServlet {
 			String submited_bid=request.getParameter("Bid_input");
 			float sub_bid=Float.parseFloat(submited_bid);
 			if(sub_bid>=buy_price && buy_price > 0){
+				/* If bid exceeds buy price */
+				
 				request.getSession().setAttribute("bid_response", "Bid exceeds buy price.Please use buy option");
 				response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=view");
 			}
 			else if(sub_bid>current_bid){
+				/* If the bid is valid */
+				
 				User_bid_AuctionPK new_bid_pk=new User_bid_AuctionPK();
 				new_bid_pk.setAuction_AuctionId(currentAuction.getAuctionId());
 				UserDAOI udao = new UserDAO();
@@ -221,6 +241,8 @@ public class AuctionView extends HttpServlet {
 			}
 		}
 		else if(action.equals("buyout")){
+			/* Buyout implementation */
+			
 			RequestDispatcher disp;
 			if(request.getSession().getAttribute("userID") == null){
 				disp = getServletContext().getRequestDispatcher("/loginerror.jsp");

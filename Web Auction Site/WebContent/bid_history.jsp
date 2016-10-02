@@ -10,18 +10,36 @@
     <script type="text/javascript" src="res/fade_out_text.js"> </script>
     <title>${name}|Hammer Deals</title>
   </head>
+    <style>
+		.text-pos{
+			position:relative;
+			left:5%;
+		}
+		.reg-width{
+			width:50%;
+		}
+		.prev-img-width{
+			width:30%;
+		}
+		.flex-display{
+			display:flex;
+		}
+		.bid-size{
+			font-size:110%	
+		}	
+  	</style>
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
 	<jsp:include page="/common/search_small.jsp" />
 	<br>
-	<a style="position:relative;left:5%;" href="${pageContext.request.contextPath}/AuctionView?auctionID=${param.auctionID}&page=view">Back to Auction</a>    
-    <p class="Gtext" style="position:relative;left:5%;">Bid History</p>
+	<a class="link3 text-pos" href="${pageContext.request.contextPath}/AuctionView?auctionID=${param.auctionID}&page=view">Back to Auction</a>    
+    <p class="Gtext text-pos">Bid History</p>
     <div id='success-message'>${sessionScope.bid_response}</div>
   	<c:remove var="bid_response"/>
     
-    <div style="display:flex;">
+    <div class="flex-display">
     	
-	    <div class="reg-table" style="width:50%;">
+	    <div class="reg-table reg-width">
 		    <table class="user-table">
 		    	<tr><th>UserID</th><th>Bid</th><th>Time</th></tr>
 		    	<c:forEach items="${user_biddings}" var="bidding">
@@ -39,11 +57,18 @@
 			</table>
 		</div>
 		
-		<div class="reg-table" style="width:30%;">
+		<div class="reg-table prev-img-width">
 	    	<p><b>${name}</b></p>
-	    	<img width=50%; height=auto; src="image/${image}" ><br><br>
+	    	<c:choose>
+				<c:when test="${not empty auction.images[0].url}">
+					<img width=50%; height=auto; src="${pageContext.request.contextPath}/image/${images[0].url}" />
+				</c:when>
+				<c:otherwise>
+					<img width=50%; height=auto; src="default_img.png"/>
+				</c:otherwise>
+			</c:choose>
 	    	
-	    	<div style="font-size:110%">Current Bid:${current_bid}$</div><br>
+	    	<div class="bid-size">Current Bid:${current_bid}$</div><br>
 	    	<div id='pop-up-message'></div>
 	    	<c:choose>
     			<c:when test="${buy_out == false and expired==false and sessionScope.userID != null}">

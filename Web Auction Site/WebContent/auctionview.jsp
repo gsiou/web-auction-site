@@ -14,10 +14,26 @@
     <script type="text/javascript" src="res/bid_validate.js"> </script>
     <title>${name}|Hammer Deals</title>
   </head>
+  <style>
+	.categories-text{
+		text-align:center;
+		font-size: 80%;
+	}
+	.view-flex-boxes{
+		display:flex;
+		flex-wrap: wrap;
+		width: 100%;
+		justify-content: center;
+	}
+	.desc-size{
+		width:100%;
+		height:75%;
+	}
+  </style>
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
 	<jsp:include page="/common/search_small.jsp" />         
-   	<div style="text-align:center; font-size: 80%;">
+   	<div class="categories-text">
 	 	<p>Listed categories:
 	    <c:forEach items="${categories}" var="category">
 	    	>${category}
@@ -32,13 +48,20 @@
 	    <p>Creator:<c:out value="${creator.userId}"/> (${creator.sell_rating})</p>
 	</div>
     
-    <div style="display:flex; flex-wrap: wrap; width: 100%; justify-content: center;">
+    <div class="view-flex-boxes">
     	
 	<div id="slider_container" class="slider_container">
         <div data-u="slides" class="slides">
-        	<c:forEach items="${imageList}" var="image">
-    			<div><img data-u="image" src="image/${image}" ></div>
-    		</c:forEach>
+        	<c:choose>
+				<c:when test="${not empty imageList}">
+					<c:forEach items="${imageList}" var="image">
+    					<div><img data-u="image" src="image/${image}" ></div>
+    				</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<div><img data-u="image" src="default_img.png"/></div>
+				</c:otherwise>
+			</c:choose>
     	</div>
         <div data-u="navigator" class="jssorb21" style="bottom: 16px; right: 6px;">
             <div data-u="prototype"></div>
@@ -91,7 +114,7 @@
     
     <div class="desc-table" >
 	<p>Description:</p>
-    	<textarea readonly name="description" class="textbox-register" style="width:100%; height:75%" >
+    	<textarea readonly name="description" class="textbox-register desc-size">
     		<c:out value="${description}" />
     	</textarea>
     </div>
