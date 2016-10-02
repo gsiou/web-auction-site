@@ -8,6 +8,12 @@
     <title>Web Auction Site by RobCo Industries</title>
     <script src="res/search_fetch_categories.js"></script>
   </head>
+  <style>
+	.deals-text-pos{
+		position:relative;
+		left:10%;
+	}
+  </style>
   <body class="page-background">
 	<jsp:include page="/common/header_bar.jsp" />
     <div id="search">
@@ -39,13 +45,20 @@
       </form>
     </div>
     
-    <p class="Gtext" style="position:relative; left:10%;">Recommended Deals</p>
+    <p class="Gtext deals-text-pos" >Recommended Deals</p>
     
     <div class="recommendation-table">
     	<c:forEach items="${recommended_aucts}" var="recs" varStatus="status">
     			<div class="rec-table-item">
  					<a class="link3" href="${pageContext.request.contextPath}/AuctionView?auctionID=${recs.auctionId}&page=view" title="auction">${recs.name}</a><br>
-   					<img class="rec-image" src="${pageContext.request.contextPath}/image/${rec_aucts_imgs[status.index]}">
+ 					<c:choose>
+						<c:when test="${not empty rec_aucts_imgs[status.index]}">
+							<img class="rec-image" src="${pageContext.request.contextPath}/image/${rec_aucts_imgs[status.index]}" />
+						</c:when>
+						<c:otherwise>
+							<img class="rec-image" src="default_img.png"/>
+						</c:otherwise>
+					</c:choose>
     				<p>Current Bid: ${recs.current_Bid} $</p>
     			</div>
     	</c:forEach>

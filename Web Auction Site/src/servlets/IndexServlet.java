@@ -84,7 +84,7 @@ public class IndexServlet extends HttpServlet {
 					recommendations.add(aucdao.findByID(Integer.parseInt(common_ids[i])));
 					List<Image> auction_images=imgdao.findImagesofAuction(aucdao.findByID(Integer.parseInt(common_ids[i])));
 					if(auction_images.isEmpty()){
-						image_paths.add("default_img.png");
+						image_paths.add(null);
 					}
 					else{
 						image_paths.add(auction_images.get(0).getUrl());
@@ -99,7 +99,7 @@ public class IndexServlet extends HttpServlet {
 					recommendations.add(aucdao.findByID(Integer.parseInt(uncommon_ids[i])));
 					List<Image> auction_images=imgdao.findImagesofAuction(aucdao.findByID(Integer.parseInt(uncommon_ids[i])));
 					if(auction_images.isEmpty()){
-						image_paths.add("default_img.png");
+						image_paths.add(null);
 					}
 					else{
 						image_paths.add(auction_images.get(0).getUrl());
@@ -118,7 +118,7 @@ public class IndexServlet extends HttpServlet {
 						recommendations.add(paucs);
 						List<Image> auction_images=imgdao.findImagesofAuction(paucs);
 						if(auction_images.isEmpty()){
-							image_paths.add("default_img.png");
+							image_paths.add(null);
 						}
 						else{
 							image_paths.add(auction_images.get(0).getUrl());
