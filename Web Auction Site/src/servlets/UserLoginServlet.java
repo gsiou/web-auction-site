@@ -61,6 +61,21 @@ public class UserLoginServlet extends HttpServlet {
 		}
 		else if (url_path.equals("/Logout")){
 			if (request.getSession().getAttribute("userID") != null) {
+				//Remove Cookies
+				Cookie[] cookies = request.getCookies();
+				
+				if(cookies != null){
+					for(Cookie ck : cookies){
+						if(ck.getName().equals("common_picks")){
+							ck.setMaxAge(0);
+							response.addCookie(ck);
+						}
+						if(ck.getName().equals("uncommon_picks")){
+							ck.setMaxAge(0);
+							response.addCookie(ck);
+						}
+					}
+				}
 				// Destroy session.
 				request.getSession().invalidate();
 			}
