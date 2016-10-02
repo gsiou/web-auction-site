@@ -33,6 +33,8 @@ public interface AuctionDAOI {
 	
 	public List<Auction> findUserUniqueBids(User user);
 	
+	public List<Auction> findUserUniqueActiveBids(User user, Date date);
+	
 	public List<Auction> findPopular(int number_of_auctions, Date date);
 	
 	public void updateAuction(Auction updated_auction);

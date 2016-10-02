@@ -36,6 +36,9 @@ import java.util.List;
 				+ " ORDER BY u.time DESC"),
 	@NamedQuery(name="Auction.findUserUniqueBids",
 		query="SELECT DISTINCT(uba.auction) FROM User_bid_Auction uba WHERE uba.user = :user"),
+	@NamedQuery(name="Auction.findUserUniqueActiveBids",
+		query="SELECT DISTINCT(uba.auction) FROM User_bid_Auction uba WHERE uba.user = :user "
+			+ "AND uba.auction.expiration_time >= :date AND uba.auction.user IS NULL AND uba.auction.start_time IS NOT NULL"),
 	@NamedQuery(name="Auction.findPopular", 
 		query="SELECT a FROM Auction a WHERE "
 				+ "a.expiration_time >= :date AND a.user IS NULL AND a.start_time IS NOT NULL "
