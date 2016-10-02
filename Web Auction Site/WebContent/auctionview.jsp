@@ -114,9 +114,7 @@
     
     <div class="desc-table" >
 	<p>Description:</p>
-    	<textarea readonly name="description" class="textbox-register desc-size">
-    		<c:out value="${description}" />
-    	</textarea>
+    	<textarea readonly name="description" class="textbox-register desc-size"><c:out value="${description}" /></textarea>
     </div>
     
     <div id="view-map" ></div>
