@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.Collections;
 
 import javax.servlet.RequestDispatcher;
@@ -18,14 +17,11 @@ import javax.servlet.http.Cookie;
 import dao.AuctionDAO;
 import dao.AuctionDAOI;
 import dao.AuctionSearchOptions;
-import dao.CategoryDAO;
-import dao.CategoryDAOI;
 import dao.ImageDAO;
 import dao.ImageDAOI;
 import dao.UserDAO;
 import dao.UserDAOI;
 import entities.Auction;
-import entities.Category;
 import entities.User;
 import entities.Image;
 
@@ -83,11 +79,8 @@ public class IndexServlet extends HttpServlet {
 			ArrayList<String> image_paths=new ArrayList<>();
 			String delim = "-";
 			if(!common_picks.isEmpty()){
-				//System.out.println("Common picks:" + common_picks);
 				String[] common_ids=common_picks.split(delim);
-				//System.out.println("Common ids len:" + common_ids.length);
 				for(int i=0;i<common_ids.length;i++){
-					System.out.println("Common id["+ i + "]:" + common_ids[i]);
 					recommendations.add(aucdao.findByID(Integer.parseInt(common_ids[i])));
 					List<Image> auction_images=imgdao.findImagesofAuction(aucdao.findByID(Integer.parseInt(common_ids[i])));
 					if(auction_images.isEmpty()){
@@ -101,10 +94,8 @@ public class IndexServlet extends HttpServlet {
 				}
 			}
 			if(!uncommon_picks.isEmpty() && recommendations.size()<max_recommendations){
-				//System.out.println("Uncommon picks:" + uncommon_picks);
 				String[] uncommon_ids=uncommon_picks.split(delim);
 				for(int i=0;i<uncommon_ids.length;i++){
-					System.out.println("Uncommon id["+ i + "]:" + uncommon_ids[i]);
 					recommendations.add(aucdao.findByID(Integer.parseInt(uncommon_ids[i])));
 					List<Image> auction_images=imgdao.findImagesofAuction(aucdao.findByID(Integer.parseInt(uncommon_ids[i])));
 					if(auction_images.isEmpty()){

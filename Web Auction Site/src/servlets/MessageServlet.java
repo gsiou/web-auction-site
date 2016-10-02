@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -143,14 +142,9 @@ public class MessageServlet extends HttpServlet {
 			String type = (String)data.get("type").getAsString();
 			String page = (String)data.get("page").getAsString();
 			
-			// Check if we have everything.
-			String message = "";
-			boolean success = false;
 			if(type == null || !(type.equals("sent") || type.equals("received"))){
-				message = "Invalid";
 			}
 			else if(page == null || page.equals("")){
-				message = "Page not specified";
 			}
 			else{
 				// Fetch user's messages according to type and page

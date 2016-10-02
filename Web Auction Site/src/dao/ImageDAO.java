@@ -6,9 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import entities.Auction;
-import entities.Category;
 import entities.Image;
-import entities.User;
 import utils.EntityManagerHelper;
 
 public class ImageDAO implements ImageDAOI{

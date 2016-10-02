@@ -134,7 +134,6 @@ public class AdminServlet extends HttpServlet {
 		}
 		
 		String action;
-		String message = "";
 		action = (String) request.getParameter("action");
 		if(action != null){
 			
@@ -151,7 +150,6 @@ public class AdminServlet extends HttpServlet {
 			
 		}
 		else{
-			message = "Invalid action.";
 			disp = getServletContext().getRequestDispatcher("/admin.jsp");
 			disp.forward(request, response);
 		}
@@ -276,7 +274,7 @@ public class AdminServlet extends HttpServlet {
 		
 	}
 
-	private void activation(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void activation(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String userid;
 		String action;
 		String message = "";
@@ -309,8 +307,7 @@ public class AdminServlet extends HttpServlet {
 			response.sendRedirect(redir_url);
 		}
 		else{
-			RequestDispatcher disp;
-			disp = getServletContext().getRequestDispatcher("/admin.jsp");
+			response.sendRedirect("Admin?message=" + URLEncoder.encode(message, "UTF-8"));
 		}
 	}
 

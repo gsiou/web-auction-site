@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -274,8 +273,6 @@ public class AuctionSubmit extends HttpServlet {
 			String categories = request.getParameter("categories");
 			//Part filePart = request.getPart("file");
 
-			// Check if we have everything.
-			boolean success = false;
 			String message = "";
 			if(name == null || name.length() > maxNameChars){
 				message = "You have to specify a name! (Max characters: " + maxNameChars +")";
