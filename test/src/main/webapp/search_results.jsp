@@ -37,10 +37,10 @@
 					</a></td>
 					<td><c:out value="${fn:substring(auction.description, 0, 100)}" /> [..]</td>
 					<td><c:out value="${auction.location}" /></td>
-					<td><strong>Current Bid:</strong> <c:out value="${auction.current_Bid}" />
-						<c:if test="${auction.buy_Price > 0}">
+					<td><strong>Current Bid:</strong> <c:out value="${auction.currentBid}" />
+						<c:if test="${auction.buyPrice > 0}">
 							<br>
-							<strong>Buy Price:</strong> <c:out value="${auction.buy_Price}" />
+							<strong>Buy Price:</strong> <c:out value="${auction.buyPrice}" />
 						</c:if>
 					</td>
 					<td>

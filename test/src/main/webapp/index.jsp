@@ -59,7 +59,7 @@
 							<img class="rec-image" src="default_img.png"/>
 						</c:otherwise>
 					</c:choose>
-    				<p>Current Bid: ${recs.current_Bid} $</p>
+    				<p>Current Bid: ${recs.currentBid} $</p>
     			</div>
     	</c:forEach>
     </div>

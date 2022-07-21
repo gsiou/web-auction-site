@@ -115,7 +115,7 @@ public class MessageServlet extends HttpServlet {
 					
 					// Create message.
 					Message msg = new Message();
-					msg.setIs_read(false);
+					msg.setRead(false);
 					msg.setShowReceived(true);
 					msg.setShowSent(true);
 					msg.setSubject(subject);
@@ -182,7 +182,7 @@ public class MessageServlet extends HttpServlet {
 					msg.addProperty("id", m.getId());
 					if(myuser.getUserId().equals(m.getUserTo().getUserId())){
 						// In this case we care about read status
-						msg.addProperty("read", m.getIs_read());
+						msg.addProperty("read", m.isRead());
 					}
 					else{
 						// When user is the one that sent the message
@@ -220,7 +220,7 @@ public class MessageServlet extends HttpServlet {
 			User myuser = udao.findByID(userid); // Get logged in user.
 			
 			if(msg != null && msg.getUserTo().getUserId().equals(myuser.getUserId())) {
-				msg.setIs_read(true);
+				msg.setRead(true);
 			}
 		}
 		else if(action.equals("count")){
@@ -264,7 +264,7 @@ public class MessageServlet extends HttpServlet {
 				mymsg.setShowReceived(false);
 			}
 			
-			if(mymsg.getShowReceived() == false && mymsg.getShowSent() == false){
+			if(mymsg.isShowReceived() == false && mymsg.isShowSent() == false){
 				// Delete
 				msgdao.delete(mymsg.getId());
 			}

@@ -100,7 +100,7 @@ public class UserLoginServlet extends HttpServlet {
 			hashed_password = HelperFunctions.hash(password);
 			if(hashed_password.equals(myuser.getPassword())){
 				// Password match.
-				if(myuser.getAccess_lvl() != 0){
+				if(myuser.getAccessLvl() != 0){
 					login_success = true;
 				}
 				else{
@@ -114,7 +114,7 @@ public class UserLoginServlet extends HttpServlet {
 		
 		if(login_success){
 			request.getSession().setAttribute("userID", username);
-			request.getSession().setAttribute("access", myuser.getAccess_lvl());
+			request.getSession().setAttribute("access", myuser.getAccessLvl());
 			
 			// Calculate recommendations for user using cosine similarity.
 			UserDAOI userdao = new UserDAO();

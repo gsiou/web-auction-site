@@ -124,7 +124,6 @@ public class UserRegistrationServlet extends HttpServlet {
 					msg = "Passwords do not match";
 				}
 				else{
-					// Hash password.
 					hashed_password = HelperFunctions.hash(password1);
 					
 					UserDAOI dao = new UserDAO();
@@ -133,8 +132,8 @@ public class UserRegistrationServlet extends HttpServlet {
 					User user = new User();
 					user.setUserId(userid);
 					user.setPassword(hashed_password);
-					user.setBid_rating(0);
-					user.setSell_rating(0);
+					user.setBidRating(0);
+					user.setSellRating(0);
 					user.setCountry(country);
 					user.setAddress(address);
 					user.setPhone(phone);
@@ -143,10 +142,10 @@ public class UserRegistrationServlet extends HttpServlet {
 					
 					// If this is the first user of the system, make him admin.
 					if(dao.userCount() == 0){
-						user.setAccess_lvl(100);
+						user.setAccessLvl(100);
 					}
 					else{
-						user.setAccess_lvl(0); // Default access level.
+						user.setAccessLvl(0); // Default access level.
 					}
 					
 					if(!latitude.equals("") && !longitude.equals("")){

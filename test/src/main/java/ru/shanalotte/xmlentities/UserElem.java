@@ -24,6 +24,4 @@ public class UserElem {
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
-
-	
 }

@@ -77,7 +77,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`User_bid_Auction`
+-- Table `mydb`.`UserBid`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`User_bid_Auction` ;
 

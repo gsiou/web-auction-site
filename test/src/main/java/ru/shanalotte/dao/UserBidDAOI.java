@@ -4,13 +4,13 @@ import java.util.Date;
 
 import ru.shanalotte.entities.Auction;
 import ru.shanalotte.entities.User;
-import ru.shanalotte.entities.User_bid_Auction;
+import ru.shanalotte.entities.UserBid;
 
-public interface User_bid_AuctionDAOI {
+public interface UserBidDAOI {
 	
 	public boolean create(User user, Auction auction, Date time, float amount);
 	
-	public User_bid_Auction find(String userid, int aucid);
+	public UserBid find(String userid, int aucid);
 
-	boolean create(User_bid_Auction uba);
+	boolean create(UserBid uba);
 }

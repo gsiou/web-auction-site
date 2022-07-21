@@ -9,7 +9,7 @@ public class EntityManagerHelper {
 
     static {
         emf = Persistence.createEntityManagerFactory("Web Auction Site");
-        threadLocal = new ThreadLocal<EntityManager>();
+        threadLocal = new ThreadLocal<>();
     }
 
     public static EntityManager getEntityManager() {

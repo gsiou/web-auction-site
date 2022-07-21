@@ -5,23 +5,23 @@ import java.util.Date;
 import jakarta.persistence.*;
 import ru.shanalotte.entities.Auction;
 import ru.shanalotte.entities.User;
-import ru.shanalotte.entities.User_bid_Auction;
-import ru.shanalotte.entities.User_bid_AuctionPK;
+import ru.shanalotte.entities.UserBid;
+import ru.shanalotte.entities.UserBidPK;
 import ru.shanalotte.utils.EntityManagerHelper;
 
-public class User_bid_AuctionDAO implements User_bid_AuctionDAOI{
+public class UserBidDAO implements UserBidDAOI{
 	
 	@Override
 	public boolean create(User user, Auction auction, Date time, float amount){
 		String userid = user.getUserId();
 		int aucid = auction.getAuctionId();
-		User_bid_AuctionPK pk = new User_bid_AuctionPK();
-		pk.setAuction_AuctionId(aucid);
-		pk.setUser_UserId(userid);
-		User_bid_Auction uba = new User_bid_Auction();
+		UserBidPK pk = new UserBidPK();
+		pk.setAuctionId(aucid);
+		pk.setUserId(userid);
+		UserBid uba = new UserBid();
 		uba.setId(pk);
 		uba.setTime(time);
-		uba.setPrice(amount);
+		uba.getId().setPrice(amount);
 		uba.setAuction(auction);
 		uba.setUser(user);
 		uba.setAuction(auction);
@@ -37,9 +37,9 @@ public class User_bid_AuctionDAO implements User_bid_AuctionDAOI{
 	}
 	
 	@Override
-	public boolean create(User_bid_Auction uba){
+	public boolean create(UserBid uba){
 		EntityManager em = EntityManagerHelper.getEntityManager();
-		if(find(uba.getId().getUser_UserId(), uba.getId().getAuction_AuctionId()) == null){
+		if(find(uba.getId().getUserId(), uba.getId().getAuctionId()) == null){
 			em.persist(uba);
 			em.flush();
 			return true;
@@ -50,12 +50,12 @@ public class User_bid_AuctionDAO implements User_bid_AuctionDAOI{
 	}
 
 	@Override
-	public User_bid_Auction find(String userid, int aucid) {
+	public UserBid find(String userid, int aucid) {
 		EntityManager em = EntityManagerHelper.getEntityManager();
-		User_bid_AuctionPK pk = new User_bid_AuctionPK();
-		pk.setAuction_AuctionId(aucid);
-		pk.setUser_UserId(userid);
-		User_bid_Auction uba = em.find(User_bid_Auction.class, pk);
+		UserBidPK pk = new UserBidPK();
+		pk.setAuctionId(aucid);
+		pk.setUserId(userid);
+		UserBid uba = em.find(UserBid.class, pk);
         return uba;
 	}
 }

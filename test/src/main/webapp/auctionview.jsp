@@ -45,7 +45,7 @@
 	</div>
 	
 	<div class="Gtext-small">
-	    <p>Creator:<c:out value="${creator.userId}"/> (${creator.sell_rating})</p>
+	    <p>Creator:<c:out value="${creator.userId}"/> (${creator.sellRating})</p>
 	</div>
     
     <div class="view-flex-boxes">

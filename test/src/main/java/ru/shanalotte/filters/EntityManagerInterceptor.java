@@ -13,51 +13,31 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import ru.shanalotte.utils.EntityManagerHelper;
 
-/**
- * Servlet Filter implementation class EntityManagerInterceptor
- */
 @WebFilter("/EntityManagerInterceptor")
 public class EntityManagerInterceptor implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public EntityManagerInterceptor() {
-        // TODO Auto-generated constructor stub
+  public EntityManagerInterceptor() {
+  }
+
+  public void init(FilterConfig fConfig) throws ServletException {
+  }
+
+  public void destroy() {
+  }
+
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    try {
+      EntityManagerHelper.beginTransaction();
+      chain.doFilter(request, response);
+      EntityManagerHelper.commit();
+    } catch (RuntimeException e) {
+      EntityTransaction tx = EntityManagerHelper.getTransaction();
+      if (tx != null && tx.isActive())
+        EntityManagerHelper.rollback();
+      throw e;
+    } finally {
+      EntityManagerHelper.closeEntityManager();
     }
-
-	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-	}
-
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		try {
-			EntityManagerHelper.beginTransaction();
-			chain.doFilter(request, response);
-			EntityManagerHelper.commit();
-		} 
-		catch (RuntimeException e) 
-		{
-			EntityTransaction tx = EntityManagerHelper.getTransaction();
-			if (tx != null && tx.isActive()) 
-				EntityManagerHelper.rollback();
-		    throw e;
-			
-		} 
-		finally {
-			EntityManagerHelper.closeEntityManager();
-		}
-	}
-
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-	}
+  }
 
 }

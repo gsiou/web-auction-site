@@ -44,8 +44,8 @@
 		    	<tr><th>UserID</th><th>Bid</th><th>Time</th></tr>
 		    	<c:forEach items="${user_biddings}" var="bidding">
 		    		<tr class="activated">
-							<td>${bidding.user.userId}(${bidding.user.bid_rating})</td>
-							<td>${bidding.price}$</td>
+							<td>${bidding.user.userId}(${bidding.user.bidRating})</td>
+							<td>${bidding.id.price}$</td>
 							<td>${bidding.time}</td>
 					</tr>
 				</c:forEach>

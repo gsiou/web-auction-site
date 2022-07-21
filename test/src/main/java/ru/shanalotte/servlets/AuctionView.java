@@ -19,13 +19,13 @@ import ru.shanalotte.dao.ImageDAOI;
 import ru.shanalotte.entities.User;
 import ru.shanalotte.entities.Image;
 import ru.shanalotte.entities.Category;
-import ru.shanalotte.entities.User_bid_Auction;
-import ru.shanalotte.entities.User_bid_AuctionPK;
+import ru.shanalotte.entities.UserBid;
+import ru.shanalotte.entities.UserBidPK;
 import ru.shanalotte.dao.AuctionDAO;
 import ru.shanalotte.dao.AuctionDAOI;
 import ru.shanalotte.entities.Auction;
-import ru.shanalotte.dao.User_bid_AuctionDAO;
-import ru.shanalotte.dao.User_bid_AuctionDAOI;
+import ru.shanalotte.dao.UserBidDAO;
+import ru.shanalotte.dao.UserBidDAOI;
 
 /**
  * Servlet implementation class AuctionView
@@ -62,12 +62,12 @@ public class AuctionView extends HttpServlet {
 			
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
-			List<User_bid_Auction> bidding_users=dao.findAuctionBids(currentAuction);
+			List<UserBid> bidding_users=dao.findAuctionBids(currentAuction);
 			request.setAttribute("user_biddings",bidding_users);
-			float starting_bid=currentAuction.getStarting_Bid();
+			float starting_bid=currentAuction.getStartingBid();
 			request.setAttribute("starting_bid",starting_bid);
-			Date start_time=currentAuction.getStart_time();
-			request.setAttribute("start_time",start_time);
+			Date startTime=currentAuction.getStartTime();
+			request.setAttribute("start_time",startTime);
 			
 			/* Get auction's images */
 			
@@ -77,16 +77,16 @@ public class AuctionView extends HttpServlet {
 			
 			/* Get auction's current bid and set if it is sold/expired or not */
 			
-			float current_bid=currentAuction.getCurrent_Bid();
+			float current_bid=currentAuction.getCurrentBid();
 			request.setAttribute("current_bid",current_bid);
 			User buyout_user=currentAuction.getUser();
 			if(buyout_user == null)
 				request.setAttribute("buy_out",false);
 			else
 				request.setAttribute("buy_out",true);
-			Date expiration_time=currentAuction.getExpiration_time();
+			Date expirationTime=currentAuction.getExpirationTime();
 			Date current_time = new Date();
-			if(current_time.after(expiration_time))
+			if(current_time.after(expirationTime))
 				request.setAttribute("expired",true);
 			else
 				request.setAttribute("expired",false);
@@ -139,16 +139,16 @@ public class AuctionView extends HttpServlet {
 			float auct_longitude=currentAuction.getLongitude();
 			String location=currentAuction.getLocation();
 			String country=currentAuction.getCountry();
-			float buy_price=currentAuction.getBuy_Price();
-			float starting_bid=currentAuction.getStarting_Bid();
-			float current_bid=currentAuction.getCurrent_Bid();
-			int num_of_bids=currentAuction.getNum_of_bids();
+			float buy_price=currentAuction.getBuyPrice();
+			float starting_bid=currentAuction.getStartingBid();
+			float current_bid=currentAuction.getCurrentBid();
+			int numOfBids=currentAuction.getNumOfBids();
 			String description=currentAuction.getDescription();
 			User creator=currentAuction.getCreator();
-			Date start_time=currentAuction.getStart_time();
-			Date expiration_time=currentAuction.getExpiration_time();
+			Date startTime=currentAuction.getStartTime();
+			Date expirationTime=currentAuction.getExpirationTime();
 			Date current_time = new Date();
-			if(current_time.after(expiration_time))
+			if(current_time.after(expirationTime))
 				request.setAttribute("expired",true);
 			else
 				request.setAttribute("expired",false);
@@ -166,11 +166,11 @@ public class AuctionView extends HttpServlet {
 			request.setAttribute("buy_price",buy_price);
 			request.setAttribute("starting_bid",starting_bid);
 			request.setAttribute("current_bid",current_bid);
-			request.setAttribute("num_of_bids",num_of_bids);
+			request.setAttribute("num_of_bids",numOfBids);
 			request.setAttribute("description",description);
 			request.setAttribute("creator",creator);
-			request.setAttribute("start_time",start_time);
-			request.setAttribute("expiration_time",expiration_time);
+			request.setAttribute("start_time",startTime);
+			request.setAttribute("expiration_time",expirationTime);
 			request.setAttribute("buy_user",buyout_user);
 			
 			disp = getServletContext().getRequestDispatcher("/auctionview.jsp");
@@ -198,8 +198,8 @@ public class AuctionView extends HttpServlet {
 			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
 			Auction currentAuction = dao.findByID(auctionid);
-			float current_bid=currentAuction.getCurrent_Bid();
-			float buy_price=currentAuction.getBuy_Price();
+			float current_bid=currentAuction.getCurrentBid();
+			float buy_price=currentAuction.getBuyPrice();
 			String submited_bid=request.getParameter("Bid_input");
 			float sub_bid=Float.parseFloat(submited_bid);
 			if(sub_bid>=buy_price && buy_price > 0){
@@ -211,13 +211,13 @@ public class AuctionView extends HttpServlet {
 			else if(sub_bid>current_bid){
 				/* If the bid is valid */
 				
-				User_bid_AuctionPK new_bid_pk=new User_bid_AuctionPK();
-				new_bid_pk.setAuction_AuctionId(currentAuction.getAuctionId());
+				UserBidPK new_bid_pk=new UserBidPK();
+				new_bid_pk.setAuctionId(currentAuction.getAuctionId());
 				UserDAOI udao = new UserDAO();
 				User user = udao.findByID(request.getSession().getAttribute("userID").toString());
-				new_bid_pk.setUser_UserId(user.getUserId());
+				new_bid_pk.setUserId(user.getUserId());
 				new_bid_pk.setPrice(sub_bid);
-				User_bid_Auction new_bid=new User_bid_Auction();
+				UserBid new_bid=new UserBid();
 				new_bid.setId(new_bid_pk);
 				new_bid.setUser(user);
 				new_bid.setAuction(currentAuction);
@@ -225,11 +225,11 @@ public class AuctionView extends HttpServlet {
 				new_bid.setTime(starting_date);
 				
 				user.addUserBidAuction(new_bid);
-				currentAuction.addUserBidAuction(new_bid);
-				currentAuction.setCurrent_Bid(sub_bid);
-				currentAuction.setNum_of_bids(currentAuction.getNum_of_bids()+1);
+				currentAuction.addBid(new_bid);
+				currentAuction.setCurrentBid(sub_bid);
+				currentAuction.setNumOfBids(currentAuction.getNumOfBids()+1);
 				
-				User_bid_AuctionDAOI bidao=new User_bid_AuctionDAO();
+				UserBidDAOI bidao=new UserBidDAO();
 				bidao.create(user, currentAuction,starting_date,sub_bid);
 				request.getSession().setAttribute("bid_response", "Bid succesfully submitted");
 				response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=history");
@@ -253,7 +253,7 @@ public class AuctionView extends HttpServlet {
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
 			Auction currentAuction = dao.findByID(auctionid);
 			User buyout_user=currentAuction.getUser();
-			Date expiration_date=currentAuction.getExpiration_time();
+			Date expiration_date=currentAuction.getExpirationTime();
 			Date current_date = new Date();
 			if(current_date.after(expiration_date) || buyout_user!=null){
 				request.getSession().setAttribute("bid_response", "Error,item expired or already bought");

@@ -5,7 +5,7 @@ import java.util.List;
 
 import ru.shanalotte.entities.Auction;
 import ru.shanalotte.entities.User;
-import ru.shanalotte.entities.User_bid_Auction;
+import ru.shanalotte.entities.UserBid;
 
 public interface AuctionDAOI {
 	
@@ -29,7 +29,7 @@ public interface AuctionDAOI {
 	
 	public List<Auction> findUserLostAuctions(User user, Date date);
 	
-	public List<User_bid_Auction> findAuctionBids(Auction auction);
+	public List<UserBid> findAuctionBids(Auction auction);
 	
 	public List<Auction> findUserUniqueBids(User user);
 	

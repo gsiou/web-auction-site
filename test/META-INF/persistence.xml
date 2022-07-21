@@ -6,8 +6,8 @@
 		<class>entities.Image</class>
 		<class>entities.Message</class>
 		<class>entities.User</class>
-		<class>entities.User_bid_Auction</class>
-		<class>entities.User_bid_AuctionPK</class>
+		<class>entities.UserBid</class>
+		<class>entities.UserBidPK</class>
 		<properties>
 			<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webauctionsite"/>
 			<property name="jakarta.persistence.jdbc.user" value="root"/>

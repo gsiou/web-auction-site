@@ -136,7 +136,7 @@ public class AuctionSubmit extends HttpServlet {
 			}
 			
 			// If auction has started, we cannot allow it to be edited.
-			if (auction.getStart_time() != null){
+			if (auction.getStartTime() != null){
 				disp = getServletContext().getRequestDispatcher("/404.html");
 				disp.forward(request, response);
 				return ;
@@ -149,11 +149,11 @@ public class AuctionSubmit extends HttpServlet {
 			// Preload auction data in form fields.
 			request.setAttribute("auctionName", auction.getName());
 			request.setAttribute("auctionDescription", auction.getDescription());
-			request.setAttribute("auctionStartingBid", auction.getStarting_Bid());
-			request.setAttribute("auctionBuyPrice", auction.getBuy_Price());
+			request.setAttribute("auctionStartingBid", auction.getStartingBid());
+			request.setAttribute("auctionBuyPrice", auction.getBuyPrice());
 			
 			// Date has to be broken into parts first.
-			Date exp_time = auction.getExpiration_time();
+			Date exp_time = auction.getExpirationTime();
 			
 			request.setAttribute("auctionEndYear",new SimpleDateFormat("yyyy").format(exp_time));
 			request.setAttribute("auctionEndMonth",new SimpleDateFormat("MM").format(exp_time));
@@ -247,7 +247,7 @@ public class AuctionSubmit extends HttpServlet {
 				}
 				
 				// If auction has started, we cannot allow it to be edited.
-				if (auc.getStart_time() != null){
+				if (auc.getStartTime() != null){
 					forwardMessage(request, response, "Cannot edit an expired auction!");
 					return ;
 				}
@@ -374,23 +374,23 @@ public class AuctionSubmit extends HttpServlet {
 
 				
 				// Set numberic values first.
-				auc.setStarting_Bid(starting_f);
+				auc.setStartingBid(starting_f);
 				if (!latitude.equals("") && !longitude.equals("")) {
 					auc.setLatitude(latitude_f);
 					auc.setLongitude(longitude_f);
 				}
 				if (!buyprice.equals("")) {
-					auc.setBuy_Price(buyprice_f);
+					auc.setBuyPrice(buyprice_f);
 				}
 				
 				auc.setName(name);
 				auc.setDescription(description);
-				auc.setStart_time(null); // Is set when user activates auction.
-				auc.setExpiration_time(ends_date);
+				auc.setStartTime(null); // Is set when user activates auction.
+				auc.setExpirationTime(ends_date);
 				auc.setCountry(country);
 				auc.setLocation(location);
-				auc.setNum_of_bids(0);
-				auc.setCurrent_Bid(auc.getStarting_Bid());
+				auc.setNumOfBids(0);
+				auc.setCurrentBid(auc.getStartingBid());
 				
 				// Parse categories
 				String[] categories_list;
@@ -549,12 +549,12 @@ public class AuctionSubmit extends HttpServlet {
 				return ;
 			}
 			
-			if(auction.getExpiration_time().before(new Date())){
+			if(auction.getExpirationTime().before(new Date())){
 				response.getWriter().write("Auction expiration date is a past date!");
 				return ;
 			}
 			
-			auction.setStart_time(new Date());
+			auction.setStartTime(new Date());
 			aucdao.updateAuction(auction);
 			
 			response.sendRedirect(request.getContextPath() + "/Manage");

@@ -2,55 +2,35 @@ package ru.shanalotte.entities;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import java.util.List;
 
-
-/**
- * The persistent class for the Image database table.
- * 
- */
 @Entity
-@Table(name="Image")
+@Table(name = "Image")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @NamedQueries({
-	@NamedQuery(name="Image.findAll", query="SELECT i FROM Image i"),
-	@NamedQuery(name="Image.findImagesofAuction", query="SELECT i FROM Image i WHERE :auction MEMBER OF i.auctions "),
+    @NamedQuery(name = "Image.findAll", query = "SELECT i FROM Image i"),
+    @NamedQuery(name = "Image.findImagesofAuction", query = "SELECT i FROM Image i WHERE :auction MEMBER OF i.auctions "),
 })
 public class Image implements Serializable {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	private String url;
+  @Id
+  private String url;
 
-	//bi-directional many-to-many association to Auction
-	@ManyToMany
-	@JoinTable(
-		name="Auction_has_Image"
-		, joinColumns={
-			@JoinColumn(name="table1_url")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="Auction_AuctionId")
-			}
-		)
-	private List<Auction> auctions;
-
-	public Image() {
-	}
-
-	public String getUrl() {
-		return this.url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public List<Auction> getAuctions() {
-		return this.auctions;
-	}
-
-	public void setAuctions(List<Auction> auctions) {
-		this.auctions = auctions;
-	}
+  @ManyToMany
+  @JoinTable(name = "Auction_has_Image",
+      joinColumns = {@JoinColumn(name = "table1_url")},
+      inverseJoinColumns = {@JoinColumn(name = "Auction_AuctionId")
+      }
+  )
+  @ToString.Exclude
+  private List<Auction> auctions;
 
 }

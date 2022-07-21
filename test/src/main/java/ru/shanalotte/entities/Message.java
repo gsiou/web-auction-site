@@ -1,27 +1,44 @@
 package ru.shanalotte.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-
-/**
- * The persistent class for the Message database table.
- */
 @Entity
 @Table(name="Message")
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @NamedQueries({
 	@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m"),
 	@NamedQuery(name="Message.getSentOf", 
-		query="SELECT m FROM Message m WHERE m.user_from = :user AND m.showSent = TRUE ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.userFrom = :user AND m.showSent = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.getReceivedOf",
-		query="SELECT m FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE ORDER BY m.time DESC"),
+		query="SELECT m FROM Message m WHERE m.userTo = :user AND m.showReceived = TRUE ORDER BY m.time DESC"),
 	@NamedQuery(name="Message.countSent",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_from = :user AND m.showSent = TRUE"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.userFrom = :user AND m.showSent = TRUE"),
 	@NamedQuery(name="Message.countReceived",
-		query="SELECT COUNT(m.id) FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE"),
+		query="SELECT COUNT(m.id) FROM Message m WHERE m.userTo = :user AND m.showReceived = TRUE"),
 	@NamedQuery(name="Message.getUnreadOf",
-	query="SELECT COUNT(m) FROM Message m WHERE m.user_to = :user AND m.showReceived = TRUE AND m.is_read = FALSE"),
+	query="SELECT COUNT(m) FROM Message m WHERE m.userTo = :user AND m.showReceived = TRUE AND m.isRead = FALSE"),
 })
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +49,7 @@ public class Message implements Serializable {
 	private int id;
 
 	@Column(name="Is_read")
-	private boolean is_read;
+	private boolean isRead;
 
 	@Column(name="show_received")
 	private boolean showReceived;
@@ -52,89 +69,24 @@ public class Message implements Serializable {
 	@Column(name="Time")
 	private Date time;
 
-	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="User_from")
-	private User user_from;
+	private User userFrom;
 
-	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="User_to")
-	private User user_to;
+	private User userTo;
 
-	public Message() {
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Message message = (Message) o;
+		return id == message.id;
 	}
 
-	public int getId() {
-		return this.id;
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
-
-	public void setId(int idMessages) {
-		this.id = idMessages;
-	}
-
-	public boolean getIs_read() {
-		return this.is_read;
-	}
-
-	public void setIs_read(boolean is_read) {
-		this.is_read = is_read;
-	}
-
-	public boolean getShowReceived() {
-		return this.showReceived;
-	}
-
-	public void setShowReceived(boolean showReceived) {
-		this.showReceived = showReceived;
-	}
-
-	public boolean getShowSent() {
-		return this.showSent;
-	}
-
-	public void setShowSent(boolean showSent) {
-		this.showSent = showSent;
-	}
-
-	public String getSubject() {
-		return this.subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getText() {
-		return this.text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public Date getTime() {
-		return this.time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-	public User getUserFrom() {
-		return this.user_from;
-	}
-
-	public void setUserFrom(User user1) {
-		this.user_from = user1;
-	}
-
-	public User getUserTo() {
-		return this.user_to;
-	}
-
-	public void setUserTo(User user2) {
-		this.user_to = user2;
-	}
-
 }

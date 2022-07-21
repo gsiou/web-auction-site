@@ -46,9 +46,9 @@
 							<c:out value="${user.userId}"/>
 						</a>
 					</td>
-					<td>${user.access_lvl}</td>
+					<td>${user.accessLvl}</td>
 					<c:choose>
-						<c:when test="${user.access_lvl == 0}">
+						<c:when test="${user.accessLvl == 0}">
 							<td>
 								<form action="" method="post">
 									<input type="hidden" name="userid" value="${fn:escapeXml(user.userId)}">
@@ -76,8 +76,8 @@
 							Address: <c:out value="${user.address}"/> <br>
 							Country: <c:out value="${user.country}"/> <br>
 							Email: <c:out value="${user.email}"/> <br>
-							Bid Rating: <c:out value="${user.bid_rating}"/> <br>
-							Sell Rating: <c:out value="${user.sell_rating}"/> <br>
+							Bid Rating: <c:out value="${user.bidRating}"/> <br>
+							Sell Rating: <c:out value="${user.sellRating}"/> <br>
 						</div>
 					</td>
 				</tr>

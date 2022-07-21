@@ -41,7 +41,7 @@ public class UserDAO implements UserDAOI {
 
 	@Override
 	public void changeAccess(User user, int access_level){
-		user.setAccess_lvl(access_level);
+		user.setAccessLvl(access_level);
 		EntityManager em = EntityManagerHelper.getEntityManager();
 		em.persist(user);
 		em.flush();

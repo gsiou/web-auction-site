@@ -28,12 +28,12 @@ import ru.shanalotte.dao.CategoryDAO;
 import ru.shanalotte.dao.CategoryDAOI;
 import ru.shanalotte.dao.UserDAO;
 import ru.shanalotte.dao.UserDAOI;
-import ru.shanalotte.dao.User_bid_AuctionDAO;
-import ru.shanalotte.dao.User_bid_AuctionDAOI;
+import ru.shanalotte.dao.UserBidDAO;
+import ru.shanalotte.dao.UserBidDAOI;
 import ru.shanalotte.entities.Auction;
 import ru.shanalotte.entities.Category;
 import ru.shanalotte.entities.User;
-import ru.shanalotte.entities.User_bid_Auction;
+import ru.shanalotte.entities.UserBid;
 import ru.shanalotte.xmlentities.Bid;
 import ru.shanalotte.xmlentities.Bidder;
 import ru.shanalotte.xmlentities.Bids;
@@ -190,11 +190,11 @@ public class AdminServlet extends HttpServlet {
 			current.setName(a.getName());
 			current.setDescription(a.getDescription());
 			current.setCountry(a.getCountry());
-			current.setCurrently("$" + a.getCurrent_Bid());
-			current.setFirst_bid("$" + a.getStarting_Bid());
-			current.setNumber_of_bids(a.getNum_of_bids());
-			if(a.getBuy_Price() != 0){
-				current.setBuy_Price("$" + a.getBuy_Price());;
+			current.setCurrently("$" + a.getCurrentBid());
+			current.setFirst_bid("$" + a.getStartingBid());
+			current.setNumber_of_bids(a.getNumOfBids());
+			if(a.getBuyPrice() != 0){
+				current.setBuy_Price("$" + a.getBuyPrice());;
 			}
 			
 			/* Location */
@@ -207,18 +207,18 @@ public class AdminServlet extends HttpServlet {
 			/* Seller */
 			current_user = new UserElem();
 			current_user.setUserID(a.getCreator().getUserId());
-			current_user.setRating((int) a.getCreator().getSell_rating());
+			current_user.setRating((int) a.getCreator().getSellRating());
 			current.setSeller(current_user);
 			
 			/* Start/End Dates */
 			SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
-			if(a.getStart_time() == null){
+			if(a.getStartTime() == null){
 				current.setStarted("");
 			}
 			else{
-				current.setStarted(sdf.format(a.getStart_time()));
+				current.setStarted(sdf.format(a.getStartTime()));
 			}
-			current.setEnds(sdf.format(a.getExpiration_time()));
+			current.setEnds(sdf.format(a.getExpirationTime()));
 			
 			/* Categories */
 			current_categories = new ArrayList<String>();
@@ -239,15 +239,15 @@ public class AdminServlet extends HttpServlet {
 			
 			/* Bids */
 			current_bid_list = new ArrayList<Bid>();
-			for(User_bid_Auction uba : a.getUserBidAuctions()){
+			for(UserBid uba : a.getUserBidAuctions()){
 				current_bidder = new Bidder();
 				current_bidder.setCountry(uba.getUser().getCountry());
 				current_bidder.setLocation(uba.getUser().getAddress());
-				current_bidder.setRating((int) uba.getUser().getBid_rating());
+				current_bidder.setRating((int) uba.getUser().getBidRating());
 				current_bidder.setUserID(uba.getUser().getUserId());
 				
 				current_bid = new Bid();
-				current_bid.setAmount("$" + uba.getPrice());
+				current_bid.setAmount("$" + uba.getId().getPrice());
 				current_bid.setTime(sdf.format(uba.getTime()));
 				current_bid.setBidder(current_bidder);
 				current_bid_list.add(current_bid);
@@ -364,12 +364,12 @@ public class AdminServlet extends HttpServlet {
         	if(creator == null){
         		creator = new User();
         		creator.setUserId(i.getSeller().getUserID());
-        		creator.setAccess_lvl(1);
+        		creator.setAccessLvl(1);
         		creator.setPassword("");
         		creator.setEmail("");
         	}
         	creator.setCountry(i.getCountry());
-    		creator.setSell_rating(i.getSeller().getRating());
+    		creator.setSellRating(i.getSeller().getRating());
     		if(i.getLocation().getLatitude() != 0 && i.getLocation().getLatitude() != 0){
         		creator.setLatitude(i.getLocation().getLatitude());
         		creator.setLongitude(i.getLocation().getLongitude());
@@ -383,59 +383,59 @@ public class AdminServlet extends HttpServlet {
         	auc.setLocation(i.getLocation().getLocation());
         	auc.setLatitude(i.getLocation().getLatitude());
         	auc.setLongitude(i.getLocation().getLongitude());
-        	auc.setNum_of_bids(i.getNumber_of_bids());
+        	auc.setNumOfBids(i.getNumber_of_bids());
         	
         	try{
-        		auc.setStarting_Bid(Float.parseFloat(i.getFirst_bid().substring(1)));
+        		auc.setStartingBid(Float.parseFloat(i.getFirst_bid().substring(1)));
         	} catch (NumberFormatException ex){
-        		auc.setStarting_Bid(0);
+        		auc.setStartingBid(0);
         	}
         	
         	if(i.getBuy_Price() != null){
         		try{
-        			auc.setBuy_Price(Float.parseFloat(i.getBuy_Price().substring(1)));
+        			auc.setBuyPrice(Float.parseFloat(i.getBuy_Price().substring(1)));
         		} catch (NumberFormatException ex){
-        			auc.setBuy_Price(0);
+        			auc.setBuyPrice(0);
         		}
         	}
         	
         	try{
-        		auc.setCurrent_Bid(Float.parseFloat(i.getCurrently().substring(1)));
+        		auc.setCurrentBid(Float.parseFloat(i.getCurrently().substring(1)));
         	} catch (NumberFormatException ex){
-        		auc.setCurrent_Bid(0);
+        		auc.setCurrentBid(0);
         	}
         	
         	SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yy HH:mm:ss", Locale.ENGLISH);
 			try {
-				auc.setStart_time(sdf.parse(i.getStarted()));
+				auc.setStartTime(sdf.parse(i.getStarted()));
 			} catch (ParseException e) {
-				auc.setStart_time(null);
+				auc.setStartTime(null);
 			}
 			
 			try{
 				//auc.setExpiration_time(sdf.parse(i.getEnds()));
-				auc.setExpiration_time(sdf.parse("Jan-01-17 23:30:01"));
+				auc.setExpirationTime(sdf.parse("Jan-01-17 23:30:01"));
 			} catch (ParseException e){
-				auc.setExpiration_time(null);
+				auc.setExpirationTime(null);
 			}
 			
         	AuctionDAOI aucdao = new AuctionDAO();
         	aucdao.create(auc);
 			
 			if (i.getBids().getBids() != null) {
-				User_bid_AuctionDAOI ubadao = new User_bid_AuctionDAO();
+				UserBidDAOI ubadao = new UserBidDAO();
 				for (Bid b : i.getBids().getBids()) {
 					User bidder = userdao.findByID(b.getBidder().getUserID());
 					if(bidder == null){
 						bidder = new User();
 						bidder.setUserId(b.getBidder().getUserID());
 						bidder.setPassword("");
-						bidder.setAccess_lvl(1);
+						bidder.setAccessLvl(1);
 						bidder.setEmail("");
 					}
 					bidder.setCountry(b.getBidder().getCountry());
 					bidder.setAddress(b.getBidder().getLocation());
-					bidder.setBid_rating(b.getBidder().getRating());
+					bidder.setBidRating(b.getBidder().getRating());
 					
 					float price;
 					try{
