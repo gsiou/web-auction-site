@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="Web Auction Site" transaction-type="RESOURCE_LOCAL">
+		<class>entities.Auction</class>
+		<class>entities.Category</class>
+		<class>entities.Image</class>
+		<class>entities.Message</class>
+		<class>entities.User</class>
+		<class>entities.User_bid_Auction</class>
+		<class>entities.User_bid_AuctionPK</class>
+		<properties>
+			<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webauctionsite"/>
+			<property name="jakarta.persistence.jdbc.user" value="root"/>
+			<property name="jakarta.persistence.jdbc.password" value="P@ssw0rd"/>
+			<property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.show_sql" value="true" />
+		</properties>
+	</persistence-unit>
+</persistence>

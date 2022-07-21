@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>Web Auction Site</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <listener>
+    <description>EntityManagerFactory Listener</description>
+    <listener-class>ru.shanalotte.utils.EntityManagerFactoryListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>EntityManagerInterceptor</filter-name>
+    <filter-class>ru.shanalotte.filters.EntityManagerInterceptor</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>EntityManagerInterceptor</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>images.location</param-name>
+    <param-value>D:\\auctionImages</param-value>
+  </context-param>
+  <context-param>
+    <param-name>images.maxsize</param-name>
+    <param-value>5000000</param-value>
+  </context-param>
+  <security-constraint>
+    <web-resource-collection>
+	  <web-resource-name>securedapp</web-resource-name>
+	    <url-pattern>/</url-pattern>
+	  </web-resource-collection>
+	  <user-data-constraint>
+		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+	</security-constraint>
+</web-app>
