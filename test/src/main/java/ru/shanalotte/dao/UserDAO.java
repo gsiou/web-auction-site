@@ -1,95 +1,27 @@
 package ru.shanalotte.dao;
 
+import ru.shanalotte.entities.User;
 import java.util.List;
 
-import jakarta.persistence.*;
-
-import ru.shanalotte.entities.User;
-import ru.shanalotte.utils.EntityManagerHelper;
-
-public class UserDAO implements UserDAOI {
-
-	@Override
-	public User findByID(String user_id){
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		User user = em.find(User.class, user_id); 
-        return user;
-	}
-
+public interface UserDAO {
 	
-	@Override
-	public boolean create(User user) {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		if(findByID(user.getUserId()) == null){
-			em.persist(user);
-			em.flush();
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
+	boolean create(User user);
 	
-	@Override
-	public List<User> list(){
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		Query query = em.createNamedQuery("User.findAll");
-		@SuppressWarnings("unchecked")
-		List<User> users = query.getResultList();  
-        return users;
-	}
+	User findByID(String user_id);
 
-	@Override
-	public void changeAccess(User user, int access_level){
-		user.setAccessLvl(access_level);
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		em.persist(user);
-		em.flush();
-	}
+	List<User> list();
 	
-	@Override public void update(User tempUser){
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		em.merge(tempUser);
-	}
-
-	@Override
-	public List<User> listUsersOfPage(int page, int entries_per_page) {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		TypedQuery<User> getUsers = em.createNamedQuery("User.findAll", User.class);
-		getUsers.setFirstResult(page * entries_per_page);
-		getUsers.setMaxResults(entries_per_page);
-		return getUsers.getResultList();
-	}
-
-	@Override
-	public List<User> listUnactivatedUsersOfPage(int page, int entries_per_page) {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		TypedQuery<User> getUsers = em.createNamedQuery("User.findUnactivated", User.class);
-		getUsers.setFirstResult(page * entries_per_page);
-		getUsers.setMaxResults(entries_per_page);
-		return getUsers.getResultList();
-	}
-
-	@Override
-	public long userCount() {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		Query countUsers = em.createNamedQuery("User.countAll");
-		return ((Number) countUsers.getSingleResult()).intValue();
-	}
-
-	@Override
-	public long unactivatedUserCount() {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		Query countUsers = em.createNamedQuery("User.countUnactivated");
-		return ((Number) countUsers.getSingleResult()).intValue();
-	}
-
-	@Override
-	public List<User> listFrequentBidders(User caller) {
-		EntityManager em = EntityManagerHelper.getEntityManager();
-		TypedQuery<User> query = em.createNamedQuery("User.findFrequentBidders", User.class);
-		query.setParameter("user", caller);
-		List<User> users = query.getResultList();  
-        return users;
-	}
+	List<User> listFrequentBidders(User caller);
+	
+	List<User> listUsersOfPage(int page, int entries_per_page);
+	
+	List<User> listUnactivatedUsersOfPage(int page, int entries_per_page);
+	
+	long userCount();
+	
+	long unactivatedUserCount();
+	
+	void changeAccess(User user, int access_level);
+	
+	void update(User user);
 }

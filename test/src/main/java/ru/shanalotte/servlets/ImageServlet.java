@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Servlet implementation class ImageServlet
@@ -17,14 +21,17 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/image/*")
 public class ImageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ImageServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ApplicationContext applicationContext = (AnnotationConfigApplicationContext) config.getServletContext().getAttribute("springcontext");
+		final AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		beanFactory.autowireBean(this);
+	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

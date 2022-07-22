@@ -7,19 +7,20 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.shanalotte.dao.AuctionDAO;
-import ru.shanalotte.dao.AuctionDAOI;
 import ru.shanalotte.dao.UserDAO;
-import ru.shanalotte.dao.UserDAOI;
 import ru.shanalotte.entities.Auction;
 import ru.shanalotte.entities.User;
 import ru.shanalotte.helper.AuctionFrequency;
@@ -33,13 +34,21 @@ import ru.shanalotte.utils.HelperFunctions;
 public class UserLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UserLoginServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	@Autowired
+	private UserDAO userDAO;
+
+	@Autowired
+	private AuctionDAO auctionDAO;
+
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ApplicationContext applicationContext = (AnnotationConfigApplicationContext) config.getServletContext().getAttribute("springcontext");
+		final AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		beanFactory.autowireBean(this);
+	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -93,8 +102,7 @@ public class UserLoginServlet extends HttpServlet {
 		String password = "";
 		username = request.getParameter("Username");
 		password = request.getParameter("Password");
-		UserDAOI dao = new UserDAO();
-		User myuser = dao.findByID(username);
+		User myuser = userDAO.findByID(username);
 		if(myuser != null){
 			// User exists.
 			hashed_password = HelperFunctions.hash(password);
@@ -117,10 +125,8 @@ public class UserLoginServlet extends HttpServlet {
 			request.getSession().setAttribute("access", myuser.getAccessLvl());
 			
 			// Calculate recommendations for user using cosine similarity.
-			UserDAOI userdao = new UserDAO();
-			AuctionDAOI auctdao = new AuctionDAO();
-			List<User> allusers = userdao.listFrequentBidders(myuser);
-			List<Auction> my_user_bids = auctdao.findUserUniqueBids(myuser);
+			List<User> allusers = userDAO.listFrequentBidders(myuser);
+			List<Auction> my_user_bids = auctionDAO.findUserUniqueBids(myuser);
 			System.out.println("Starting process with users: " + allusers.size());
 			if (!my_user_bids.isEmpty()) {
 				int common_aucts;
@@ -131,7 +137,7 @@ public class UserLoginServlet extends HttpServlet {
 				int neighbors_found=0;
 				for (User u : allusers) {
 					common_aucts = 0;
-					List<Auction> check_user_bids = auctdao.findUserUniqueBids(u);
+					List<Auction> check_user_bids = auctionDAO.findUserUniqueBids(u);
 					for (Auction check_aucts : check_user_bids) {
 						for (Auction my_aucts : my_user_bids) {
 							if (check_aucts.getAuctionId() == my_aucts.getAuctionId())
@@ -165,7 +171,7 @@ public class UserLoginServlet extends HttpServlet {
 				for(int i=0;i<neighbors_found;i++){
 					System.out.println(
 							"Nearest Users(" + k_nearest_users[i].getUserId() + "," + neighbors_cosine[i] + ")");
-					for(Auction a : auctdao.findUserUniqueActiveBids(k_nearest_users[i], new Date())){
+					for(Auction a : auctionDAO.findUserUniqueActiveBids(k_nearest_users[i], new Date())){
 						if(!my_user_bids.contains(a)){
 							recommended_auctions.add(a.getAuctionId());
 						}

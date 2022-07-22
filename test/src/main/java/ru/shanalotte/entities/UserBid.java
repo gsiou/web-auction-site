@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="UserBid")
+@Table(name="user_bid_auction")
 @NamedQuery(name="UserBid.findAll", query="SELECT u FROM UserBid u")
 public class UserBid implements Serializable {
 

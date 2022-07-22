@@ -7,25 +7,31 @@ import java.util.Date;
 
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.shanalotte.dao.CategoryDAO;
+import ru.shanalotte.dao.UserDAOImpl;
 import ru.shanalotte.dao.UserDAO;
-import ru.shanalotte.dao.UserDAOI;
+import ru.shanalotte.dao.ImageDAOImpl;
 import ru.shanalotte.dao.ImageDAO;
-import ru.shanalotte.dao.ImageDAOI;
 import ru.shanalotte.entities.User;
 import ru.shanalotte.entities.Image;
 import ru.shanalotte.entities.Category;
 import ru.shanalotte.entities.UserBid;
 import ru.shanalotte.entities.UserBidPK;
+import ru.shanalotte.dao.AuctionDAOImpl;
 import ru.shanalotte.dao.AuctionDAO;
-import ru.shanalotte.dao.AuctionDAOI;
 import ru.shanalotte.entities.Auction;
+import ru.shanalotte.dao.UserBidDAOImpl;
 import ru.shanalotte.dao.UserBidDAO;
-import ru.shanalotte.dao.UserBidDAOI;
 
 /**
  * Servlet implementation class AuctionView
@@ -33,14 +39,30 @@ import ru.shanalotte.dao.UserBidDAOI;
 @WebServlet("/AuctionView")
 public class AuctionView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AuctionView() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	@Autowired
+	private UserDAO userDAO;
+
+	@Autowired
+	private AuctionDAO auctionDAO;
+
+	@Autowired
+	private CategoryDAO categoryDAO;
+
+	@Autowired
+	private UserBidDAO userBidDAO;
+
+	@Autowired
+	private ImageDAO imageDAO;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ApplicationContext applicationContext = (AnnotationConfigApplicationContext) config.getServletContext().getAttribute("springcontext");
+		final AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		beanFactory.autowireBean(this);
+	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,15 +76,14 @@ public class AuctionView extends HttpServlet {
 		else if(action.equals("history")){
 			/* Bid history servlet implementation */
 			
-			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
-			Auction currentAuction = dao.findByID(auctionid);
+			Auction currentAuction = auctionDAO.findByID(auctionid);
 			
 			/* Get name,starting bid,bids and start time of the current auction */
 			
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
-			List<UserBid> bidding_users=dao.findAuctionBids(currentAuction);
+			List<UserBid> bidding_users=auctionDAO.findAuctionBids(currentAuction);
 			request.setAttribute("user_biddings",bidding_users);
 			float starting_bid=currentAuction.getStartingBid();
 			request.setAttribute("starting_bid",starting_bid);
@@ -71,8 +92,7 @@ public class AuctionView extends HttpServlet {
 			
 			/* Get auction's images */
 			
-			ImageDAOI imgdao = new ImageDAO();
-			List<Image> auction_images=imgdao.findImagesofAuction(currentAuction);
+			List<Image> auction_images=imageDAO.findImagesofAuction(currentAuction);
 			request.setAttribute("images",auction_images);
 			
 			/* Get auction's current bid and set if it is sold/expired or not */
@@ -98,16 +118,14 @@ public class AuctionView extends HttpServlet {
 			
 			/* Find current auction*/
 			
-			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
-			Auction currentAuction = dao.findByID(auctionid);
+			Auction currentAuction = auctionDAO.findByID(auctionid);
 			String auction_name=currentAuction.getName();
 			request.setAttribute("name",auction_name);
-			ImageDAOI imgdao = new ImageDAO();
-			
+
 			/* Find auction's images*/
 			
-			List<Image> auction_images=imgdao.findImagesofAuction(currentAuction);
+			List<Image> auction_images=imageDAO.findImagesofAuction(currentAuction);
 			ArrayList<String> image_paths=new ArrayList<>();
 			for (Image auct_im : auction_images) {
 	            image_paths.add(auct_im.getUrl());
@@ -195,9 +213,8 @@ public class AuctionView extends HttpServlet {
 				disp.forward(request, response);
 				return;
 			}
-			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
-			Auction currentAuction = dao.findByID(auctionid);
+			Auction currentAuction = auctionDAO.findByID(auctionid);
 			float current_bid=currentAuction.getCurrentBid();
 			float buy_price=currentAuction.getBuyPrice();
 			String submited_bid=request.getParameter("Bid_input");
@@ -213,8 +230,7 @@ public class AuctionView extends HttpServlet {
 				
 				UserBidPK new_bid_pk=new UserBidPK();
 				new_bid_pk.setAuctionId(currentAuction.getAuctionId());
-				UserDAOI udao = new UserDAO();
-				User user = udao.findByID(request.getSession().getAttribute("userID").toString());
+				User user = userDAO.findByID(request.getSession().getAttribute("userID").toString());
 				new_bid_pk.setUserId(user.getUserId());
 				new_bid_pk.setPrice(sub_bid);
 				UserBid new_bid=new UserBid();
@@ -229,8 +245,7 @@ public class AuctionView extends HttpServlet {
 				currentAuction.setCurrentBid(sub_bid);
 				currentAuction.setNumOfBids(currentAuction.getNumOfBids()+1);
 				
-				UserBidDAOI bidao=new UserBidDAO();
-				bidao.create(user, currentAuction,starting_date,sub_bid);
+				userBidDAO.create(user, currentAuction,starting_date,sub_bid);
 				request.getSession().setAttribute("bid_response", "Bid succesfully submitted");
 				response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=history");
 			}
@@ -249,9 +264,8 @@ public class AuctionView extends HttpServlet {
 				disp.forward(request, response);
 				return;
 			}
-			AuctionDAOI dao = new AuctionDAO();
 			int auctionid=Integer.parseInt(request.getParameter("auctionID"));
-			Auction currentAuction = dao.findByID(auctionid);
+			Auction currentAuction = auctionDAO.findByID(auctionid);
 			User buyout_user=currentAuction.getUser();
 			Date expiration_date=currentAuction.getExpirationTime();
 			Date current_date = new Date();
@@ -259,8 +273,7 @@ public class AuctionView extends HttpServlet {
 				request.getSession().setAttribute("bid_response", "Error,item expired or already bought");
 				response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=view");
 			}
-			UserDAOI udao = new UserDAO();
-			User user = udao.findByID(request.getSession().getAttribute("userID").toString());
+			User user = userDAO.findByID(request.getSession().getAttribute("userID").toString());
 			currentAuction.setUser(user);
 			request.getSession().setAttribute("bid_response", "Item successfully bought");
 			response.sendRedirect("AuctionView?auctionID="+auctionid+"&page=view");

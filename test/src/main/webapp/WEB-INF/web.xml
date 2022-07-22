@@ -11,7 +11,7 @@
   </welcome-file-list>
   <listener>
     <description>EntityManagerFactory Listener</description>
-    <listener-class>ru.shanalotte.utils.EntityManagerFactoryListener</listener-class>
+    <listener-class>ru.shanalotte.utils.ApplicationStartListener</listener-class>
   </listener>
   <filter>
     <filter-name>EntityManagerInterceptor</filter-name>

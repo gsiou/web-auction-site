@@ -7,16 +7,12 @@ public class AuctionSearchOptions {
 	private boolean price_max_search = false;
 	private float price_min = 0;
 	private float price_max = 0;
-	
 	private boolean location_search = false;
 	private String location = "";
-	
 	private boolean description_search = false;
 	private String description = "";
-	
 	private boolean category_search = false;
 	private String category = "";
-	
 	private Date min_date = null;
 	
 	public AuctionSearchOptions(Date min_date){

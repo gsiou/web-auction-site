@@ -11,15 +11,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.shanalotte.dao.MessageDAOImpl;
 import ru.shanalotte.dao.MessageDAO;
-import ru.shanalotte.dao.MessageDAOI;
+import ru.shanalotte.dao.UserDAOImpl;
 import ru.shanalotte.dao.UserDAO;
-import ru.shanalotte.dao.UserDAOI;
 import ru.shanalotte.entities.Message;
 import ru.shanalotte.entities.User;
 
@@ -31,13 +36,21 @@ public class MessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private static final int ENTRIES_PER_MESSAGE_PAGE = 10;
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MessageServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	@Autowired
+	private MessageDAO messageDAO;
+
+	@Autowired
+	private UserDAO userDAO;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ApplicationContext applicationContext = (AnnotationConfigApplicationContext) config.getServletContext().getAttribute("springcontext");
+		final AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		beanFactory.autowireBean(this);
+	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -104,14 +117,13 @@ public class MessageServlet extends HttpServlet {
 			else{
 				// Check if user exists.
 				User recipient;
-				UserDAOI udao = new UserDAO();
-				recipient = udao.findByID(user);
+				recipient = userDAO.findByID(user);
 				if(recipient == null){
 					message = "User not found";
 				}
 				else{
 					// Get our user.
-					User sender = udao.findByID(request.getSession().getAttribute("userID").toString());
+					User sender = userDAO.findByID(request.getSession().getAttribute("userID").toString());
 					
 					// Create message.
 					Message msg = new Message();
@@ -123,8 +135,7 @@ public class MessageServlet extends HttpServlet {
 					msg.setUserFrom(sender);
 					msg.setUserTo(recipient);
 					msg.setTime(new Date());
-					MessageDAOI msgdao = new MessageDAO();
-					msgdao.create(msg);
+					messageDAO.create(msg);
 					success = true;
 					message = "Message sent";
 					
@@ -150,17 +161,15 @@ public class MessageServlet extends HttpServlet {
 				// Fetch user's messages according to type and page
 				int entries_per_page = ENTRIES_PER_MESSAGE_PAGE;
 				String userid = request.getSession().getAttribute("userID").toString();
-				UserDAOI udao = new UserDAO();
-				User myuser = udao.findByID(userid); // Get logged in user.
-				MessageDAOI msgdao = new MessageDAO();
-				
+				User myuser = userDAO.findByID(userid); // Get logged in user.
+
 				// Gather all messages.
 				List<Message> msg_list = null;
 				if(type.equals("sent")){
-					msg_list = msgdao.getSentOf(myuser, Integer.parseInt(page), entries_per_page);
+					msg_list = messageDAO.getSentOf(myuser, Integer.parseInt(page), entries_per_page);
 				}
 				else{
-					msg_list = msgdao.getReceivedOf(myuser, Integer.parseInt(page), entries_per_page);
+					msg_list = messageDAO.getReceivedOf(myuser, Integer.parseInt(page), entries_per_page);
 				}
 				
 				// Prepare Json Response.
@@ -194,10 +203,10 @@ public class MessageServlet extends HttpServlet {
 				
 				int pages_number; // Let the front end know how many pages exists. 
 				if(type.equals("sent")){
-					pages_number = (int) (Math.ceil(msgdao.getCountSent(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
+					pages_number = (int) (Math.ceil(messageDAO.getCountSent(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
 				}
 				else{
-					pages_number = (int) (Math.ceil(msgdao.getCountReceived(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
+					pages_number = (int) (Math.ceil(messageDAO.getCountReceived(myuser)/ (double) ENTRIES_PER_MESSAGE_PAGE));
 				}
 				
 				JsonObject reply = new JsonObject();
@@ -212,12 +221,10 @@ public class MessageServlet extends HttpServlet {
 			JsonObject data = new Gson().fromJson(request.getReader(), JsonObject.class);
 			int message_id = (int) data.get("message_id").getAsInt();	
 			
-			MessageDAOI msgdao = new MessageDAO();
-			Message msg = msgdao.find(message_id);
+			Message msg = messageDAO.find(message_id);
 			
 			String userid = request.getSession().getAttribute("userID").toString();
-			UserDAOI udao = new UserDAO();
-			User myuser = udao.findByID(userid); // Get logged in user.
+			User myuser = userDAO.findByID(userid); // Get logged in user.
 			
 			if(msg != null && msg.getUserTo().getUserId().equals(myuser.getUserId())) {
 				msg.setRead(true);
@@ -225,10 +232,8 @@ public class MessageServlet extends HttpServlet {
 		}
 		else if(action.equals("count")){
 			String userid = request.getSession().getAttribute("userID").toString();
-			UserDAOI udao = new UserDAO();
-			User myuser = udao.findByID(userid); // Get logged in user.
-			MessageDAOI msgdao = new MessageDAO();
-			long msg_count = msgdao.getCountUnreadOf(myuser);
+			User myuser = userDAO.findByID(userid); // Get logged in user.
+			long msg_count = messageDAO.getCountUnreadOf(myuser);
 			JsonObject reply = new JsonObject();
 			reply.addProperty("count", msg_count);
 			response.setContentType("application/json");
@@ -241,11 +246,9 @@ public class MessageServlet extends HttpServlet {
 			String message_type = data.get("message_type").getAsString();
 			String userid = request.getSession().getAttribute("userID").toString();
 			
-			UserDAOI udao = new UserDAO();
-			User myuser = udao.findByID(userid);
-			MessageDAOI msgdao = new MessageDAO();
-			
-			Message mymsg = msgdao.find(message_id);
+			User myuser = userDAO.findByID(userid);
+
+			Message mymsg = messageDAO.find(message_id);
 			if(message_type.equals("sent")){
 				if(!mymsg.getUserFrom().getUserId().equals(myuser.getUserId())){
 					return ; // Cant delete another persons messages.
@@ -266,11 +269,11 @@ public class MessageServlet extends HttpServlet {
 			
 			if(mymsg.isShowReceived() == false && mymsg.isShowSent() == false){
 				// Delete
-				msgdao.delete(mymsg.getId());
+				messageDAO.delete(mymsg.getId());
 			}
 			else{
 				// Update
-				msgdao.update(mymsg);
+				messageDAO.update(mymsg);
 			}
 		}
 	}

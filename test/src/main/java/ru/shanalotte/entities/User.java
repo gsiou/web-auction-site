@@ -61,6 +61,7 @@ public class User implements Serializable {
 	@Column(name="Trn")
 	private String trn;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy="user")
 	private List<Auction> auctions;
 

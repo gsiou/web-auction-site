@@ -1,20 +1,23 @@
 package ru.shanalotte.utils;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
 
-public class EntityManagerHelper {
+@Service
+public class EntityManagerHelper implements InitializingBean {
 	
-	private final static EntityManagerFactory emf;
-    private static final ThreadLocal<EntityManager> threadLocal;
+	private EntityManagerFactory emf;
+  private ThreadLocal<EntityManager> threadLocal;
 
-    static {
+    @Override
+    public void afterPropertiesSet() {
         emf = Persistence.createEntityManagerFactory("Web Auction Site");
         threadLocal = new ThreadLocal<>();
     }
 
-    public static EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         EntityManager em = threadLocal.get();
-
         if (em == null) {
             em = emf.createEntityManager();
             threadLocal.set(em);
@@ -22,7 +25,8 @@ public class EntityManagerHelper {
         return em;
     }
 
-    public static void closeEntityManager() {
+
+    public void closeEntityManager() {
         EntityManager em = threadLocal.get();
         if (em != null) {
             em.close();
@@ -30,23 +34,23 @@ public class EntityManagerHelper {
         }
     }
 
-    public static void closeEntityManagerFactory() {
+    public void closeEntityManagerFactory() {
         emf.close();
     }
 
-    public static void beginTransaction() {
+    public void beginTransaction() {
         getEntityManager().getTransaction().begin();
     }
     
-    public static EntityTransaction getTransaction() {
+    public EntityTransaction getTransaction() {
         return getEntityManager().getTransaction();
     }
 
-    public static void rollback() {
+    public void rollback() {
         getEntityManager().getTransaction().rollback();
     }
 
-    public static void commit() {
+    public void commit() {
         getEntityManager().getTransaction().commit();
     } 
 
