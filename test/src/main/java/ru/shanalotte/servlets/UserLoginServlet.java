@@ -27,11 +27,9 @@ import ru.shanalotte.helper.AuctionFrequency;
 import ru.shanalotte.helper.AuctionFrequencyComparator;
 import ru.shanalotte.utils.HelperFunctions;
 
-/**
- * Servlet implementation class UserLoginServlet
- */
 @WebServlet(urlPatterns = {"/Login", "/Logout"})
 public class UserLoginServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
        
 	@Autowired
@@ -39,7 +37,6 @@ public class UserLoginServlet extends HttpServlet {
 
 	@Autowired
 	private AuctionDAO auctionDAO;
-
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -50,9 +47,6 @@ public class UserLoginServlet extends HttpServlet {
 	}
 
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher disp;
 		String url_path = request.getRequestURI().substring(request.getContextPath().length());

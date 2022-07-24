@@ -31,7 +31,9 @@ import ru.shanalotte.entities.User;
 @Service
 @WebServlet(urlPatterns = {"", "/Search", "/Manage"})
 public class IndexServlet extends HttpServlet {
+
   private static final long serialVersionUID = 1L;
+
   private static final int searchResultsPerPage = 15;
 
   @Autowired
@@ -59,99 +61,99 @@ public class IndexServlet extends HttpServlet {
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    String url_path = request.getRequestURI().substring(request.getContextPath().length());
-    if (url_path.equals("/Search")) { // Load search results
-      search(request, response);
-    } else if (url_path.equals("/Manage")) {
-      manageAuctions(request, response);
-    } else { // Load front page
-
-      //Get recommended auction ids from cookies
-      Cookie[] cookies = request.getCookies();
-      String common_picks = "";
-      String uncommon_picks = "";
-
-      if (cookies != null) {
-        for (Cookie ck : cookies) {
-          if (ck.getName().equals("common_picks"))
-            common_picks += ck.getValue();
-          if (ck.getName().equals("uncommon_picks"))
-            uncommon_picks += ck.getValue();
-        }
-      }
-
-      //Parse auction ids strings
-
-      int max_recommendations = 5;
-      List<Auction> recommendations = new ArrayList<>();
-      ArrayList<String> image_paths = new ArrayList<>();
-      String delim = "-";
-      if (!common_picks.isEmpty()) {
-        String[] common_ids = common_picks.split(delim);
-        for (int i = 0; i < common_ids.length; i++) {
-          recommendations.add(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
-          List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
-          if (auction_images.isEmpty()) {
-            image_paths.add(null);
-          } else {
-            image_paths.add(auction_images.get(0).getUrl());
-          }
-          if (recommendations.size() == max_recommendations)
-            break;
-        }
-      }
-      if (!uncommon_picks.isEmpty() && recommendations.size() < max_recommendations) {
-        String[] uncommon_ids = uncommon_picks.split(delim);
-        for (int i = 0; i < uncommon_ids.length; i++) {
-          recommendations.add(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
-          List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
-          if (auction_images.isEmpty()) {
-            image_paths.add(null);
-          } else {
-            image_paths.add(auction_images.get(0).getUrl());
-          }
-          if (recommendations.size() == max_recommendations)
-            break;
-        }
-      }
-      if (recommendations.size() < max_recommendations) {
-        Date curr_date = new Date();
-        int top_auctions_pool_size = 20;
-        List<Auction> pop_aucts = auctionDAO.findPopular(top_auctions_pool_size, curr_date);
-        Collections.shuffle(pop_aucts);
-        for (Auction paucs : pop_aucts) {
-          if (!recommendations.contains(paucs)) {
-            recommendations.add(paucs);
-            List<Image> auction_images = imageDAO.findImagesofAuction(paucs);
-            if (auction_images.isEmpty()) {
-              image_paths.add(null);
-            } else {
-              image_paths.add(auction_images.get(0).getUrl());
-            }
-            if (recommendations.size() == max_recommendations)
-              break;
-          }
-        }
-      }
-
-      request.setAttribute("recommended_aucts", recommendations);
-      request.setAttribute("rec_aucts_imgs", image_paths);
-
-      RequestDispatcher disp = getServletContext().getRequestDispatcher("/index.jsp");
-      disp.forward(request, response);
+    String urlPath = request.getRequestURI().substring(request.getContextPath().length());
+    if (urlPath.equals("/Search")) {
+      processSearchRequest(request, response);
+    } else if (urlPath.equals("/Manage")) {
+      showAuctionsPage(request, response);
+    } else {
+      showFrontPage(request, response);
     }
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-   * response)
-   */
+  //TODO
+  private void showFrontPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    //Get recommended auction ids from cookies
+    Cookie[] cookies = request.getCookies();
+    String common_picks = "";
+    String uncommon_picks = "";
+
+    if (cookies != null) {
+      for (Cookie ck : cookies) {
+        if (ck.getName().equals("common_picks"))
+          common_picks += ck.getValue();
+        if (ck.getName().equals("uncommon_picks"))
+          uncommon_picks += ck.getValue();
+      }
+    }
+
+    //Parse auction ids strings
+
+    int max_recommendations = 5;
+    List<Auction> recommendations = new ArrayList<>();
+    ArrayList<String> image_paths = new ArrayList<>();
+    String delim = "-";
+    if (!common_picks.isEmpty()) {
+      String[] common_ids = common_picks.split(delim);
+      for (int i = 0; i < common_ids.length; i++) {
+        recommendations.add(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
+        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
+        if (auction_images.isEmpty()) {
+          image_paths.add(null);
+        } else {
+          image_paths.add(auction_images.get(0).getUrl());
+        }
+        if (recommendations.size() == max_recommendations)
+          break;
+      }
+    }
+    if (!uncommon_picks.isEmpty() && recommendations.size() < max_recommendations) {
+      String[] uncommon_ids = uncommon_picks.split(delim);
+      for (int i = 0; i < uncommon_ids.length; i++) {
+        recommendations.add(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
+        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
+        if (auction_images.isEmpty()) {
+          image_paths.add(null);
+        } else {
+          image_paths.add(auction_images.get(0).getUrl());
+        }
+        if (recommendations.size() == max_recommendations)
+          break;
+      }
+    }
+    if (recommendations.size() < max_recommendations) {
+      Date curr_date = new Date();
+      int top_auctions_pool_size = 20;
+      List<Auction> pop_aucts = auctionDAO.findPopular(top_auctions_pool_size, curr_date);
+      Collections.shuffle(pop_aucts);
+      for (Auction paucs : pop_aucts) {
+        if (!recommendations.contains(paucs)) {
+          recommendations.add(paucs);
+          List<Image> auction_images = imageDAO.findImagesofAuction(paucs);
+          if (auction_images.isEmpty()) {
+            image_paths.add(null);
+          } else {
+            image_paths.add(auction_images.get(0).getUrl());
+          }
+          if (recommendations.size() == max_recommendations)
+            break;
+        }
+      }
+    }
+
+    request.setAttribute("recommended_aucts", recommendations);
+    request.setAttribute("rec_aucts_imgs", image_paths);
+
+    RequestDispatcher disp = getServletContext().getRequestDispatcher("/index.jsp");
+    disp.forward(request, response);
+  }
+
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     doGet(request, response);
   }
-
-  protected void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  //TODO
+  protected void processSearchRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     // Create an AuctionSearchOptions with current date as minimum.
     AuctionSearchOptions options = new AuctionSearchOptions(new Date());
     String description_param = request.getParameter("description");
@@ -244,42 +246,27 @@ public class IndexServlet extends HttpServlet {
     disp.forward(request, response);
   }
 
-  protected void manageAuctions(HttpServletRequest request, HttpServletResponse response)
+  protected void showAuctionsPage(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    RequestDispatcher disp;
     if (request.getSession().getAttribute("userID") == null) {
-      disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
+      RequestDispatcher disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
       disp.forward(request, response);
       return;
     }
-
-    // Get current user.
-    User user = userDAO.findByID(request.getSession().getAttribute("userID").toString());
-
-    // We have 4 types of auctions, inactive, active, sold and bidded.
-    // Fetch them in different lists.
-    List<Auction> inactive;
-    List<Auction> active;
-    List<Auction> sold;
-    List<Auction> won;
-    List<Auction> lost;
-    List<Auction> bidded;
-
-    inactive = auctionDAO.findInactiveOf(user);
-    active = auctionDAO.findActiveOf(user, new Date());
-    sold = auctionDAO.findSoldOf(user, new Date());
-    won = auctionDAO.findUserWonAuctions(user, new Date());
-    lost = auctionDAO.findUserLostAuctions(user, new Date());
-    bidded = auctionDAO.findUserBiddedAuctions(user, new Date());
-
-    request.setAttribute("inactiveList", inactive);
-    request.setAttribute("activeList", active);
-    request.setAttribute("soldList", sold);
-    request.setAttribute("wonList", won);
-    request.setAttribute("lostList", lost);
-    request.setAttribute("biddedList", bidded);
-
-    disp = getServletContext().getRequestDispatcher("/auction_manage.jsp");
-    disp.forward(request, response);
+    User currentUser = userDAO.findByID(request.getSession().getAttribute("userID").toString());
+    var inactiveAuctions = auctionDAO.findInactiveOf(currentUser);
+    var activeAuctions = auctionDAO.findActiveOf(currentUser, new Date());
+    var soldAuctions = auctionDAO.findSoldOf(currentUser, new Date());
+    var wonAuctions = auctionDAO.findUserWonAuctions(currentUser, new Date());
+    var lostAuctions = auctionDAO.findUserLostAuctions(currentUser, new Date());
+    var biddedAuctions = auctionDAO.findUserBiddedAuctions(currentUser, new Date());
+    request.setAttribute("inactiveList", inactiveAuctions);
+    request.setAttribute("activeList", activeAuctions);
+    request.setAttribute("soldList", soldAuctions);
+    request.setAttribute("wonList", wonAuctions);
+    request.setAttribute("lostList", lostAuctions);
+    request.setAttribute("biddedList", biddedAuctions);
+    RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/auction_manage.jsp");
+    requestDispatcher.forward(request, response);
   }
 }

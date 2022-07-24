@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.shanalotte.dto.RegistrationRequestData;
+import ru.shanalotte.utils.HelperFunctions;
 import java.util.List;
 
 @Entity
@@ -77,7 +79,26 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="user")
 	private List<UserBid> userBidAuctions;
 
-	public void addUserBidAuction(UserBid userBidAuction) {
+  public static User fromDto(RegistrationRequestData registrationData) {
+		String hashedPassword = HelperFunctions.hash(registrationData.getPassword1());
+		User user = new User();
+		user.setUserId(registrationData.getUserid());
+		user.setPassword(hashedPassword);
+		user.setBidRating(0);
+		user.setSellRating(0);
+		user.setCountry(registrationData.getCountry());
+		user.setAddress(registrationData.getCountry());
+		user.setPhone(registrationData.getPhone());
+		user.setEmail(registrationData.getEmail());
+		user.setTrn(registrationData.getTrn());
+		if (!registrationData.getLatitude().equals("") && !registrationData.getLongitude().equals("")) {
+			user.setLatitude(Float.parseFloat(registrationData.getLatitude()));
+			user.setLongitude(Float.parseFloat(registrationData.getLongitude()));
+		}
+		return user;
+  }
+
+  public void addUserBidAuction(UserBid userBidAuction) {
 		getUserBidAuctions().add(userBidAuction);
 		userBidAuction.setUser(this);
 	}

@@ -17,14 +17,13 @@ public class AuctionDAOImpl implements AuctionDAO {
 
   @Autowired
   private EntityManagerHelper entityManagerHelper;
+  @Autowired
+  private CategoryDAO categoryDAO;
 
   @Autowired
   public AuctionDAOImpl(EntityManagerHelper entityManagerHelper) {
     this.entityManagerHelper = entityManagerHelper;
   }
-
-  @Autowired
-  private CategoryDAO categoryDAO;
 
   @Override
   public boolean create(Auction auction) {
