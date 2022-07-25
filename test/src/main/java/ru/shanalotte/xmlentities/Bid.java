@@ -8,7 +8,6 @@ public class Bid {
 	private Bidder bidder;
 	private String time;
 	private String amount;
-	
 	@XmlElement(name = "Bidder")
 	public Bidder getBidder() {
 		return bidder;

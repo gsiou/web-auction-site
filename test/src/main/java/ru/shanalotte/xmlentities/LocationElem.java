@@ -9,7 +9,6 @@ public class LocationElem {
 	private String location;
 	private float latitude;
 	private float longitude;
-	
 	@XmlValue
 	public String getLocation() {
 		return location;
@@ -24,7 +23,6 @@ public class LocationElem {
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
-	
 	@XmlAttribute(name = "Longitude")
 	public float getLongitude() {
 		return longitude;

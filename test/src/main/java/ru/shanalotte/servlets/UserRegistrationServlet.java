@@ -25,7 +25,6 @@ import ru.shanalotte.service.RegistrationDtoValidator;
 @WebServlet("/Registration")
 public class UserRegistrationServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
-  RequestDispatcher disp;
   @Autowired
   private UserDAO userDAO;
   @Autowired

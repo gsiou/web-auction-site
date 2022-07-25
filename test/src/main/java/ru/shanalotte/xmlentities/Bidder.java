@@ -10,7 +10,6 @@ public class Bidder {
 	private String userID;
 	private String location;
 	private String country;
-	
 	@XmlAttribute(name = "Rating")
 	public int getRating() {
 		return rating;
