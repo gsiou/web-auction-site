@@ -133,5 +133,4 @@ public class UserRegistrationServlet extends HttpServlet {
   private boolean isUserAlreadyExists(String username) {
     return userDAO.findByID(username) != null;
   }
-
 }
