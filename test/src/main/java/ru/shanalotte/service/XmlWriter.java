@@ -27,7 +27,6 @@ public class XmlWriter {
     return xmlEntries;
   }
 
-
   private Bidder bidderToXml(UserBid userBid) {
     Bidder currentBidder = new Bidder();
     currentBidder.setCountry(userBid.getUser().getCountry());
