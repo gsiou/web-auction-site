@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.shanalotte</groupId>
-    <artifactId>test</artifactId>
+    <groupId>com.github.gsiou</groupId>
+    <artifactId>web-auction-site</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>war</packaging>

@@ -11,11 +11,11 @@
   </welcome-file-list>
   <listener>
     <description>EntityManagerFactory Listener</description>
-    <listener-class>ru.shanalotte.utils.ApplicationStartListener</listener-class>
+    <listener-class>com.github.gsiou.utils.ApplicationStartListener</listener-class>
   </listener>
   <filter>
     <filter-name>EntityManagerInterceptor</filter-name>
-    <filter-class>ru.shanalotte.filters.EntityManagerInterceptor</filter-class>
+    <filter-class>com.github.gsiou.filters.EntityManagerInterceptor</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>EntityManagerInterceptor</filter-name>
