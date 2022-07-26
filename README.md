@@ -5,3 +5,20 @@ Auction (Ebay-like) Website Project (Web Applications Technology Course, DIT @ U
 Team: 
 Georgios Anastasiou (https://github.com/gsiou)
 Athanasios Avgetidis (https://github.com/ThanosAvg)
+
+### Fork changelog
+
+- Add Maven
+- Add Spring core
+- Local project deploy via Maven Jetty plugin (to run execute `mvn clean jetty:run`)
+- Replace some boilerplate code with Lombok annotations (e.g entities)
+- Rename some fields
+- Rename base package to com.github.gsiou
+- Refactor AuctionSubmit.java to some extent
+- Refactor IndexServlet to some point
+- Refactor MessageServlet
+- Refactor UserLoginServlet to some point
+- Remove local persistence.xml file
+- Refactor XML import process in AdminServlet.java
+- Refactor XML export process in AdminServlet.java
+- Refactor user registration process
