@@ -1,3 +1,4 @@
+
 package ru.shanalotte.entities;
 
 import java.io.Serializable;
