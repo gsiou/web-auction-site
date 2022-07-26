@@ -80,7 +80,6 @@ public class AuctionView extends HttpServlet {
     requestDispatcher.forward(request, response);
   }
 
-
   private void showAuctionInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     int requestedAuctionId = Integer.parseInt(request.getParameter("auctionID"));
     Auction currentAuction = auctionDAO.findByID(requestedAuctionId);
@@ -133,7 +132,6 @@ public class AuctionView extends HttpServlet {
     }
     return imagesUrl;
   }
-
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getSession().getAttribute("userID") == null) {
@@ -191,19 +189,19 @@ public class AuctionView extends HttpServlet {
 	}
 
 	private void createBid(HttpServletRequest request, HttpServletResponse response, Auction auction, float submittedBidValue) throws IOException {
-		UserBidPK new_bid_pk = new UserBidPK();
-		new_bid_pk.setAuctionId(auction.getAuctionId());
+		UserBidPK newBidPk = new UserBidPK();
+		newBidPk.setAuctionId(auction.getAuctionId());
 		User user = userDAO.findByID(request.getSession().getAttribute("userID").toString());
-		new_bid_pk.setUserId(user.getUserId());
-		new_bid_pk.setPrice(submittedBidValue);
-		UserBid new_bid = new UserBid();
-		new_bid.setId(new_bid_pk);
-		new_bid.setUser(user);
-		new_bid.setAuction(auction);
+		newBidPk.setUserId(user.getUserId());
+		newBidPk.setPrice(submittedBidValue);
+		UserBid newBid = new UserBid();
+		newBid.setId(newBidPk);
+		newBid.setUser(user);
+		newBid.setAuction(auction);
 		Date starting_date = new Date();
-		new_bid.setTime(starting_date);
-		user.addUserBidAuction(new_bid);
-		auction.addBid(new_bid);
+		newBid.setTime(starting_date);
+		user.addUserBidAuction(newBid);
+		auction.addBid(newBid);
 		auction.setCurrentBid(submittedBidValue);
 		auction.setNumOfBids(auction.getNumOfBids() + 1);
 		userBidDAO.create(user, auction, starting_date, submittedBidValue);
@@ -220,5 +218,4 @@ public class AuctionView extends HttpServlet {
 		RequestDispatcher disp = getServletContext().getRequestDispatcher("/loginerror.jsp");
 		disp.forward(request, response);
 	}
-
 }

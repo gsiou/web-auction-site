@@ -45,10 +45,6 @@ import ru.shanalotte.entities.Category;
 import ru.shanalotte.entities.Image;
 import ru.shanalotte.entities.User;
 
-/**
- * Servlet implementation class AuctionSubmit
- */
-
 @WebServlet("/AuctionSubmit")
 @MultipartConfig
 public class AuctionSubmit extends HttpServlet {

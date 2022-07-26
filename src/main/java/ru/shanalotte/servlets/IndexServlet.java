@@ -36,6 +36,8 @@ public class IndexServlet extends HttpServlet {
 
   private static final int searchResultsPerPage = 15;
 
+  private static final int MAX_RECOMMENDATIONS = 5;
+
   @Autowired
   private UserDAO userDAO;
 
@@ -71,79 +73,70 @@ public class IndexServlet extends HttpServlet {
     }
   }
 
-  //TODO
   private void showFrontPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    //Get recommended auction ids from cookies
     Cookie[] cookies = request.getCookies();
-    String common_picks = "";
-    String uncommon_picks = "";
-
+    StringBuilder commonPicks = new StringBuilder();
+    StringBuilder uncommonPicks = new StringBuilder();
     if (cookies != null) {
       for (Cookie ck : cookies) {
         if (ck.getName().equals("common_picks"))
-          common_picks += ck.getValue();
+          commonPicks.append(ck.getValue());
         if (ck.getName().equals("uncommon_picks"))
-          uncommon_picks += ck.getValue();
+          uncommonPicks.append(ck.getValue());
       }
     }
-
-    //Parse auction ids strings
-
-    int max_recommendations = 5;
     List<Auction> recommendations = new ArrayList<>();
-    ArrayList<String> image_paths = new ArrayList<>();
-    String delim = "-";
-    if (!common_picks.isEmpty()) {
-      String[] common_ids = common_picks.split(delim);
-      for (int i = 0; i < common_ids.length; i++) {
-        recommendations.add(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
-        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(common_ids[i])));
+    ArrayList<String> imagePaths = new ArrayList<>();
+    String delimiter = "-";
+    if (commonPicks.length() > 0) {
+      String[] commonIds = commonPicks.toString().split(delimiter);
+      for (String commonId : commonIds) {
+        recommendations.add(auctionDAO.findByID(Integer.parseInt(commonId)));
+        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(commonId)));
         if (auction_images.isEmpty()) {
-          image_paths.add(null);
+          imagePaths.add(null);
         } else {
-          image_paths.add(auction_images.get(0).getUrl());
+          imagePaths.add(auction_images.get(0).getUrl());
         }
-        if (recommendations.size() == max_recommendations)
+        if (recommendations.size() == MAX_RECOMMENDATIONS)
           break;
       }
     }
-    if (!uncommon_picks.isEmpty() && recommendations.size() < max_recommendations) {
-      String[] uncommon_ids = uncommon_picks.split(delim);
-      for (int i = 0; i < uncommon_ids.length; i++) {
-        recommendations.add(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
-        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(uncommon_ids[i])));
+    if ((uncommonPicks.length() > 0) && recommendations.size() < MAX_RECOMMENDATIONS) {
+      String[] uncommon_ids = uncommonPicks.toString().split(delimiter);
+      for (String uncommon_id : uncommon_ids) {
+        recommendations.add(auctionDAO.findByID(Integer.parseInt(uncommon_id)));
+        List<Image> auction_images = imageDAO.findImagesofAuction(auctionDAO.findByID(Integer.parseInt(uncommon_id)));
         if (auction_images.isEmpty()) {
-          image_paths.add(null);
+          imagePaths.add(null);
         } else {
-          image_paths.add(auction_images.get(0).getUrl());
+          imagePaths.add(auction_images.get(0).getUrl());
         }
-        if (recommendations.size() == max_recommendations)
+        if (recommendations.size() == MAX_RECOMMENDATIONS)
           break;
       }
     }
-    if (recommendations.size() < max_recommendations) {
+    if (recommendations.size() < MAX_RECOMMENDATIONS) {
       Date curr_date = new Date();
-      int top_auctions_pool_size = 20;
-      List<Auction> pop_aucts = auctionDAO.findPopular(top_auctions_pool_size, curr_date);
+      int topAuctionsPoolSize = 20;
+      List<Auction> pop_aucts = auctionDAO.findPopular(topAuctionsPoolSize, curr_date);
       Collections.shuffle(pop_aucts);
       for (Auction paucs : pop_aucts) {
         if (!recommendations.contains(paucs)) {
           recommendations.add(paucs);
           List<Image> auction_images = imageDAO.findImagesofAuction(paucs);
           if (auction_images.isEmpty()) {
-            image_paths.add(null);
+            imagePaths.add(null);
           } else {
-            image_paths.add(auction_images.get(0).getUrl());
+            imagePaths.add(auction_images.get(0).getUrl());
           }
-          if (recommendations.size() == max_recommendations)
+          if (recommendations.size() == MAX_RECOMMENDATIONS)
             break;
         }
       }
     }
-
     request.setAttribute("recommended_aucts", recommendations);
-    request.setAttribute("rec_aucts_imgs", image_paths);
-
+    request.setAttribute("rec_aucts_imgs", imagePaths);
     RequestDispatcher disp = getServletContext().getRequestDispatcher("/index.jsp");
     disp.forward(request, response);
   }
@@ -152,98 +145,69 @@ public class IndexServlet extends HttpServlet {
       throws ServletException, IOException {
     doGet(request, response);
   }
-  //TODO
+
+
   protected void processSearchRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // Create an AuctionSearchOptions with current date as minimum.
-    AuctionSearchOptions options = new AuctionSearchOptions(new Date());
-    String description_param = request.getParameter("description");
-    String category_param = request.getParameter("category");
-    String price_from_param = request.getParameter("price-from");
-    String price_to_param = request.getParameter("price-to");
-    String location_param = request.getParameter("location");
-
-    // Check every parameter and form options.
-    if (description_param != null && !description_param.equals("")) {
-      options.setDescription(description_param);
-    }
-    if (category_param != null && !category_param.equals("") && !category_param.equals("all")) {
-      options.setCategory(category_param);
-    }
-    if (price_from_param != null) {
-      float price_from_safe;
+    AuctionSearchOptions options = prepareAuctionSearchOptions(request);
+    String pageNumberString = request.getParameter("page");
+    int searchPageNumber = 0;
+    if (pageNumberString != null) {
       try {
-        price_from_safe = Float.parseFloat(price_from_param);
-        options.setMinPrice(price_from_safe);
-
-      } catch (NumberFormatException e) {
-        // Nothing to be handled, we just dont add the option.
+        searchPageNumber = Integer.parseInt(pageNumberString);
+      } catch (NumberFormatException ignored) {
       }
     }
-    if (price_to_param != null) {
-      float price_to_safe;
-      try {
-        price_to_safe = Float.parseFloat(price_to_param);
-        options.setMaxPrice(price_to_safe);
-
-      } catch (NumberFormatException e) {
-        // Nothing to be handled, we just dont add the option.
-      }
+    if (searchPageNumber < 0) {
+      searchPageNumber = 0;
     }
-
-    if (location_param != null && !location_param.equals("")) {
-      options.setLocation(location_param);
-    }
-
-    // Determine which page we have to present
-    String pageStr = request.getParameter("page");
-    int page = 0;
-    if (pageStr != null) {
-      try {
-        page = Integer.parseInt(pageStr);
-      } catch (NumberFormatException e) {
-        // Page will remain 0, nothing to handle.
-      }
-    }
-
-    if (page < 0) {
-      // We cannot allow negative pages.
-      page = 0;
-    }
-
-    // Inject the dao with our options.
-    List<Auction> search_results;
-    search_results = auctionDAO.search(options, page, searchResultsPerPage);
-
-    boolean has_next_page = false;
-    boolean has_prev_page = false;
-
-    // Check if we have a next page.
-    if (auctionDAO.search(options, ((page + 1) * searchResultsPerPage), 1).size() > 0) {
-      // Above line checks if next item of fetched page exists.
-      // If it does not exist, no more pages exist.
-      has_next_page = true;
-    } else {
-      has_next_page = false;
-    }
-
-    if (page != 0) {
-      has_prev_page = true;
-    } else {
-      has_prev_page = false;
-    }
-
-    request.setAttribute("searchResults", search_results);
-    request.setAttribute("nextPage", has_next_page);
-    request.setAttribute("prevPage", has_prev_page);
-    request.setAttribute("currentPage", page);
-    request.setAttribute("descriptionParam", description_param);
-    request.setAttribute("locationParam", location_param);
-    request.setAttribute("categoryParam", category_param);
-    request.setAttribute("priceMinParam", price_from_param);
-    request.setAttribute("priceMaxParam", price_to_param);
-
+    List<Auction> searchResults;
+    searchResults = auctionDAO.search(options, searchPageNumber, searchResultsPerPage);
+    boolean hasNextPage = auctionDAO.search(options, ((searchPageNumber + 1) * searchResultsPerPage), 1).size() > 0;
+    boolean hasPrevPage = searchPageNumber != 0;
+    request.setAttribute("searchResults", searchResults);
+    request.setAttribute("nextPage", hasNextPage);
+    request.setAttribute("prevPage", hasPrevPage);
+    request.setAttribute("currentPage", searchPageNumber);
+    request.setAttribute("descriptionParam", request.getParameter("description"));
+    request.setAttribute("locationParam", request.getParameter("location"));
+    request.setAttribute("categoryParam", request.getParameter("category"));
+    request.setAttribute("priceMinParam", request.getParameter("price-from"));
+    request.setAttribute("priceMaxParam", request.getParameter("price-to"));
     RequestDispatcher disp = getServletContext().getRequestDispatcher("/search_results.jsp");
     disp.forward(request, response);
+  }
+
+  private AuctionSearchOptions prepareAuctionSearchOptions(HttpServletRequest request) {
+    AuctionSearchOptions options = new AuctionSearchOptions(new Date());
+    String descriptionParam = request.getParameter("description");
+    String categoryParam = request.getParameter("category");
+    String priceFromParam = request.getParameter("price-from");
+    String priceToParam = request.getParameter("price-to");
+    String locationParam = request.getParameter("location");
+    if (descriptionParam != null && !descriptionParam.equals("")) {
+      options.setDescription(descriptionParam);
+    }
+    if (categoryParam != null && !categoryParam.equals("") && !categoryParam.equals("all")) {
+      options.setCategory(categoryParam);
+    }
+    if (priceFromParam != null) {
+      try {
+        float price_from_safe = Float.parseFloat(priceFromParam);
+        options.setMinPrice(price_from_safe);
+      } catch (NumberFormatException ignored) {
+      }
+    }
+    if (priceToParam != null) {
+      try {
+        float price_to_safe = Float.parseFloat(priceToParam);
+        options.setMaxPrice(price_to_safe);
+      } catch (NumberFormatException ignored) {
+      }
+    }
+    if (locationParam != null && !locationParam.equals("")) {
+      options.setLocation(locationParam);
+    }
+    return options;
   }
 
   protected void showAuctionsPage(HttpServletRequest request, HttpServletResponse response)

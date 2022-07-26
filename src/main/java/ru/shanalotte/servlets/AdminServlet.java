@@ -172,7 +172,7 @@ public class AdminServlet extends HttpServlet {
     if (successfullyActivatedOrDeactivated) {
       redirectAdminWhereHeWasBefore(request, response);
     } else {
-      response.sendRedirect("Admin?message=" + URLEncoder.encode(message, "UTF-8"));
+      response.sendRedirect("Admin?message=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
     }
   }
 
@@ -235,7 +235,7 @@ public class AdminServlet extends HttpServlet {
       xmlReader.importXmlEntry(nextXmlEntry);
     }
     try {
-      response.sendRedirect("Admin?message=" + URLEncoder.encode("Import successful.", "UTF-8"));
+      response.sendRedirect("Admin?message=" + URLEncoder.encode("Import successful.", StandardCharsets.UTF_8));
     } catch (IOException e) {
       e.printStackTrace();
       showImportFailedMessage(response);
@@ -244,7 +244,7 @@ public class AdminServlet extends HttpServlet {
 
   public void showImportFailedMessage(HttpServletResponse response) {
     try {
-      response.sendRedirect("Admin?message=" + URLEncoder.encode("Import failed.", "UTF-8"));
+      response.sendRedirect("Admin?message=" + URLEncoder.encode("Import failed.", StandardCharsets.UTF_8));
     } catch (IOException e) {
       e.printStackTrace();
     }
