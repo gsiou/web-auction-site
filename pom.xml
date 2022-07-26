@@ -40,7 +40,6 @@
             <artifactId>gson</artifactId>
             <version>2.9.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
@@ -67,7 +66,6 @@
             <artifactId>activation</artifactId>
             <version>1.1</version>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -97,7 +95,6 @@
             <artifactId>spring-web</artifactId>
             <version>5.3.22</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
         <dependency>
             <groupId>org.springframework</groupId>
